@@ -545,7 +545,7 @@
 
         // --- Vote integration: Firebase (optional) or simple server API ---
         // If you want server mode, run the provided Express server and set SERVER_API_BASE.
-        const firebaseConfig = {
+        const firebaseConfig = window.BIS_FIREBASE_CONFIG || {
             // apiKey: "YOUR_API_KEY",
             // authDomain: "PROJECT_ID.firebaseapp.com",
             // projectId: "PROJECT_ID",
@@ -574,7 +574,7 @@
             } catch (e) { return false; }
             if (!firebaseConfig.apiKey) return false;
             try {
-                firebase.initializeApp(firebaseConfig);
+                if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
                 db = firebase.firestore();
                 useFirebase = true;
                 listenVotesFirebase();
