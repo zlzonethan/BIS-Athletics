@@ -287,17 +287,44 @@
     </style>
     <style>
         /* Mobile-friendly adjustments */
-        @media (max-width: 480px) {
-            body { padding: 12px; }
+        @media (max-width: 600px) {
+            body { padding: 16px 12px; }
             .container { max-width: 100%; }
-            .card { padding: 16px; }
-            .team-vs img { width: 44px; height: 44px; }
-            .team-logo { width: 28px; height: 28px; }
-            .team-logo-large { width: 56px; height: 56px; }
+            .card { padding: 20px 16px; border-radius: 20px; }
+            .header { margin-bottom: 16px; }
+            .back { font-size: 13px; }
+            .match-date { font-size: 12px; }
+            .team-vs { gap: 12px; }
+            .team-vs img { width: 48px; height: 48px; }
+            .team-vs span { font-size: 13px; }
+            .vs-badge { font-size: 13px; }
+            .match-location { font-size: 11px; }
+            .score-row { margin-top: 10px; gap: 14px; }
+            .score-num { font-size: 18px; }
+            .status-badge { padding: 6px 10px; font-size: 12px; }
+            .gender-badge { padding: 4px 8px; font-size: 10px; }
+            .timeline { margin-top: 16px; padding: 14px; }
+            .timeline-item { font-size: 13px; padding: 6px 0; }
+            .stream { margin-top: 16px; padding: 14px; }
+            .stream iframe { height: 180px; }
+            #voteCard { padding: 14px; margin-top: 16px; }
+            #voteCard h4 { font-size: 14px; margin-bottom: 10px; }
+            .vote-btns { gap: 8px; }
+            .vote-btn { padding: 10px; font-size: 13px; }
+            .vote-stats { font-size: 11px; }
+            .top-actions { top: auto; bottom: 12px; right: 12px; gap: 8px; }
+            .theme-toggle { padding: 6px 10px; font-size: 13px; }
+            .admin-modal { padding: 12px; }
+            .admin-panel { padding: 14px; border-radius: 14px; }
+        }
+
+        @media (max-width: 380px) {
+            body { padding: 10px 8px; }
+            .card { padding: 16px 12px; }
+            .team-vs img { width: 40px; height: 40px; }
+            .team-vs span { font-size: 12px; }
             .score-num { font-size: 16px; }
-            #voteCard { padding: 12px; }
-            #voteCard .vote-btn { padding: 12px; font-size: 14px; }
-            .top-actions { top: auto; bottom: 12px; right: 12px; }
+            .stream iframe { height: 150px; }
         }
     </style>
     <!-- Firebase SDKs (replace with modular SDK if preferred) -->
