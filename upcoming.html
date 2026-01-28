@@ -416,7 +416,7 @@
             <a class="nav-item" href="bobcat.html">Bobcat</a>
             <a class="nav-item" href="team.html">Team</a>
           </div>
-          <a href="index.html" class="nav-logo-link"><img class="logo" src="assets/bismascot.png" alt="BIS mascot" /></a>
+          <a href="index.html" class="nav-logo-link"><img class="logo" src="bismascot.png" alt="BIS mascot" /></a>
           <div class="nav-right">
             <a class="nav-item" href="upcoming.html">Upcoming</a>
             <a class="nav-item" href="kisaa-kaiac.html">KISAA/KAIAC</a>
@@ -446,6 +446,19 @@
     </div>
 
     <script>
+      window.BIS_FIREBASE_CONFIG = {
+        apiKey: "AIzaSyCzjMG7r_tweUGfznUnckpp_Xm4hF5119Q",
+        authDomain: "bis-athletics.firebaseapp.com",
+        projectId: "bis-athletics",
+        storageBucket: "bis-athletics.firebasestorage.app",
+        messagingSenderId: "759086332599",
+        appId: "1:759086332599:web:4261b5aa076f0c60a0eb32",
+        measurementId: "G-87M42WQKEQ"
+      };
+    </script>
+    <script src="https://www.gstatic.com/firebasejs/9.24.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.24.0/firebase-firestore-compat.js"></script>
+    <script>
       const getAssetBase = () => {
         const origin = window.location.origin;
         if (origin === 'null') return '';
@@ -457,7 +470,7 @@
       };
 
       const ASSET_BASE = getAssetBase();
-      const assetUrl = (fileName) => `${ASSET_BASE}assets/${fileName}`;
+      const assetUrl = (fileName) => `${ASSET_BASE}${fileName}`;
 
       const teams = [
         { id: 'bis', name: 'BIS', logo: assetUrl('bismascot.png') },
@@ -490,6 +503,20 @@
       const MATCH_SUB_KEY = 'kisvl_match_subscriptions';
       const VOTES_KEY = 'kisvl_votes';
       const VOTE_COUNTS_KEY = 'kisvl_vote_counts';
+
+      // Optional Firebase config for shared vote counts
+      const firebaseConfig = window.BIS_FIREBASE_CONFIG || {
+        // apiKey: "YOUR_API_KEY",
+        // authDomain: "PROJECT_ID.firebaseapp.com",
+        // projectId: "PROJECT_ID",
+        // storageBucket: "PROJECT_ID.appspot.com",
+        // messagingSenderId: "SENDER_ID",
+        // appId: "APP_ID"
+      };
+      const hasFirebaseConfig = !!firebaseConfig && !!firebaseConfig.apiKey;
+      let useFirebase = false;
+      let db = null;
+      let voteCountsCache = {};
 
       let searchQuery = '';
 
@@ -530,11 +557,52 @@
       const setVoteCounts = (all) => {
         try { localStorage.setItem(VOTE_COUNTS_KEY, JSON.stringify(all)); } catch (e) {}
       };
-      const getCountsForMatch = (matchId) => getVoteCounts()[matchId] || { home: 0, draw: 0, away: 0 };
+      const getCountsForMatch = (matchId) => {
+        if (useFirebase) return voteCountsCache[matchId] || { home: 0, draw: 0, away: 0 };
+        return getVoteCounts()[matchId] || { home: 0, draw: 0, away: 0 };
+      };
       const setCountsForMatch = (matchId, counts) => {
         const all = getVoteCounts();
         all[matchId] = counts;
         setVoteCounts(all);
+      };
+
+      const listenVoteCountsFirebase = () => {
+        if (!db) return;
+        db.collection('votes').onSnapshot((snap) => {
+          const all = {};
+          snap.forEach((doc) => {
+            all[doc.id] = doc.data() || {};
+          });
+          voteCountsCache = all;
+          renderSchedule();
+        });
+      };
+
+      const initFirebaseIfConfigured = () => {
+        if (!hasFirebaseConfig || !window.firebase || !firebase.initializeApp) return false;
+        try {
+          if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+          db = firebase.firestore();
+          useFirebase = true;
+          listenVoteCountsFirebase();
+          return true;
+        } catch (e) {
+          console.warn('Firebase init failed, falling back to localStorage.', e);
+          useFirebase = false;
+          db = null;
+          return false;
+        }
+      };
+
+      const voteRemote = async (matchId, side) => {
+        if (!db || !firebase?.firestore?.FieldValue) return;
+        const ref = db.collection('votes').doc(String(matchId));
+        const field = side === 'home' ? 'home' : side === 'away' ? 'away' : 'draw';
+        const inc = firebase.firestore.FieldValue.increment(1);
+        await db.runTransaction(async (tx) => {
+          tx.set(ref, { [field]: inc }, { merge: true });
+        });
       };
 
       // Notification helpers for subscribe feature
@@ -657,17 +725,33 @@
 
       
 
-      const vote = (matchId, side) => {
+      const vote = async (matchId, side) => {
         const match = schedules.find(m => m.id === matchId);
         if (!match) return;
         if (hasVoted(matchId)) return;
-        const counts = getCountsForMatch(matchId);
-        if (side === 'home') counts.home = (counts.home || 0) + 1;
-        else if (side === 'away') counts.away = (counts.away || 0) + 1;
-        else if (side === 'draw') counts.draw = (counts.draw || 0) + 1;
-        setCountsForMatch(matchId, counts);
-        storeVote(matchId, side);
-        renderSchedule();
+        if (useFirebase) {
+          try {
+            await voteRemote(matchId, side);
+            storeVote(matchId, side);
+          } catch (e) {
+            console.warn('Remote vote failed, falling back to localStorage.', e);
+            const counts = getCountsForMatch(matchId);
+            if (side === 'home') counts.home = (counts.home || 0) + 1;
+            else if (side === 'away') counts.away = (counts.away || 0) + 1;
+            else if (side === 'draw') counts.draw = (counts.draw || 0) + 1;
+            setCountsForMatch(matchId, counts);
+            storeVote(matchId, side);
+            renderSchedule();
+          }
+        } else {
+          const counts = getCountsForMatch(matchId);
+          if (side === 'home') counts.home = (counts.home || 0) + 1;
+          else if (side === 'away') counts.away = (counts.away || 0) + 1;
+          else if (side === 'draw') counts.draw = (counts.draw || 0) + 1;
+          setCountsForMatch(matchId, counts);
+          storeVote(matchId, side);
+          renderSchedule();
+        }
       };
 
       document.addEventListener('click', async (event) => {
@@ -708,7 +792,10 @@
         });
       }
 
-      renderSchedule();
+      const firebaseReady = initFirebaseIfConfigured();
+      if (!firebaseReady) {
+        renderSchedule();
+      }
 
       (function(){
         const toggleButton = document.querySelector('.theme-toggle');

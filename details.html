@@ -301,6 +301,17 @@
         }
     </style>
     <!-- Firebase SDKs (replace with modular SDK if preferred) -->
+    <script>
+        window.BIS_FIREBASE_CONFIG = {
+            apiKey: "AIzaSyCzjMG7r_tweUGfznUnckpp_Xm4hF5119Q",
+            authDomain: "bis-athletics.firebaseapp.com",
+            projectId: "bis-athletics",
+            storageBucket: "bis-athletics.firebasestorage.app",
+            messagingSenderId: "759086332599",
+            appId: "1:759086332599:web:4261b5aa076f0c60a0eb32",
+            measurementId: "G-87M42WQKEQ"
+        };
+    </script>
     <script src="https://www.gstatic.com/firebasejs/9.24.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.24.0/firebase-firestore-compat.js"></script>
 </head>
@@ -548,10 +559,12 @@
         let db = null;
 
         function updateVoteUI(counts) {
-            const hv = document.getElementById('homeVotes');
-            const av = document.getElementById('awayVotes');
-            if (hv) hv.textContent = counts.home || 0;
-            if (av) av.textContent = counts.away || 0;
+            updateVoteUIFromCounts({
+                home: Number(counts.home || 0),
+                draw: Number(counts.draw || 0),
+                away: Number(counts.away || 0)
+            });
+            applyVoteState();
         }
 
         // Firebase path (keeps existing behavior if configured)
@@ -574,7 +587,7 @@
         function listenVotesFirebase() {
             if (!db) return;
             votesDocRef().onSnapshot(doc => {
-                const data = doc.exists ? doc.data() : { home: 0, away: 0 };
+                const data = doc.exists ? doc.data() : { home: 0, draw: 0, away: 0 };
                 updateVoteUI(data);
             }, err => console.error('votes listen error', err));
         }
@@ -633,6 +646,16 @@
             });
         }
 
+        async function voteRemote(id, side) {
+            if (!db || !firebase?.firestore?.FieldValue) return;
+            const ref = votesDocRef();
+            const field = side === 'home' ? 'home' : side === 'away' ? 'away' : 'draw';
+            const inc = firebase.firestore.FieldValue.increment(1);
+            await db.runTransaction(async (tx) => {
+                tx.set(ref, { [field]: inc }, { merge: true });
+            });
+        }
+
         function voteLocal(id, side) {
             if (hasVoted(id)) { alert('이미 이 경기에는 한 번 투표하셨습니다.'); return; }
             const counts = getCountsForMatch(id);
@@ -665,6 +688,8 @@
             }
         }
 
+        const firebaseReady = initFirebaseIfConfigured();
+
         // initialize vote UI to mirror index.html
         (function initLocalVoteUI(){
             const homeBtn = document.getElementById('voteHomeBtn');
@@ -675,12 +700,35 @@
                 drawBtn.textContent = `Vote Draw`;
                 awayBtn.textContent = `Vote ${awayTeam.name}`;
 
-                homeBtn.addEventListener('click', () => voteLocal(matchId, 'home'));
-                drawBtn.addEventListener('click', () => voteLocal(matchId, 'draw'));
-                awayBtn.addEventListener('click', () => voteLocal(matchId, 'away'));
+                homeBtn.addEventListener('click', async () => {
+                    if (useFirebase) {
+                        try { await voteRemote(matchId, 'home'); storeVote(matchId, 'home'); }
+                        catch (e) { voteLocal(matchId, 'home'); }
+                    } else {
+                        voteLocal(matchId, 'home');
+                    }
+                });
+                drawBtn.addEventListener('click', async () => {
+                    if (useFirebase) {
+                        try { await voteRemote(matchId, 'draw'); storeVote(matchId, 'draw'); }
+                        catch (e) { voteLocal(matchId, 'draw'); }
+                    } else {
+                        voteLocal(matchId, 'draw');
+                    }
+                });
+                awayBtn.addEventListener('click', async () => {
+                    if (useFirebase) {
+                        try { await voteRemote(matchId, 'away'); storeVote(matchId, 'away'); }
+                        catch (e) { voteLocal(matchId, 'away'); }
+                    } else {
+                        voteLocal(matchId, 'away');
+                    }
+                });
 
-                const counts = getCountsForMatch(matchId);
-                updateVoteUIFromCounts(counts);
+                if (!useFirebase) {
+                    const counts = getCountsForMatch(matchId);
+                    updateVoteUIFromCounts(counts);
+                }
                 applyVoteState();
             }
         })();
