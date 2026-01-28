@@ -219,109 +219,157 @@
 				color: var(--tab-accent);
 				font-weight: 700;
 				text-decoration: none;
-				transition: color 0.18s ease;
 			}
 
 			.bobcat-link:hover {
-				color: color-mix(in srgb, var(--tab-accent) 80%, black 20%);
-				text-decoration: none;
-			}
-
-			/* Subtle visual polish */
-			.panel {
-				background: linear-gradient(180deg, rgba(255,255,255,0.96), var(--panel));
-				border: 1px solid rgba(37,99,235,0.06);
-				box-shadow: 0 30px 60px rgba(37,99,235,0.04);
-				position: relative;
-				overflow: visible;
-			}
-
-			.panel-title { position: relative; }
-			.panel-title::after {
-				content: '';
-				position: absolute;
-				left: 50%;
-				transform: translateX(-50%);
-				bottom: -12px;
-				width: 64px;
-				height: 6px;
-				border-radius: 6px;
-				background: linear-gradient(90deg, var(--tab-accent), #60a5fa);
-				opacity: 0.12;
-			}
-
-			.bobcat-card {
-				position: relative;
-				transition: transform 220ms cubic-bezier(.2,.9,.2,1), box-shadow 220ms ease;
-				will-change: transform;
-			}
-
-			.bobcat-card:hover {
-				transform: translateY(-8px) scale(1.01);
-				box-shadow: 0 24px 48px rgba(15,23,42,0.12);
-			}
-
-			.bobcat-img {
-				border-radius: 12px;
-				max-height: 220px;
-				object-fit: cover;
-				display: block;
-				box-shadow: inset 0 -12px 30px rgba(0,0,0,0.04);
-			}
-
-			.bobcat-card .caption { font-size: 13px; color: var(--muted); margin-top: 6px; }
-
-			/* Accent badge */
-			.bobcat-card::before {
-				content: '';
-				position: absolute;
-				top: 12px;
-				right: 12px;
-				width: 36px;
-				height: 36px;
-				border-radius: 999px;
-				background: linear-gradient(135deg, rgba(37,99,235,0.12), rgba(96,165,250,0.12));
-				box-shadow: 0 8px 18px rgba(37,99,235,0.06);
-				pointer-events: none;
+				text-decoration: underline;
 			}
 
 			@media (max-width: 860px) {
-				.top-nav { gap: 40px; }
-				.nav-center { display: flex; gap: 32px; flex-wrap: wrap; justify-content: center; }
-				.nav-left, .nav-right { gap: 24px; justify-content: center; }
-				.theme-toggle { margin-top: 0; }
-				.panel { padding: 24px 20px 32px; }
+				.top-nav {
+					gap: 40px;
+				}
+
+				.nav-center {
+					display: flex;
+					gap: 32px;
+					flex-wrap: wrap;
+					justify-content: center;
+				}
+
+				.nav-left,
+				.nav-right {
+					gap: 24px;
+					justify-content: center;
+				}
+
+				.theme-toggle {
+					margin-top: 0;
+				}
+
+				.panel {
+					padding: 24px 20px 32px;
+				}
 			}
 
 			@media (max-width: 600px) {
-				.wrap { padding: 12px 16px 60px; }
-				.top-nav { gap: 20px; }
-				.nav-center { gap: 16px; }
-				.nav-left, .nav-right { gap: 16px; font-size: 14px; }
-				.top-nav .logo { width: 40px; height: 40px; }
-				.hero h1 { font-size: clamp(32px, 10vw, 60px); }
-				.panel { margin-top: 20px; padding: 20px 16px 28px; border-radius: 20px; }
-				.panel-title { font-size: 20px; margin-bottom: 20px; }
-				.bobcat-grid { grid-template-columns: 1fr; gap: 16px; }
-				.bobcat-card { padding: 16px 14px 14px; }
-				.bobcat-card h3 { font-size: 16px; }
-				.bobcat-img { max-height: 200px; }
-				.bobcat-note { font-size: 14px; }
-				.theme-toggle { padding: 6px 12px; font-size: 14px; }
+				.wrap {
+					padding: 12px 16px 60px;
+				}
+
+				.top-nav {
+					gap: 20px;
+				}
+
+				.nav-center {
+					gap: 16px;
+				}
+
+				.nav-left,
+				.nav-right {
+					gap: 16px;
+					font-size: 14px;
+				}
+
+				.top-nav .logo {
+					width: 40px;
+					height: 40px;
+				}
+
+				.hero h1 {
+					font-size: clamp(32px, 10vw, 60px);
+				}
+
+				.panel {
+					margin-top: 20px;
+					padding: 20px 16px 28px;
+					border-radius: 20px;
+				}
+
+				.panel-title {
+					font-size: 20px;
+					margin-bottom: 20px;
+				}
+
+				.bobcat-grid {
+					grid-template-columns: 1fr;
+					gap: 16px;
+				}
+
+				.bobcat-card {
+					padding: 16px 14px 14px;
+				}
+
+				.bobcat-card h3 {
+					font-size: 16px;
+				}
+
+				.bobcat-img {
+					max-height: 200px;
+				}
+
+				.bobcat-note {
+					font-size: 14px;
+				}
+
+				.theme-toggle {
+					padding: 6px 12px;
+					font-size: 14px;
+				}
 			}
 
 			@media (max-width: 360px) {
-				.wrap { padding: 10px 12px 50px; }
-				.nav-left, .nav-right { gap: 12px; font-size: 12px; }
-				.top-nav .logo { width: 36px; height: 36px; }
-				.hero h1 { font-size: 28px; }
-				.panel { margin-top: 16px; padding: 16px 12px 24px; border-radius: 16px; }
-				.panel-title { font-size: 18px; margin-bottom: 16px; }
-				.bobcat-card { padding: 14px 12px 12px; border-radius: 16px; }
-				.bobcat-card h3 { font-size: 14px; }
-				.bobcat-img { max-height: 160px; }
-				.bobcat-note { font-size: 12px; }
-				.theme-toggle { padding: 5px 10px; font-size: 12px; }
+				.wrap {
+					padding: 10px 12px 50px;
+				}
+
+				.nav-left,
+				.nav-right {
+					gap: 12px;
+					font-size: 12px;
+				}
+
+				.top-nav .logo {
+					width: 36px;
+					height: 36px;
+				}
+
+				.hero h1 {
+					font-size: 28px;
+				}
+
+				.panel {
+					margin-top: 16px;
+					padding: 16px 12px 24px;
+					border-radius: 16px;
+				}
+
+				.panel-title {
+					font-size: 18px;
+					margin-bottom: 16px;
+				}
+
+				.bobcat-card {
+					padding: 14px 12px 12px;
+					border-radius: 16px;
+				}
+
+				.bobcat-card h3 {
+					font-size: 14px;
+				}
+
+				.bobcat-img {
+					max-height: 160px;
+				}
+
+				.bobcat-note {
+					font-size: 12px;
+				}
+
+				.theme-toggle {
+					padding: 5px 10px;
+					font-size: 12px;
+				}
 			}
 		</style>
 	</head>
@@ -377,28 +425,22 @@
 					</div>
 				</div>
 
-				<p class="bobcat-note">
-					Stylized assets are <strong>special use only</strong>. For access to all files, ask Mr. Cassell and
-					<a class="bobcat-link" href="https://drive.google.com/drive/u/1/folders/1DdzwfLwLSK1FXB1m08WmMn81eq1xMio1" target="_blank" rel="noreferrer">click here</a>.
-				</p>
-			</section>
+				<div class="bobcat-grid">
+					<div class="bobcat-card">
+						<h3>Main 2025 Bobcat</h3>
+						<img class="bobcat-img" src="https://lh3.googleusercontent.com/sitesv/APaQ0ST0tIHn3E0LhFovVFM9z2JoCAg8hMiB8JOrG4k0yQheJqTC4RBOtPbtoB5qsfp7KG181hKZsaHjtunpRJvsqXSG2BhFiB2WHG7AaMrC0G8GB2jjJgLoewCaghCHLQXqP-tNmI5KZXesUm4DD4oJsMRiJ--O2lDCmKmHgkNkzQkQg9pjTeElkGfbhdJMf6LzLyhV7h5HLTX9ZbNiv4FTQBSOWcOw_KJTAMDFX8A=w1280" alt="Main 2025 Bobcat logo" />
+					</div>
 
-			<div class="theme-toggle-wrap">
-				<button class="theme-toggle" type="button" aria-pressed="false">
-					<span class="toggle-icon">🌙</span>
-					<span class="toggle-text">Dark</span>
-				</button>
-			</div>
-		</div>
-		<script>
-			const toggleButton = document.querySelector(".theme-toggle");
-			const toggleIcon = document.querySelector(".toggle-icon");
-			const toggleText = document.querySelector(".toggle-text");
-			const prefersDark = window.matchMedia("(prefers-color-scheme: dark)");
+					<div class="bobcat-card">
+						<h3>Retro Alternate Bobcat</h3>
+						<img class="bobcat-img" src="https://lh3.googleusercontent.com/sitesv/APaQ0SRuLOMbIV870R05e7iyQ5aEwp7peZ0Q5XDqjDUGPMWKinQ5Djw5d5LGk8Vx5A_sTQftwzG9q8DjB1qW_iiLYUNDdu9kuZzHrzzEFk-ik2SPzSnwS3Uaffdgd_fMqFOe8zVlEVfmnaTjyrydaR9Zqtho2-Sk9zzkjmL_z2sc8Kb6g4bHKtzzHmDmv2cPH0i_7ta6pc8GiFVdxQQu3De1MIesQ_qOO_D3rEzb=w1280" alt="Retro alternate Bobcat logo" />
+					</div>
 
-			const applyTheme = (theme) => {
-				document.body.classList.toggle("dark", theme === "dark");
-				document.body.classList.toggle("light", theme === "light");
+					<div class="bobcat-card">
+						<h3>Official Colors & HEX Codes</h3>
+						<img class="bobcat-img" src="https://lh3.googleusercontent.com/sitesv/APaQ0SQqepzSn7ttBX38GJNkYVczjRDDOJOMrBeStIgJK2lrvsmt5iBhqYbImidygRLiBF7zLRT691SceM5_VLL7otlp-VvsWJ-EI24jBcyj_c3Q2PGeLWQibRSH30Lk_cXLTdILC4j0xCqmFsUrVyctQQyeOGIQ1VGY-p22knRc78GHafRdnRmmx4JwcQgI-P73Cpg8eImSeu5VOxm3bauCWy5aHYD9kFJNdDMo=w1280" alt="Official BIS Athletics colors and HEX codes" />
+					</div>
+				</div>
 				const isDark = theme === "dark";
 				toggleButton.setAttribute("aria-pressed", String(isDark));
 				toggleIcon.textContent = isDark ? "☀️" : "🌙";
