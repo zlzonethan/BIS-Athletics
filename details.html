@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Match Details</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* Make sizing predictable so 100% widths include padding/border */
+        *, *::before, *::after { box-sizing: border-box; }
+
+        :root {
+            --primary-color: #2563EB;
+            --bg-color: #F3F4F6;
+            --card-bg: #FFFFFF;
+            --muted-surface: #F9FAFB;
+            --muted-border: #E5E7EB;
+            --text-main: #1F2937;
+            --text-sub: #6B7280;
+            --win-color: #10B981;
+            --lose-color: #EF4444;
+            --border-radius: 24px;
+        }
+        body.dark {
+            --bg-color: #0b1220;
+            --card-bg: #0f1724;
+            --muted-surface: #071226;
+            --muted-border: rgba(255,255,255,0.06);
+            --text-main: #ffffff;
+            --text-sub: #c0c7d0;
+            --primary-color: #60A5FA;
+            --win-color: #34D399;
+            --lose-color: #F87171;
+        }
+        body {
+            font-family: 'Poppins', 'Noto Sans KR', sans-serif;
+            background: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+        body,
+        .card,
+        .status-badge,
+        .team-vs img,
+        .stream,
+        .timeline-item,
+        .vote-btn,
+        .theme-toggle {
+            transition: background-color 360ms cubic-bezier(0.2,0.8,0.2,1),
+                        color 360ms cubic-bezier(0.2,0.8,0.2,1),
+                        border-color 360ms cubic-bezier(0.2,0.8,0.2,1),
+                        box-shadow 360ms cubic-bezier(0.2,0.8,0.2,1);
+        }
+        .container { width: 100%; max-width: 720px; }
+        .card {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            padding: 24px;
+        }
+        .top-actions {
+            position: fixed;
+            top: 18px;
+            right: 18px;
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .theme-toggle {
+            position: static;
+            padding: 6px 10px;
+            border-radius: 10px;
+            border: 1px solid var(--muted-border);
+            background: var(--card-bg);
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 12px;
+            min-width: 36px;
+            min-height: 28px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-main);
+        }
+        body.dark .theme-toggle {
+            color: var(--text-main);
+            border-color: rgba(255,255,255,0.08);
+            background: rgba(255,255,255,0.03);
+        }
+
+        /* Ensure readable text colors in dark mode */
+        body.dark,
+        body.dark .card,
+        body.dark .card *,
+        body.dark .team-vs span,
+        body.dark .match-location,
+        body.dark .score-row,
+        body.dark .timeline-item,
+        body.dark .vote-section,
+        body.dark .vote-btn,
+        body.dark .status-badge {
+            color: var(--text-main) !important;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        .back {
+            text-decoration: none;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+        .match-date {
+            font-size: 12px;
+            color: var(--text-sub);
+        }
+        .match-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 12px;
+        }
+        .team-vs {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 40%;
+        }
+        .team-vs img {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            margin-bottom: 8px;
+            background: #ffffff;
+            padding: 6px;
+            object-fit: cover;
+            box-shadow: 0 8px 18px rgba(0,0,0,0.06);
+        }
+        .team-vs span { font-weight: 700; font-size: 14px; }
+        .vs-badge { font-size: 14px; font-weight: 900; color: #9CA3AF; font-style: italic; }
+        .match-location { font-size: 12px; color: var(--text-sub); text-align: center; margin-top: 6px; }
+        .score-row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            margin-top: 12px;
+            font-weight: 800;
+        }
+        .score-num { font-size: 20px; color: var(--text-main); min-width: 20px; text-align: center; }
+        .score-sep { color: var(--text-sub); font-weight: 700; }
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            border-radius: 999px;
+            font-size: 13px;
+            font-weight: 800;
+            background: rgba(254,242,242,0.95);
+            color: var(--lose-color);
+            box-shadow: 0 6px 18px rgba(239,68,68,0.06);
+            margin-top: 8px;
+        }
+        .status-badge .live-dot{ width:10px; height:10px; border-radius:50%; background:var(--lose-color); box-shadow:0 6px 12px rgba(239,68,68,0.12) }
+        .status-badge.live { background: rgba(254,242,242,0.95); color: var(--lose-color); }
+        .status-badge.ft { background: rgba(236,253,245,0.95); color: var(--win-color); box-shadow: 0 6px 18px rgba(16,185,129,0.06); }
+        body.dark .status-badge { background: rgba(255,235,235,0.06); color: var(--lose-color); box-shadow: 0 6px 18px rgba(0,0,0,0.35) }
+        .gender-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2px 8px;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 800;
+            background: var(--muted-border);
+            color: var(--text-main);
+            margin-top: 8px;
+        }
+        .live-dot {
+            width: 6px; height: 6px; border-radius: 50%;
+            background: currentColor; box-shadow: 0 0 8px currentColor;
+            animation: livePulse 1.2s ease-in-out infinite;
+        }
+        @keyframes livePulse {
+            0% { opacity: 0.4; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1); }
+            100% { opacity: 0.4; transform: scale(0.8); }
+        }
+        .timeline {
+            margin-top: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .timeline-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 12px;
+            border-radius: 12px;
+            background: var(--muted-surface);
+            border: 1px solid var(--muted-border);
+            font-size: 12px;
+        }
+        .timeline-minute {
+            font-weight: 800;
+            color: var(--primary-color);
+            min-width: 36px;
+            text-align: center;
+        }
+        .timeline-team { font-weight: 700; }
+        .timeline-type { font-weight: 600; color: var(--text-sub); }
+
+        .stream {
+            margin-top: 16px;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid var(--muted-border);
+            background: var(--muted-surface);
+        }
+
+        .stream iframe {
+            width: 100%;
+            height: 360px;
+            border: 0;
+        }
+
+        .stream-placeholder {
+            padding: 14px;
+            font-size: 12px;
+            color: var(--text-sub);
+        }
+        /* 투표 버튼/바 스타일 (index.html과 동일하게 유지) */
+        .vote-btns {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
+        .vote-btn {
+            flex: 1;
+            padding: 8px;
+            border: 1px solid var(--muted-border);
+            background: var(--card-bg);
+            color: var(--text-main);
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .vote-btn:hover {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .vote-btn[disabled] { opacity: 0.6; cursor: not-allowed; box-shadow: none; }
+        .vote-btn.active { background: var(--primary-color); color: white; border-color: var(--primary-color); }
+
+        .vote-bar-container { height: 6px; background: var(--muted-border); border-radius: 3px; overflow: hidden; display: flex; }
+        .vote-bar-left { height: 100%; background: var(--primary-color); width: 50%; transition: width 0.5s ease; will-change: width; }
+        .vote-bar-mid { height: 100%; background: var(--text-sub); width: 0%; transition: width 0.5s ease; will-change: width; }
+        .vote-bar-right { height: 100%; background: var(--lose-color); width: 0%; transition: width 0.5s ease; will-change: width; }
+
+        .vote-stats { display: flex; justify-content: space-between; font-size: 11px; color: var(--text-sub); margin-top: 6px; }
+
+        .hidden { display: none !important; }
+        /* Admin modal */
+        .admin-modal { position: fixed; inset: 0; display:flex;align-items:flex-end;justify-content:center; padding:24px; background: rgba(2,6,23,0.4); z-index:99999 }
+        .admin-panel { width:100%; max-width:720px; background:var(--card-bg); border-radius:12px; padding:16px; box-shadow:0 30px 60px rgba(2,6,23,0.4); max-height:80vh; overflow:auto }
+        .admin-panel h3{margin:6px 0 12px;font-size:16px}
+        .admin-row{display:flex;gap:8px;align-items:center;margin-bottom:8px}
+        .admin-row input[type="text"], .admin-row input[type="number"], .admin-row select, .admin-row textarea{flex:1;padding:8px;border-radius:8px;border:1px solid var(--muted-border);background:var(--card-bg)}
+        .admin-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:12px}
+    </style>
+    <style>
+        /* Mobile-friendly adjustments */
+        @media (max-width: 480px) {
+            body { padding: 12px; }
+            .container { max-width: 100%; }
+            .card { padding: 16px; }
+            .team-vs img { width: 44px; height: 44px; }
+            .team-logo { width: 28px; height: 28px; }
+            .team-logo-large { width: 56px; height: 56px; }
+            .score-num { font-size: 16px; }
+            #voteCard { padding: 12px; }
+            #voteCard .vote-btn { padding: 12px; font-size: 14px; }
+            .top-actions { top: auto; bottom: 12px; right: 12px; }
+        }
+    </style>
+    <!-- Firebase SDKs (replace with modular SDK if preferred) -->
+    <script src="https://www.gstatic.com/firebasejs/9.24.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.24.0/firebase-firestore-compat.js"></script>
+</head>
+<body>
+    <div class="top-actions">
+        <button id="themeToggle" class="theme-toggle" aria-label="다크/라이트 모드 전환" aria-pressed="false"></button>
+        <button id="adminOpenBtn" class="theme-toggle" aria-label="Admin" title="Admin">⚙️</button>
+    </div>
+    <div class="container">
+        <div class="card">
+            <div class="header">
+                <a class="back" href="upcoming.html">← Back</a>
+                <div class="match-date" id="matchDate"></div>
+            </div>
+            <div id="statusBadge"></div>
+            <div id="matchGender" class="gender-badge" style="display:none;"></div>
+            <div class="stream" id="streamContainer"></div>
+            <div class="match-content">
+                <div class="team-vs">
+                    <img id="homeLogo" src="" alt="home">
+                    <span id="homeName"></span>
+                </div>
+                <div style="display:flex;flex-direction:column;align-items:center;gap:4px;">
+                    <span class="vs-badge">VS</span>
+                    <div class="match-location" id="matchLocation"></div>
+                </div>
+                <div class="team-vs">
+                    <img id="awayLogo" src="" alt="away">
+                    <span id="awayName"></span>
+                </div>
+            </div>
+            <div class="score-row">
+                <span class="score-num" id="homeScore">0</span>
+                <span class="score-sep">-</span>
+                <span class="score-num" id="awayScore">0</span>
+            </div>
+            <div class="timeline" id="timeline"></div>
+            <div id="voteCard" style="margin-top:16px;padding:14px;border-radius:12px;background:var(--muted-surface);border:1px solid var(--muted-border);">
+                <div style="display:flex;justify-content:space-between;align-items:center;">
+                    <div style="font-weight:700">투표</div>
+                    <div style="font-size:12px;color:var(--text-sub)">한 번만 투표하세요</div>
+                </div>
+                <div class="vote-section" style="margin-top:10px;">
+                    <div class="vote-btns">
+                        <button id="voteHomeBtn" class="vote-btn">Vote Home</button>
+                        <button id="voteDrawBtn" class="vote-btn">Vote Draw</button>
+                        <button id="voteAwayBtn" class="vote-btn">Vote Away</button>
+                    </div>
+                    <div class="vote-bar-container" aria-hidden="true">
+                        <div class="vote-bar-left" id="voteBarLeft" style="width:33%"></div>
+                        <div class="vote-bar-mid" id="voteBarMid" style="width:33%"></div>
+                        <div class="vote-bar-right" id="voteBarRight" style="width:34%"></div>
+                    </div>
+                    <div class="vote-stats">
+                        <span id="votePctLeft">33%</span>
+                        <span id="votePctMid">33%</span>
+                        <span id="votePctRight">34%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        const LIVE_SCORE_KEY = 'kisvl_live_scores';
+        const LIVE_EVENTS_KEY = 'kisvl_live_events';
+        const MATCH_META_KEY = 'kisvl_match_meta';
+
+        let currentUser = null;
+
+        function getAssetBase() {
+            const origin = window.location.origin;
+            if (origin === 'null') {
+                const fileBase = new URL('.', window.location.href).href;
+                return fileBase.endsWith('/') ? fileBase : fileBase + '/';
+            }
+            const path = window.location.pathname || '/';
+            const hasExt = /\.[a-zA-Z0-9]+$/.test(path);
+            const basePath = path.endsWith('/') ? path : (hasExt ? path.replace(/\/[^/]*$/, '/') : path + '/');
+            const base = origin + basePath;
+            return base.endsWith('/') ? base : base + '/';
+        }
+
+        const ASSET_BASE = getAssetBase();
+        const assetUrl = (fileName) => `${ASSET_BASE}assets/${fileName}`;
+
+        const teams = [
+            { id: 'bis', name: 'BIS', logo: assetUrl('bismascot.png') },
+            { id: 'spps', name: 'SPPS', logo: assetUrl('sppsmascot.png') },
+            { id: 'mica', name: 'MICA', logo: assetUrl('micamascot.png') },
+            { id: 'ccas', name: 'CCAS', logo: assetUrl('ccasmascot.png') },
+            { id: 'icsu', name: 'ICSU', logo: assetUrl('icsumascot.png') },
+            { id: 'spas', name: 'SPAS', logo: assetUrl('spasmascot.png') },
+            { id: 'fps', name: 'FPS', logo: assetUrl('fpsmascot.jpeg') },
+            { id: 'sie', name: 'SIE', logo: assetUrl('siemascot.jpg') }
+        ];
+
+        const schedules = [
+            { id: 1, home: 'BIS', away: 'ICSU', date: 'Jan 29, Girls 5:00pm', location: 'BIS' },
+            { id: 2, home: 'BIS', away: 'SPAS', date: 'Feb 2, Time TBD', location: '제이비스포츠' },
+            { id: 3, home: 'BIS', away: 'CCAS', date: 'Feb 4, Arrival 4:55pm', location: 'CCAS' },
+            { id: 4, home: 'BIS', away: 'CCAS', date: 'Feb 11, Girls 4:30pm', location: 'BIS' },
+            { id: 5, home: 'BIS', away: 'SPAS', date: 'Feb 12, Girls 4:30pm (unconfirmed)', location: 'BIS?' },
+            { id: 6, home: 'BIS', away: 'ICSU', date: 'Feb 19, Girls 3:30pm', location: 'ICSU' },
+            { id: 7, home: 'BIS', away: 'MICA', date: 'Feb 21, Girls 4:00pm', location: 'BIS' },
+            { id: 8, home: 'BIS', away: 'FPS', date: 'Feb 24, Time TBD', location: '' },
+            { id: 9, home: 'BIS', away: 'SPPS', date: 'Feb 28, Boys 4:30pm', location: 'BIS' },
+            { id: 10, home: 'BIS', away: 'SIE', date: 'TBD (No date picked)', location: 'BIS' }
+        ];
+
+        function qs(name) {
+            const params = new URLSearchParams(location.search);
+            return params.get(name);
+        }
+
+        function formatMatchDate(raw) {
+            if (!raw || typeof raw !== 'string') return 'TBD';
+            const monthDayMatch = raw.match(/([A-Za-z]{3,9}\s*\d{1,2})/);
+            const timeMatch = raw.match(/(\d{1,2}:\d{2}\s*(?:am|pm|AM|PM)?)/i);
+            if (monthDayMatch && timeMatch) return (monthDayMatch[1].trim() + ' ' + timeMatch[1].toLowerCase());
+            if (monthDayMatch) return monthDayMatch[1].trim();
+            if (timeMatch) return timeMatch[1].toLowerCase();
+            return 'TBD';
+        }
+
+        function getLiveScores() {
+            try { return JSON.parse(localStorage.getItem(LIVE_SCORE_KEY) || '{}'); }
+            catch (e) { return {}; }
+        }
+
+        function getLiveEvents() {
+            try { return JSON.parse(localStorage.getItem(LIVE_EVENTS_KEY) || '{}'); }
+            catch (e) { return {}; }
+        }
+
+        function getMatchMeta() {
+            try { return JSON.parse(localStorage.getItem(MATCH_META_KEY) || '{}'); }
+            catch (e) { return {}; }
+        }
+        function getMatchMetaFor(id) {
+            const all = getMatchMeta();
+            return all[id] || {};
+        }
+
+        let matchId = Number(qs('id'));
+        if (!Number.isFinite(matchId)) {
+            matchId = schedules[0]?.id || 1;
+        }
+        let match = schedules.find(m => m.id === matchId);
+        if (!match && schedules.length) {
+            match = schedules[0];
+            matchId = match.id;
+        }
+        let homeTeam = null;
+        let awayTeam = null;
+        if (!match) {
+            document.querySelector('.card').innerHTML = '<div>경기를 찾을 수 없습니다.</div>';
+        } else {
+            const live = getLiveScores()[matchId] || {};
+            const events = (getLiveEvents()[matchId] || []).slice().sort((a, b) => (a.minute ?? 0) - (b.minute ?? 0));
+            const meta = getMatchMetaFor(matchId);
+            const gender = meta.gender || match.gender || '';
+            homeTeam = teams.find(t => t.name === match.home) || { name: match.home, logo: 'https://placehold.co/100x100/9CA3AF/ffffff?text=?' };
+            awayTeam = teams.find(t => t.name === match.away) || { name: match.away, logo: 'https://placehold.co/100x100/9CA3AF/ffffff?text=?' };
+
+            document.getElementById('matchDate').textContent = formatMatchDate(match.date);
+            document.getElementById('matchLocation').textContent = match.location || '';
+            document.getElementById('homeLogo').src = homeTeam.logo;
+            document.getElementById('homeName').textContent = homeTeam.name;
+            document.getElementById('awayLogo').src = awayTeam.logo;
+            document.getElementById('awayName').textContent = awayTeam.name;
+
+            document.getElementById('homeScore').textContent = Number.isFinite(live.homeScore) ? live.homeScore : 0;
+            document.getElementById('awayScore').textContent = Number.isFinite(live.awayScore) ? live.awayScore : 0;
+
+            const setLabel = live.setNumber ? `Set ${live.setNumber}` : '';
+            const noteLabel = live.note ? live.note : '';
+            const extra = [setLabel, noteLabel].filter(Boolean).join(' • ');
+            const badge = document.getElementById('statusBadge');
+            if (live.status === 'live') badge.innerHTML = `<div class="status-badge live"><span class="live-dot"></span>LIVE${extra ? ' • ' + extra : ''}</div>`;
+            else if (live.status === 'ft') badge.innerHTML = `<div class="status-badge ft">FINAL${extra ? ' • ' + extra : ''}</div>`;
+            else badge.innerHTML = '';
+
+            const genderEl = document.getElementById('matchGender');
+            if (genderEl) {
+                if (gender) {
+                    genderEl.textContent = gender === 'boys' ? '남자' : '여자';
+                    genderEl.style.display = 'inline-flex';
+                } else {
+                    genderEl.style.display = 'none';
+                }
+            }
+
+            const streamContainer = document.getElementById('streamContainer');
+            const streamUrl = live.streamUrl || '';
+            if (streamUrl) {
+                const embedUrl = toYouTubeEmbed(streamUrl);
+                if (embedUrl) {
+                    streamContainer.innerHTML = `
+                        <iframe
+                            src="${embedUrl}"
+                            title="YouTube live stream"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                            allowfullscreen
+                        ></iframe>
+                    `;
+                } else {
+                    streamContainer.innerHTML = `<div class="stream-placeholder">유효한 YouTube 링크가 필요합니다.</div>`;
+                }
+            } else {
+                streamContainer.innerHTML = `<div class="stream-placeholder">스트리밍 링크가 아직 등록되지 않았습니다.</div>`;
+            }
+            if (location.protocol === 'file:') {
+                streamContainer.innerHTML = `<div class="stream-placeholder">로컬 파일(file://)에서는 YouTube 임베드가 차단될 수 있어요. 로컬 서버로 열어주세요.</div>`;
+            }
+
+            const timeline = document.getElementById('timeline');
+            if (!events.length) {
+                timeline.innerHTML = '<div style="color:var(--text-sub);font-size:12px;">이벤트가 없습니다.</div>';
+            } else {
+                timeline.innerHTML = events.map(evt => `
+                    <div class="timeline-item">
+                        <div class="timeline-minute">${evt.minute}'</div>
+                        <div class="timeline-team">${evt.team === 'home' ? homeTeam.name : awayTeam.name}</div>
+                        <div class="timeline-type">${evt.type}${evt.note ? ' • ' + evt.note : ''}</div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        // --- Vote integration: Firebase (optional) or simple server API ---
+        // If you want server mode, run the provided Express server and set SERVER_API_BASE.
+        const firebaseConfig = {
+            // apiKey: "YOUR_API_KEY",
+            // authDomain: "PROJECT_ID.firebaseapp.com",
+            // projectId: "PROJECT_ID",
+            // storageBucket: "PROJECT_ID.appspot.com",
+            // messagingSenderId: "SENDER_ID",
+            // appId: "APP_ID"
+        };
+
+        const SERVER_API_BASE = '/api'; // change if your server runs elsewhere
+        let useFirebase = false;
+        let db = null;
+
+        function updateVoteUI(counts) {
+            const hv = document.getElementById('homeVotes');
+            const av = document.getElementById('awayVotes');
+            if (hv) hv.textContent = counts.home || 0;
+            if (av) av.textContent = counts.away || 0;
+        }
+
+        // Firebase path (keeps existing behavior if configured)
+        function initFirebaseIfConfigured() {
+            try {
+                if (!firebase || !firebase.initializeApp) return false;
+            } catch (e) { return false; }
+            if (!firebaseConfig.apiKey) return false;
+            try {
+                firebase.initializeApp(firebaseConfig);
+                db = firebase.firestore();
+                useFirebase = true;
+                listenVotesFirebase();
+                return true;
+            } catch (e) { console.error('Firebase init error', e); return false; }
+        }
+
+        function votesDocRef() { return db.collection('votes').doc(String(matchId)); }
+
+        function listenVotesFirebase() {
+            if (!db) return;
+            votesDocRef().onSnapshot(doc => {
+                const data = doc.exists ? doc.data() : { home: 0, away: 0 };
+                updateVoteUI(data);
+            }, err => console.error('votes listen error', err));
+        }
+
+        // Server path: simple polling for updates
+        async function fetchVotesServer() {
+            try {
+                const res = await fetch(`${SERVER_API_BASE}/votes/${matchId}`);
+                if (!res.ok) return;
+                const json = await res.json();
+                updateVoteUI(json);
+            } catch (e) { console.error('fetchVotesServer error', e); }
+        }
+
+        function listenVotesServer() {
+            fetchVotesServer();
+            setInterval(fetchVotesServer, 5000);
+        }
+
+        // Local vote storage (mimic index.html behaviour)
+        function getVotes() {
+            try { return JSON.parse(localStorage.getItem('kisvl_votes') || '{}'); } catch (e) { return {}; }
+        }
+        function hasVoted(id) { const v = getVotes(); return !!v[id]; }
+        function getVote(id) { const v = getVotes(); return v[id] || null; }
+        function storeVote(id, choice) { try { const v = getVotes(); v[id] = choice; localStorage.setItem('kisvl_votes', JSON.stringify(v)); } catch(e){}
+        }
+
+        function getVoteCounts() {
+            try { return JSON.parse(localStorage.getItem('kisvl_vote_counts') || '{}'); } catch (e) { return {}; }
+        }
+        function setVoteCounts(all) { try { localStorage.setItem('kisvl_vote_counts', JSON.stringify(all)); } catch(e){} }
+        function getCountsForMatch(id) { const all = getVoteCounts(); return all[id] || { home: 0, draw: 0, away: 0 }; }
+        function setCountsForMatch(id, counts) { const all = getVoteCounts(); all[id] = counts; setVoteCounts(all); }
+
+        function updateVoteUIFromCounts(counts) {
+            const total = (counts.home || 0) + (counts.draw || 0) + (counts.away || 0);
+            const leftPct = total === 0 ? 33 : Math.round(((counts.home || 0) / total) * 100);
+            const midPct = total === 0 ? 33 : Math.round(((counts.draw || 0) / total) * 100);
+            const rightPct = total === 0 ? 34 : Math.max(0, 100 - leftPct - midPct);
+
+            const leftBar = document.getElementById('voteBarLeft');
+            const midBar = document.getElementById('voteBarMid');
+            const rightBar = document.getElementById('voteBarRight');
+            const pLeft = document.getElementById('votePctLeft');
+            const pMid = document.getElementById('votePctMid');
+            const pRight = document.getElementById('votePctRight');
+
+            requestAnimationFrame(() => {
+                if (leftBar) leftBar.style.width = leftPct + '%';
+                if (midBar) midBar.style.width = midPct + '%';
+                if (rightBar) rightBar.style.width = rightPct + '%';
+                if (pLeft) pLeft.textContent = leftPct + '%';
+                if (pMid) pMid.textContent = midPct + '%';
+                if (pRight) pRight.textContent = rightPct + '%';
+            });
+        }
+
+        function voteLocal(id, side) {
+            if (hasVoted(id)) { alert('이미 이 경기에는 한 번 투표하셨습니다.'); return; }
+            const counts = getCountsForMatch(id);
+            if (side === 'home') counts.home = (counts.home || 0) + 1;
+            else if (side === 'draw') counts.draw = (counts.draw || 0) + 1;
+            else if (side === 'away') counts.away = (counts.away || 0) + 1;
+            setCountsForMatch(id, counts);
+            storeVote(id, side);
+            updateVoteUIFromCounts(counts);
+
+            // disable buttons
+            const btns = [document.getElementById('voteHomeBtn'), document.getElementById('voteDrawBtn'), document.getElementById('voteAwayBtn')];
+            btns.forEach(b => { if (b) { b.setAttribute('disabled','disabled'); b.classList.remove('active'); } });
+            const chosen = document.getElementById(side === 'home' ? 'voteHomeBtn' : side === 'draw' ? 'voteDrawBtn' : 'voteAwayBtn');
+            if (chosen) chosen.classList.add('active');
+        }
+
+        function applyVoteState() {
+            const homeBtn = document.getElementById('voteHomeBtn');
+            const drawBtn = document.getElementById('voteDrawBtn');
+            const awayBtn = document.getElementById('voteAwayBtn');
+            if (!homeBtn || !drawBtn || !awayBtn) return;
+            if (hasVoted(matchId)) {
+                [homeBtn, drawBtn, awayBtn].forEach(b => { b.setAttribute('disabled','disabled'); b.classList.remove('active'); });
+                const chosen = getVote(matchId);
+                const chosenBtn = chosen === 'home' ? homeBtn : chosen === 'draw' ? drawBtn : awayBtn;
+                if (chosenBtn) chosenBtn.classList.add('active');
+            } else {
+                [homeBtn, drawBtn, awayBtn].forEach(b => { b.removeAttribute('disabled'); b.classList.remove('active'); });
+            }
+        }
+
+        // initialize vote UI to mirror index.html
+        (function initLocalVoteUI(){
+            const homeBtn = document.getElementById('voteHomeBtn');
+            const drawBtn = document.getElementById('voteDrawBtn');
+            const awayBtn = document.getElementById('voteAwayBtn');
+            if (homeBtn && drawBtn && awayBtn && homeTeam && awayTeam) {
+                homeBtn.textContent = `Vote ${homeTeam.name}`;
+                drawBtn.textContent = `Vote Draw`;
+                awayBtn.textContent = `Vote ${awayTeam.name}`;
+
+                homeBtn.addEventListener('click', () => voteLocal(matchId, 'home'));
+                drawBtn.addEventListener('click', () => voteLocal(matchId, 'draw'));
+                awayBtn.addEventListener('click', () => voteLocal(matchId, 'away'));
+
+                const counts = getCountsForMatch(matchId);
+                updateVoteUIFromCounts(counts);
+                applyVoteState();
+            }
+        })();
+
+        // sync vote UI across tabs/pages
+        window.addEventListener('storage', (event) => {
+            if (event.key === 'kisvl_vote_counts' || event.key === 'kisvl_votes') {
+                const counts = getCountsForMatch(matchId);
+                updateVoteUIFromCounts(counts);
+                applyVoteState();
+            }
+        });
+
+        window.addEventListener('storage', (event) => {
+            if (event.key === LIVE_SCORE_KEY || event.key === LIVE_EVENTS_KEY) {
+                location.reload();
+            }
+        });
+
+        function toYouTubeEmbed(url) {
+            try {
+                const u = new URL(url);
+                const origin = location.origin && location.origin.startsWith('http') ? location.origin : '';
+                const params = new URLSearchParams();
+                if (origin) params.set('origin', origin);
+                params.set('rel', '0');
+                const withParams = (base) => {
+                    const joiner = base.includes('?') ? '&' : '?';
+                    return `${base}${joiner}${params.toString()}`;
+                };
+
+                if (u.hostname.includes('youtu.be')) {
+                    const id = u.pathname.replace('/', '');
+                    return id ? withParams(`https://www.youtube.com/embed/${id}`) : '';
+                }
+                if (u.hostname.includes('youtube.com')) {
+                    const id = u.searchParams.get('v');
+                    if (id) return withParams(`https://www.youtube.com/embed/${id}`);
+                    if (u.pathname.startsWith('/live/')) {
+                        const liveId = u.pathname.split('/live/')[1] || '';
+                        return liveId ? withParams(`https://www.youtube.com/embed/${liveId}`) : '';
+                    }
+                    if (u.pathname.startsWith('/embed/')) {
+                        return withParams(`https://www.youtube.com${u.pathname}`);
+                    }
+                }
+            } catch (e) {}
+            return '';
+        }
+
+        const sunSvg = `
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="12" cy="12" r="4"></circle>
+                <path d="M12 2v2"></path>
+                <path d="M12 20v2"></path>
+                <path d="M4.93 4.93l1.41 1.41"></path>
+                <path d="M17.66 17.66l1.41 1.41"></path>
+                <path d="M2 12h2"></path>
+                <path d="M20 12h2"></path>
+                <path d="M4.93 19.07l1.41-1.41"></path>
+                <path d="M17.66 6.34l1.41-1.41"></path>
+            </svg>`;
+
+        const moonSvg = `
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>`;
+
+        function updateThemeButton() {
+            const btn = document.getElementById('themeToggle');
+            if (!btn) return;
+            const isDark = document.body.classList.contains('dark');
+            btn.innerHTML = isDark ? moonSvg : sunSvg;
+            btn.setAttribute('aria-label', isDark ? '라이트 모드로 전환' : '다크 모드로 전환');
+            btn.setAttribute('aria-pressed', isDark ? 'true' : 'false');
+        }
+
+        function applyTheme(theme) {
+            if (theme === 'dark') document.body.classList.add('dark');
+            else document.body.classList.remove('dark');
+            try { localStorage.setItem('theme', theme); } catch(e) {}
+            updateThemeButton();
+        }
+
+        function toggleTheme() {
+            const isDark = document.body.classList.contains('dark');
+            applyTheme(isDark ? 'light' : 'dark');
+        }
+
+        (function initTheme(){
+            let saved = null;
+            try { saved = localStorage.getItem('theme'); } catch(e) { saved = null; }
+            if (saved) applyTheme(saved);
+            else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) applyTheme('dark');
+            else applyTheme('light');
+
+            const btn = document.getElementById('themeToggle');
+            if (btn) btn.addEventListener('click', toggleTheme);
+        })();
+
+    </script>
+    <script>
+        // --- Admin modal behavior ---
+        const ADMIN_PASSPHRASE_KEY = 'kis_admin_pass';
+        const ADMIN_DEFAULT = 'admin';
+
+        function getAllLiveScores() {
+            try { return JSON.parse(localStorage.getItem(LIVE_SCORE_KEY) || '{}'); } catch(e){ return {}; }
+        }
+        function getAllLiveEvents() {
+            try { return JSON.parse(localStorage.getItem(LIVE_EVENTS_KEY) || '{}'); } catch(e){ return {}; }
+        }
+        function getAllMatchMeta() {
+            try { return JSON.parse(localStorage.getItem(MATCH_META_KEY) || '{}'); } catch(e){ return {}; }
+        }
+
+        function promptForAdmin() {
+            const saved = localStorage.getItem(ADMIN_PASSPHRASE_KEY) || ADMIN_DEFAULT;
+            const pass = prompt('Enter admin passphrase');
+            if (pass === null) return false;
+            return pass === saved;
+        }
+
+        function showAdminModal() {
+            const modal = document.getElementById('adminModal');
+            if (!modal) return;
+            modal.classList.remove('hidden');
+            modal.setAttribute('aria-hidden', 'false');
+            populateAdminFields();
+        }
+        function hideAdminModal() {
+            const modal = document.getElementById('adminModal');
+            if (!modal) return;
+            modal.classList.add('hidden');
+            modal.setAttribute('aria-hidden', 'true');
+        }
+
+        function populateAdminFields(){
+            const liveAll = getAllLiveScores();
+            const metaAll = getAllMatchMeta();
+            const eventsAll = getAllLiveEvents();
+            const live = liveAll[matchId] || {};
+            const meta = metaAll[matchId] || {};
+            const events = (eventsAll[matchId] || []).slice().sort((a,b)=> (a.minute||0)-(b.minute||0));
+
+            document.getElementById('adminStream').value = live.streamUrl || '';
+            document.getElementById('adminStatus').value = live.status || (meta.status || 'scheduled');
+            document.getElementById('adminHomeScore').value = Number.isFinite(live.homeScore) ? live.homeScore : '';
+            document.getElementById('adminAwayScore').value = Number.isFinite(live.awayScore) ? live.awayScore : '';
+            document.getElementById('adminSet').value = live.setNumber || '';
+            document.getElementById('adminNote').value = live.note || '';
+            document.getElementById('adminGender').value = meta.gender || '';
+
+            renderAdminEvents(events);
+        }
+
+        function renderAdminEvents(events){
+            const list = document.getElementById('adminEventsList');
+            if(!list) return;
+            if(!events || events.length===0){ list.innerHTML = '<div style="color:var(--text-sub);font-size:12px">No events</div>'; return; }
+            list.innerHTML = events.map((ev, idx)=>`
+                <div style="display:flex;gap:8px;align-items:center;justify-content:space-between;padding:8px;border-radius:8px;border:1px solid var(--muted-border);background:var(--muted-surface)">
+                    <div style="display:flex;gap:12px;align-items:center;"> <strong style="min-width:36px">${ev.minute}'</strong> <div style="font-weight:700">${ev.team==='home'?homeTeam.name:awayTeam.name}</div> <div style="color:var(--text-sub)">${ev.type}${ev.note? ' • '+ev.note:''}</div> </div>
+                    <div><button data-evt-index="${idx}" class="theme-toggle evt-del">Delete</button></div>
+                </div>
+            `).join('');
+            // attach delete handlers
+            list.querySelectorAll('.evt-del').forEach(btn=> btn.addEventListener('click', (e)=>{
+                const idx = Number(btn.dataset.evtIndex);
+                const eventsAll = getAllLiveEvents();
+                const arr = eventsAll[matchId] || [];
+                arr.splice(idx,1);
+                eventsAll[matchId] = arr;
+                try{ localStorage.setItem(LIVE_EVENTS_KEY, JSON.stringify(eventsAll)); }catch(e){}
+                renderAdminEvents(arr);
+            }));
+        }
+
+        document.getElementById('adminOpenBtn').addEventListener('click', ()=>{
+            if(!promptForAdmin()){ alert('패스프레이즈가 틀렸습니다.'); return; }
+            showAdminModal();
+        });
+
+        // open if url has admin=1
+        (function(){ if (qs('admin') === '1') { if(promptForAdmin()) showAdminModal(); else { alert('패스프레이즈 필요'); const url = new URL(location.href); url.searchParams.delete('admin'); location.replace(url.href); } } })();
+
+        // add event
+        document.getElementById('addEvtBtn').addEventListener('click', ()=>{
+            const minute = Number(document.getElementById('evtMinute').value) || 0;
+            const team = document.getElementById('evtTeam').value || 'home';
+            const type = document.getElementById('evtType').value || '';
+            const note = document.getElementById('evtNote').value || '';
+            const eventsAll = getAllLiveEvents();
+            const arr = eventsAll[matchId] || [];
+            arr.push({ minute, team, type, note });
+            arr.sort((a,b)=> (a.minute||0)-(b.minute||0));
+            eventsAll[matchId] = arr;
+            try{ localStorage.setItem(LIVE_EVENTS_KEY, JSON.stringify(eventsAll)); }catch(e){}
+            renderAdminEvents(arr);
+            // clear inputs
+            document.getElementById('evtMinute').value = '';
+            document.getElementById('evtType').value = '';
+            document.getElementById('evtNote').value = '';
+        });
+
+        document.getElementById('adminCancel').addEventListener('click', ()=>{ hideAdminModal(); });
+
+        document.getElementById('adminSave').addEventListener('click', ()=>{
+            const liveAll = getAllLiveScores();
+            const metaAll = getAllMatchMeta();
+            const eventsAll = getAllLiveEvents();
+
+            const streamUrl = document.getElementById('adminStream').value.trim();
+            const status = document.getElementById('adminStatus').value;
+            const homeScore = Number(document.getElementById('adminHomeScore').value) || 0;
+            const awayScore = Number(document.getElementById('adminAwayScore').value) || 0;
+            const setNumber = Number(document.getElementById('adminSet').value) || undefined;
+            const note = document.getElementById('adminNote').value || '';
+            const gender = document.getElementById('adminGender').value || '';
+
+            const entry = liveAll[matchId] || {};
+            entry.streamUrl = streamUrl || entry.streamUrl;
+            entry.status = status;
+            entry.homeScore = homeScore;
+            entry.awayScore = awayScore;
+            if (setNumber) entry.setNumber = setNumber; else delete entry.setNumber;
+            if (note) entry.note = note; else delete entry.note;
+            liveAll[matchId] = entry;
+            try{ localStorage.setItem(LIVE_SCORE_KEY, JSON.stringify(liveAll)); }catch(e){}
+
+            const meta = metaAll[matchId] || {};
+            if (gender) meta.gender = gender; else delete meta.gender;
+            metaAll[matchId] = meta;
+            try{ localStorage.setItem(MATCH_META_KEY, JSON.stringify(metaAll)); }catch(e){}
+
+            // events already saved when added/deleted; ensure ordering
+            if (eventsAll[matchId]) eventsAll[matchId].sort((a,b)=> (a.minute||0)-(b.minute||0));
+            try{ localStorage.setItem(LIVE_EVENTS_KEY, JSON.stringify(eventsAll)); }catch(e){}
+
+            hideAdminModal();
+            // notify other tabs
+            try{ localStorage.setItem('kisvl_admin_update', String(Date.now())); }catch(e){}
+            location.reload();
+        });
+
+        // close modal on backdrop click
+        document.getElementById('adminModal').addEventListener('click', (e)=>{ if (e.target === e.currentTarget) hideAdminModal(); });
+    </script>
+    <script>
+        // Set admin passphrase (saved by user request)
+        try { localStorage.setItem('kis_admin_pass', 'BISathletic120712!'); } catch(e) {}
+    </script>
+</body>
+</html>

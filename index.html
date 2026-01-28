@@ -1,0 +1,1056 @@
+<!DOCTYPE html>
+<html lang="ko">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>BIS Athletics</title>
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet" />
+		<style>
+			:root {
+				--bg: #f4f5f7;
+				--text: #0f172a;
+				--muted: #6b7280;
+				--card: #ffffff;
+				--shadow: 0 20px 60px rgba(15, 23, 42, 0.12);
+				--accent: #0b1b3a;
+				--panel: #fefefe;
+				--nav-muted: rgba(15, 23, 42, 0.7);
+				--glass: rgba(255, 255, 255, 0.6);
+				--border: rgba(148, 163, 184, 0.14);
+				--split-bg: linear-gradient(180deg, rgba(255,255,255,0.95), rgba(255,255,255,0.85));
+				--tab-track: rgba(15, 23, 42, 0.14);
+			}
+
+			body.dark {
+				--bg: #0a1120;
+				--text: #f8fafc;
+				--muted: #9aa4b2;
+				--card: #0f1a2b;
+				--shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
+				--accent: #e2e8f0;
+				--panel: #121d2e;
+				--nav-muted: rgba(248, 250, 252, 0.8);
+				--glass: rgba(12, 20, 36, 0.75);
+				--border: rgba(255,255,255,0.06);
+				--split-bg: linear-gradient(180deg, rgba(12,20,36,0.95), rgba(12,20,36,0.85));
+				--tab-track: rgba(255,255,255,0.06);
+			}
+
+			@media (prefers-color-scheme: dark) {
+				body:not(.light) {
+					--bg: #0a1120;
+					--text: #f8fafc;
+					--muted: #9aa4b2;
+					--card: #0f1a2b;
+					--shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
+					--accent: #e2e8f0;
+					--panel: #121d2e;
+					--nav-muted: rgba(248, 250, 252, 0.8);
+					--glass: rgba(12, 20, 36, 0.75);
+				}
+			}
+
+			* {
+				box-sizing: border-box;
+				margin: 0;
+				padding: 0;
+			}
+
+			body {
+				font-family: 'Noto Sans KR', system-ui, -apple-system, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+				background: var(--bg);
+				color: var(--text);
+				min-height: 100vh;
+				transition: background 0.3s ease, color 0.3s ease;
+			}
+
+			.wrap {
+				max-width: 1200px;
+				margin: 0 auto;
+				padding: 18px 24px 80px;
+			}
+
+			.top-nav {
+				position: relative;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				gap: 0;
+				color: var(--nav-muted);
+				font-weight: 700;
+				letter-spacing: 0.4px;
+			}
+
+			.nav-center {
+				display: grid;
+				grid-template-columns: 1fr auto 1fr;
+				align-items: center;
+				column-gap: 80px;
+				margin: 0 auto;
+				width: 100%;
+			}
+
+			.nav-left,
+			.nav-right {
+				display: flex;
+				align-items: center;
+				gap: 120px;
+			}
+
+			.nav-left {
+				justify-content: flex-end;
+			}
+
+			.nav-right {
+				justify-content: flex-start;
+			}
+
+			.top-nav .nav-item {
+				position: relative;
+				display: flex;
+				align-items: center;
+				gap: 10px;
+				color: var(--nav-muted);
+				text-decoration: none;
+			}
+
+			.top-nav .nav-item:hover,
+			.top-nav .nav-item:focus {
+				text-decoration: none;
+			}
+
+			.theme-toggle {
+				display: flex;
+				align-items: center;
+				gap: 10px;
+				background: var(--glass);
+				border: 1px solid rgba(148, 163, 184, 0.2);
+				color: var(--text);
+				padding: 8px 14px;
+				border-radius: 999px;
+				cursor: pointer;
+				font-weight: 600;
+				backdrop-filter: blur(6px);
+				transition: all 0.3s ease;
+			}
+
+			.theme-toggle:hover {
+				transform: scale(1.02);
+			}
+
+			.theme-toggle-wrap {
+				margin-top: 28px;
+				display: flex;
+				justify-content: center;
+			}
+
+			.top-nav .logo {
+				width: 48px;
+				height: 48px;
+				object-fit: contain;
+			}
+
+			.hero {
+				text-align: center;
+				margin-top: 18px;
+			}
+
+			.hero h1 {
+				font-family: 'Black Han Sans', 'Noto Sans KR', sans-serif;
+				font-weight: 400;
+				font-size: clamp(48px, 8vw, 96px);
+				letter-spacing: 1px;
+			}
+
+			.hero .season {
+				font-weight: 700;
+				color: var(--text);
+				margin-top: 6px;
+			}
+
+			.panel {
+				margin-top: 28px;
+				background: var(--card);
+				border-radius: 30px;
+				padding: 38px 44px 48px;
+				box-shadow: var(--shadow);
+				border: 1px solid var(--border);
+				transition: background 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+			}
+
+			.panel-title {
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				gap: 12px;
+				font-size: 26px;
+				font-weight: 800;
+				letter-spacing: 0.6px;
+				margin-bottom: 26px;
+				color: var(--accent);
+			}
+
+			.teams {
+				display: grid;
+				grid-template-columns: repeat(2, minmax(0, 1fr));
+				gap: 60px;
+				align-items: center;
+				text-align: center;
+			}
+
+			.split-grid {
+				display: grid;
+				grid-template-columns: repeat(2, minmax(0, 1fr));
+				gap: 32px;
+				align-items: start;
+			}
+
+			.split-panel {
+				background: var(--split-bg);
+				border-radius: 26px;
+				--panel-hpad: 26px;
+				padding: 24px var(--panel-hpad) 26px;
+				display: grid;
+				gap: 18px;
+				box-shadow: var(--shadow);
+				border: 1px solid var(--border);
+			}
+
+			.split-title {
+				display: flex;
+				align-items: center;
+				gap: 10px;
+				font-size: 20px;
+				font-weight: 800;
+				color: var(--accent);
+			}
+
+			.gender-tabs {
+				display: grid;
+				grid-template-columns: repeat(2, minmax(0, 1fr));
+				align-items: end;
+				gap: 0;
+				position: relative;
+				/* horizontal padding matches panel horizontal padding variable */
+				padding: 0 var(--panel-hpad) 10px;
+				justify-self: start;
+				width: 100%;
+				--tab-accent: #2563eb;
+				--active-tab: 0;
+				overflow: hidden;
+			}
+
+			/* base track that stretches to the card edges (account for panel padding)
+			   negative offsets match the panel horizontal padding (26px) so the line
+			   reaches the rounded card edge visually. */
+
+			.gender-tabs::before {
+				content: "";
+				position: absolute;
+				left: 0;
+				right: 0;
+				bottom: 0;
+				height: 2px;
+				background: var(--tab-track);
+				border-radius: 999px;
+			}
+
+			/* sliding accent that sits on top of the base track and animates between
+			   the two halves. left calculation offsets the panel padding so the blue
+			   bar aligns visually with the card edges. */
+
+			.gender-tabs::after {
+				content: "";
+				position: absolute;
+				left: 0;
+				bottom: 0;
+				/* exact half width so each tab corresponds to 50% */
+				width: 50%;
+				height: 3px;
+				background: var(--tab-accent);
+				border-radius: 999px;
+				transform: translateX(calc(var(--active-tab) * 100%));
+				transition: transform 0.28s cubic-bezier(.2,.9,.2,1);
+			}
+
+			.gender-tab {
+				border: none;
+				background: transparent;
+				color: var(--text);
+				font-weight: 800;
+				padding: 4px 10px 8px;
+				cursor: pointer;
+				position: relative;
+				font-size: 16px;
+				transition: color 0.2s ease;
+			}
+
+			.gender-tab.active {
+				color: var(--tab-accent);
+			}
+
+			.gender-content {
+				position: absolute;
+				inset: 0;
+				opacity: 0;
+				transform: translateX(calc(var(--slide-dir, 1) * 18px));
+				transition: transform 0.35s cubic-bezier(.2,.9,.2,1), opacity 0.25s ease;
+				pointer-events: none;
+			}
+
+			.gender-content.active {
+				display: grid;
+				gap: 12px;
+				opacity: 1;
+				transform: translateX(0);
+				pointer-events: auto;
+			}
+
+			.gender-panels {
+				position: relative;
+				width: 100%;
+				min-height: 320px;
+				height: var(--panel-height, auto);
+				transition: height 0.25s ease;
+			}
+
+			.centered-panel .split-title {
+				justify-content: center;
+			}
+
+			.centered-panel .gender-tabs {
+				justify-self: center;
+			}
+
+			.centered-panel .gender-content {
+				justify-items: center;
+			}
+
+			.centered-panel .team-card {
+				width: 100%;
+				max-width: 420px;
+			}
+
+			.schedule-grid {
+				display: grid;
+				grid-template-columns: repeat(5, minmax(0, 1fr));
+				gap: 24px;
+				text-align: center;
+				margin-top: 12px;
+			}
+
+			.season-tabs {
+				display: grid;
+				grid-template-columns: repeat(3, minmax(0, 1fr));
+				align-items: end;
+				gap: 0;
+				position: relative;
+				padding: 0 12px 10px;
+				margin-bottom: 18px;
+				--tab-accent: #2563eb;
+				--active-tab: 0;
+			}
+
+			.season-tabs::before {
+				content: "";
+				position: absolute;
+				left: 0;
+				right: 0;
+				bottom: 0;
+				height: 2px;
+				background: var(--tab-track);
+				border-radius: 999px;
+			}
+
+			.season-tabs::after {
+				content: "";
+				position: absolute;
+				left: 0;
+				bottom: 0;
+				width: calc(100% / 3);
+				height: 3px;
+				background: var(--tab-accent);
+				border-radius: 999px;
+				transform: translateX(calc(var(--active-tab) * 100%));
+				transition: transform 0.28s cubic-bezier(.2,.9,.2,1);
+			}
+
+			.season-tab {
+				border: none;
+				background: transparent;
+				color: var(--text);
+				font-weight: 800;
+				padding: 6px 10px 8px;
+				cursor: pointer;
+				font-size: 16px;
+				transition: color 0.2s ease;
+			}
+
+			.season-tab.active {
+				color: var(--tab-accent);
+			}
+
+			.season-content {
+				display: none;
+			}
+
+			.season-content.active {
+				display: block;
+			}
+
+			.schedule-col {
+				background: var(--panel);
+				border-radius: 20px;
+				padding: 18px 16px 20px;
+				min-height: 220px;
+				display: grid;
+				gap: 10px;
+			}
+
+			.schedule-col h3 {
+				font-size: 28px;
+				font-weight: 800;
+				color: var(--accent);
+			}
+
+			.season-label {
+				font-weight: 800;
+				color: var(--text);
+			}
+
+			.season-item {
+				color: var(--muted);
+				font-weight: 600;
+			}
+
+			.team-card {
+				background: var(--panel);
+				border-radius: 22px;
+				padding: 28px 22px 22px;
+				transition: background 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+				text-align: center;
+				box-shadow: var(--shadow);
+			}
+
+			.team-card:hover {
+				transform: translateY(-4px);
+				box-shadow: 0 16px 30px rgba(15, 23, 42, 0.14);
+			}
+
+			.team-card h3 {
+				font-size: 22px;
+				margin-bottom: 12px;
+			}
+
+			.mascot {
+				width: 120px;
+				height: 120px;
+				object-fit: contain;
+				margin: 12px 0 18px;
+			}
+
+			.stats {
+				display: flex;
+				justify-content: center;
+				gap: 26px;
+				font-weight: 700;
+				margin-top: 8px;
+			}
+
+			.stat {
+				display: grid;
+				gap: 4px;
+				min-width: 56px;
+			}
+
+			.stat .value {
+				font-size: 22px;
+			}
+
+			.stat .label {
+				letter-spacing: 1px;
+				font-size: 12px;
+				text-transform: uppercase;
+			}
+
+			.stat.win .value {
+				color: #10b981;
+			}
+
+			.stat.draw .value {
+				color: #94a3b8;
+			}
+
+			.stat.lose .value {
+				color: #ef4444;
+			}
+
+			@media (max-width: 860px) {
+				.top-nav {
+					gap: 40px;
+				}
+
+				.nav-center {
+					display: flex;
+					gap: 32px;
+					flex-wrap: wrap;
+					justify-content: center;
+				}
+
+				.nav-left,
+				.nav-right {
+					gap: 24px;
+					justify-content: center;
+				}
+
+				.theme-toggle {
+					margin-top: 0;
+				}
+
+				.teams {
+					grid-template-columns: 1fr;
+				}
+
+				.split-grid {
+					grid-template-columns: 1fr;
+				}
+
+				.schedule-grid {
+					grid-template-columns: 1fr;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<div class="wrap">
+			<nav class="top-nav">
+				<div class="nav-center">
+					<div class="nav-left">
+						<a class="nav-item" href="bobcat.html">Bobcat</a>
+						<a class="nav-item" href="team.html">Team</a>
+					</div>
+					<a class="nav-logo-link" href="index.html">
+						<img class="logo" src="assets/bismascot.png" alt="BIS mascot" />
+					</a>
+					<div class="nav-right">
+						<a class="nav-item" href="upcoming.html">Upcoming</a>
+						<a class="nav-item" href="kisaa-kaiac.html">KISAA/KAIAC</a>
+					</div>
+				</div>
+			</nav>
+
+			<header class="hero">
+				<h1>BIS ATHLETICS</h1>
+				<div class="season">2025-2026</div>
+			</header>
+
+			<section class="panel">
+				<div class="panel-title">
+					<span>MS / HS TEAMS</span>
+				</div>
+
+				<div class="split-grid">
+					<div class="split-panel centered-panel">
+						<div class="split-title">
+							<span>MS Volleyball Team</span>
+						</div>
+						<div class="gender-tabs" role="tablist" aria-label="Volleyball gender">
+							<button class="gender-tab active" type="button" data-group="volleyball" data-target="volleyball-boys">Boys</button>
+							<button class="gender-tab" type="button" data-group="volleyball" data-target="volleyball-girls">Girls</button>
+						</div>
+						<div class="gender-panels" style="--slide-dir: 1;">
+							<div class="gender-content active" id="volleyball-boys" data-group="volleyball">
+								<div class="team-card">
+									<h3>Boys</h3>
+									<img class="mascot" src="assets/bismascot.png" alt="Boys volleyball team mascot" />
+									<div class="stats">
+										<div class="stat win">
+											<div class="value">0</div>
+											<div class="label">WIN</div>
+										</div>
+										<div class="stat draw">
+											<div class="value">0</div>
+											<div class="label">DRAW</div>
+										</div>
+										<div class="stat lose">
+											<div class="value">0</div>
+											<div class="label">LOSE</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="gender-content" id="volleyball-girls" data-group="volleyball">
+								<div class="team-card">
+									<h3>Girls</h3>
+									<img class="mascot" src="assets/bismascot.png" alt="Girls volleyball team mascot" />
+									<div class="stats">
+										<div class="stat win">
+											<div class="value">0</div>
+											<div class="label">WIN</div>
+										</div>
+										<div class="stat draw">
+											<div class="value">0</div>
+											<div class="label">DRAW</div>
+										</div>
+										<div class="stat lose">
+											<div class="value">0</div>
+											<div class="label">LOSE</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="split-panel centered-panel">
+						<div class="split-title">
+							<span>HS Volleyball Team</span>
+						</div>
+						<div class="gender-tabs" role="tablist" aria-label="HS Volleyball gender">
+							<button class="gender-tab active" type="button" data-group="hs-volleyball" data-target="hs-volleyball-boys">Boys</button>
+							<button class="gender-tab" type="button" data-group="hs-volleyball" data-target="hs-volleyball-girls">Girls</button>
+						</div>
+						<div class="gender-panels" style="--slide-dir: 1;">
+							<div class="gender-content active" id="hs-volleyball-boys" data-group="hs-volleyball">
+								<div class="team-card">
+									<h3>Boys</h3>
+									<img class="mascot" src="assets/bismascot.png" alt="Boys HS volleyball team mascot" />
+									<div class="stats">
+										<div class="stat win">
+											<div class="value">0</div>
+											<div class="label">WIN</div>
+										</div>
+										<div class="stat draw">
+											<div class="value">0</div>
+											<div class="label">DRAW</div>
+										</div>
+										<div class="stat lose">
+											<div class="value">0</div>
+											<div class="label">LOSE</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="gender-content" id="hs-volleyball-girls" data-group="hs-volleyball">
+								<div class="team-card">
+									<h3>Girls</h3>
+									<img class="mascot" src="assets/bismascot.png" alt="Girls HS volleyball team mascot" />
+									<div class="stats">
+										<div class="stat win">
+											<div class="value">0</div>
+											<div class="label">WIN</div>
+										</div>
+										<div class="stat draw">
+											<div class="value">0</div>
+											<div class="label">DRAW</div>
+										</div>
+										<div class="stat lose">
+											<div class="value">0</div>
+											<div class="label">LOSE</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+
+
+			<section class="panel">
+				<div class="panel-title">
+					<span>📅</span>
+					<span>Teams by Season</span>
+					<span>📅</span>
+				</div>
+
+				<div class="season-tabs" role="tablist" aria-label="Season schedule">
+					<button class="season-tab active" type="button" data-target="season-autumn">Autumn</button>
+					<button class="season-tab" type="button" data-target="season-winter">Winter</button>
+					<button class="season-tab" type="button" data-target="season-spring">Spring</button>
+				</div>
+
+				<div class="season-content active" id="season-autumn">
+					<div class="schedule-grid">
+						<div class="schedule-col">
+							<h3>Mon</h3>
+							<div class="season-item">HS Volleyball Men</div>
+						</div>
+						<div class="schedule-col">
+							<h3>Tue</h3>
+							<div class="season-item">HS Volleyball Women</div>
+						</div>
+						<div class="schedule-col">
+							<h3>Wed</h3>
+							<div class="season-item">HS Volleyball Men</div>
+						</div>
+						<div class="schedule-col">
+							<h3>Th</h3>
+							<div class="season-item">HS Volleyball Women</div>
+						</div>
+						<div class="schedule-col">
+							<h3>Fri</h3>
+							<div class="season-item">MS Soccer Boys</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="season-content" id="season-winter">
+					<div class="schedule-grid">
+						<div class="schedule-col">
+							<h3>Mon</h3>
+							<div class="season-item">HS Basketball Women</div>
+						</div>
+						<div class="schedule-col">
+							<h3>Tue</h3>
+							<div class="season-item">MS Volleyball Girls</div>
+						</div>
+						<div class="schedule-col">
+							<h3>Wed</h3>
+							<div class="season-item">HS Basketball Women / Men</div>
+						</div>
+						<div class="schedule-col">
+							<h3>Th</h3>
+							<div class="season-item">MS Volleyball Boys</div>
+						</div>
+						<div class="schedule-col">
+							<h3>Fri</h3>
+							<div class="season-item">HS Basketball Men</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="season-content" id="season-spring">
+					<div class="schedule-grid">
+						<div class="schedule-col">
+							<h3>Mon</h3>
+							<div class="season-item">MS Basketball Girls</div>
+						</div>
+						<div class="schedule-col">
+							<h3>Tue</h3>
+							<div class="season-item">HS Soccer Men</div>
+						</div>
+						<div class="schedule-col">
+							<h3>Wed</h3>
+							<div class="season-item">MS Basketball Boys</div>
+						</div>
+						<div class="schedule-col">
+							<h3>Th</h3>
+							<div class="season-item">HS Soccer Men</div>
+						</div>
+						<div class="schedule-col">
+							<h3>Fri</h3>
+							<div class="season-item">Badminton</div>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<div class="theme-toggle-wrap">
+				<button class="theme-toggle" type="button" aria-pressed="false">
+					<span class="toggle-icon">🌙</span>
+					<span class="toggle-text">Dark</span>
+				</button>
+			</div>
+
+			<!-- Admin dock (bottom of index only) -->
+			<div id="adminDock" style="margin-top:28px">
+				<div class="panel" id="adminPanel" style="padding:18px;">
+					<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+						<div style="font-weight:800;font-size:18px">🔧 Live Score Admin</div>
+						<div>
+							<button id="adminToggleBtn" class="theme-toggle">Open</button>
+						</div>
+					</div>
+					<div id="adminBody" style="display:none;gap:12px">
+						<div style="margin-top:8px">
+							<label style="font-weight:700;display:block;margin-bottom:6px">Stream URL (YouTube)</label>
+							<input id="adminStream" type="text" placeholder="https://www.youtube.com/watch?v=..." style="width:100%;padding:10px;border-radius:10px;border:1px solid rgba(0,0,0,0.08)" />
+						</div>
+						<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+							<div>
+								<label style="font-weight:700;display:block;margin-bottom:6px">Match</label>
+								<select id="adminMatchSelect" style="width:100%;padding:10px;border-radius:10px;border:1px solid rgba(0,0,0,0.08)"></select>
+							</div>
+							<div>
+								<label style="font-weight:700;display:block;margin-bottom:6px">Status</label>
+								<select id="adminStatus" style="width:100%;padding:10px;border-radius:10px;border:1px solid rgba(0,0,0,0.08)">
+									<option value="scheduled">scheduled</option>
+									<option value="live">live</option>
+									<option value="ft">ft</option>
+								</select>
+							</div>
+						</div>
+						<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:8px">
+							<div>
+								<label style="font-weight:700;display:block;margin-bottom:6px">Set #</label>
+								<input id="adminSet" type="number" min="0" style="width:100%;padding:10px;border-radius:10px;border:1px solid rgba(0,0,0,0.08)" />
+							</div>
+							<div>
+								<label style="font-weight:700;display:block;margin-bottom:6px">Note (optional)</label>
+								<input id="adminNote" type="text" style="width:100%;padding:10px;border-radius:10px;border:1px solid rgba(0,0,0,0.08)" />
+							</div>
+						</div>
+						<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:8px">
+							<div>
+								<label style="font-weight:700;display:block;margin-bottom:6px">Home Score</label>
+								<input id="adminHomeScore" type="number" min="0" style="width:100%;padding:10px;border-radius:10px;border:1px solid rgba(0,0,0,0.08)" />
+							</div>
+							<div>
+								<label style="font-weight:700;display:block;margin-bottom:6px">Away Score</label>
+								<input id="adminAwayScore" type="number" min="0" style="width:100%;padding:10px;border-radius:10px;border:1px solid rgba(0,0,0,0.08)" />
+							</div>
+						</div>
+						<div style="display:flex;gap:8px;margin-top:12px;align-items:center">
+							<button id="adminSaveBtn" class="theme-toggle">Save</button>
+							<button id="adminClearBtn" class="theme-toggle">Clear Match Override</button>
+							<button id="adminCopyBtn" class="theme-toggle">Copy JSON</button>
+						</div>
+						<div style="margin-top:12px">
+							<label style="font-weight:700;display:block;margin-bottom:6px">Live Overrides (JSON)</label>
+							<textarea id="adminJson" style="width:100%;height:120px;padding:12px;border-radius:8px;border:1px solid rgba(0,0,0,0.06);font-family:monospace;font-size:13px"></textarea>
+						</div>
+					</div>
+				</div>
+		</div>
+		<script>
+			const initGenderTabs = () => {
+				document.querySelectorAll('.gender-tab').forEach((tab) => {
+					tab.addEventListener('click', () => {
+						const group = tab.dataset.group;
+						const target = tab.dataset.target;
+						const tabsWrap = tab.closest('.gender-tabs');
+						const panelsWrap = tab.closest('.split-panel')?.querySelector('.gender-panels');
+						let prevIdx = 0;
+						if (tabsWrap) {
+							const prev = tabsWrap.style.getPropertyValue('--active-tab');
+							prevIdx = Number(prev) || 0;
+						}
+						document.querySelectorAll(`.gender-tab[data-group="${group}"]`).forEach((btn) => {
+							btn.classList.remove('active');
+						});
+						tab.classList.add('active');
+						document.querySelectorAll(`.gender-content[data-group="${group}"]`).forEach((panel) => {
+							panel.classList.remove('active');
+						});
+						const panel = document.getElementById(target);
+						if (panel) panel.classList.add('active');
+						if (tabsWrap) {
+							const tabs = Array.from(tabsWrap.querySelectorAll('.gender-tab'));
+							const idx = Math.max(0, tabs.indexOf(tab));
+							tabsWrap.style.setProperty('--active-tab', String(idx));
+							if (panelsWrap) {
+								panelsWrap.style.setProperty('--slide-dir', idx >= prevIdx ? '1' : '-1');
+								requestAnimationFrame(() => {
+									panelsWrap.style.setProperty('--panel-height', `${panel?.offsetHeight || 0}px`);
+								});
+							}
+						}
+					});
+				});
+
+				document.querySelectorAll('.gender-tabs').forEach((tabsWrap) => {
+					const active = tabsWrap.querySelector('.gender-tab.active') || tabsWrap.querySelector('.gender-tab');
+					if (!active) return;
+					const tabs = Array.from(tabsWrap.querySelectorAll('.gender-tab'));
+					const idx = Math.max(0, tabs.indexOf(active));
+					tabsWrap.style.setProperty('--active-tab', String(idx));
+					const panelsWrap = tabsWrap.closest('.split-panel')?.querySelector('.gender-panels');
+					const activePanel = tabsWrap.closest('.split-panel')?.querySelector(`.gender-content.active[data-group="${active.dataset.group}"]`);
+					if (panelsWrap && activePanel) {
+						panelsWrap.style.setProperty('--panel-height', `${activePanel.offsetHeight}px`);
+					}
+				});
+			};
+
+			const initSeasonTabs = () => {
+				document.querySelectorAll('.season-tab').forEach((tab) => {
+					tab.addEventListener('click', () => {
+						const target = tab.dataset.target;
+						const tabsWrap = tab.closest('.season-tabs');
+						document.querySelectorAll('.season-tab').forEach((btn) => {
+							btn.classList.remove('active');
+						});
+						tab.classList.add('active');
+						document.querySelectorAll('.season-content').forEach((panel) => {
+							panel.classList.remove('active');
+						});
+						const panel = document.getElementById(target);
+						if (panel) panel.classList.add('active');
+						if (tabsWrap) {
+							const tabs = Array.from(tabsWrap.querySelectorAll('.season-tab'));
+							const idx = Math.max(0, tabs.indexOf(tab));
+							tabsWrap.style.setProperty('--active-tab', String(idx));
+						}
+					});
+				});
+
+				const tabsWrap = document.querySelector('.season-tabs');
+				if (!tabsWrap) return;
+				const active = tabsWrap.querySelector('.season-tab.active') || tabsWrap.querySelector('.season-tab');
+				if (!active) return;
+				const tabs = Array.from(tabsWrap.querySelectorAll('.season-tab'));
+				const idx = Math.max(0, tabs.indexOf(active));
+				tabsWrap.style.setProperty('--active-tab', String(idx));
+			};
+
+			initGenderTabs();
+			initSeasonTabs();
+
+			const toggleButton = document.querySelector(".theme-toggle");
+			const toggleIcon = document.querySelector(".toggle-icon");
+			const toggleText = document.querySelector(".toggle-text");
+			const prefersDark = window.matchMedia("(prefers-color-scheme: dark)");
+
+			const applyTheme = (theme) => {
+				document.body.classList.toggle("dark", theme === "dark");
+				document.body.classList.toggle("light", theme === "light");
+				const isDark = theme === "dark";
+				toggleButton.setAttribute("aria-pressed", String(isDark));
+				toggleIcon.textContent = isDark ? "☀️" : "🌙";
+				toggleText.textContent = isDark ? "Light" : "Dark";
+			};
+
+			const savedTheme = localStorage.getItem("bis-theme");
+			if (savedTheme) {
+				applyTheme(savedTheme);
+			} else {
+				applyTheme(prefersDark.matches ? "dark" : "light");
+			}
+
+			prefersDark.addEventListener("change", (event) => {
+				const stored = localStorage.getItem("bis-theme");
+				if (!stored) {
+					applyTheme(event.matches ? "dark" : "light");
+				}
+			});
+
+			toggleButton.addEventListener("click", () => {
+				const isDark = document.body.classList.contains("dark");
+				const nextTheme = isDark ? "light" : "dark";
+				localStorage.setItem("bis-theme", nextTheme);
+				applyTheme(nextTheme);
+			});
+		</script>
+		<script>
+			// Admin dock script
+			(function(){
+				const LIVE_SCORE_KEY = 'kisvl_live_scores';
+				// Local copy of schedules to populate match selector (kept in sync manually)
+				const SCHEDULES = [
+					{ id: 1, home: 'BIS', away: 'CCAS', date: 'Jan 28, Girls 4:30pm' },
+					{ id: 2, home: 'BIS', away: 'ICSU', date: 'Jan 29, Girls 5:00pm' },
+					{ id: 3, home: 'BIS', away: 'SFS JV-B', date: 'Jan 30, Men 4:30pm' },
+					{ id: 4, home: 'BIS', away: 'FPS', date: 'Feb 2, Men 4:15pm' },
+					{ id: 5, home: 'BIS', away: 'SPAS', date: 'Feb 2, Girls 4:30pm' },
+					{ id: 6, home: 'BIS', away: 'SPAS', date: 'Feb 11, Men 6:00pm' },
+					{ id: 7, home: 'BIS', away: 'CCAS', date: 'Feb 11, Women 5:00pm' },
+					{ id: 8, home: 'BIS', away: 'ICSU', date: 'Feb 11, Boys 4:30pm' },
+					{ id: 9, home: 'BIS', away: 'FPS', date: 'Feb 24, Boys 4:30pm' },
+					{ id: 10, home: 'BIS', away: 'BCC', date: 'Feb 25, Women 4:30pm' },
+					{ id: 11, home: 'BIS', away: 'CMIS', date: 'Mar 12, Men 2:30pm' },
+					{ id: 12, home: 'BIS', away: 'CCAS', date: 'Mar 18, Men 4:30pm' }
+				];
+				const ADMIN_PASSPHRASE_KEY = 'kis_admin_pass';
+				const ADMIN_DEFAULT = 'admin';
+
+				const $ = (sel) => document.querySelector(sel);
+				const adminToggle = $('#adminToggleBtn');
+				const adminBody = $('#adminBody');
+				const matchSelect = $('#adminMatchSelect');
+				const statusInput = $('#adminStatus');
+				const streamInput = $('#adminStream');
+				const setInput = $('#adminSet');
+				const noteInput = $('#adminNote');
+				const homeInput = $('#adminHomeScore');
+				const awayInput = $('#adminAwayScore');
+				const saveBtn = $('#adminSaveBtn');
+				const clearBtn = $('#adminClearBtn');
+				const copyBtn = $('#adminCopyBtn');
+				const jsonArea = $('#adminJson');
+
+				function formatShortDate(raw){
+					if(!raw || typeof raw !== 'string') return '';
+					const m = raw.match(/([A-Za-z]{3,9}\s*\d{1,2})/);
+					return m ? m[1].trim() : raw;
+				}
+
+				function populateMatchSelect(){
+					if(!matchSelect) return;
+					matchSelect.innerHTML = '';
+					SCHEDULES.forEach(s=>{
+						const opt = document.createElement('option');
+						opt.value = String(s.id);
+						const shortDate = formatShortDate(s.date);
+						opt.textContent = `${s.home} vs ${s.away} (#${s.id}) — ${shortDate}`;
+						matchSelect.appendChild(opt);
+					});
+				}
+				populateMatchSelect();
+
+				function getAll() { try { return JSON.parse(localStorage.getItem(LIVE_SCORE_KEY)||'{}'); } catch(e){ return {}; } }
+				function setAll(obj){ try{ localStorage.setItem(LIVE_SCORE_KEY, JSON.stringify(obj)); }catch(e){}
+				}
+
+				function promptPass(){ const saved = localStorage.getItem(ADMIN_PASSPHRASE_KEY) || ADMIN_DEFAULT; const p = prompt('Admin passphrase'); if (p===null) return false; return p===saved; }
+
+				adminToggle.addEventListener('click', ()=>{
+					if (adminBody.style.display === 'none' || adminBody.style.display === '') {
+						if(!promptPass()){ alert('Incorrect passphrase'); return; }
+						adminBody.style.display = 'block'; adminToggle.textContent = 'Close';
+						refreshJson();
+					} else { adminBody.style.display = 'none'; adminToggle.textContent = 'Open'; }
+				});
+
+				function refreshJson(){ const all = getAll(); jsonArea.value = JSON.stringify(all, null, 2); }
+
+				matchSelect.addEventListener('change', ()=>{
+					const id = String(matchSelect.value || '');
+					if(!id) return;
+					const all = getAll();
+					const entry = all[id]||{};
+					statusInput.value = entry.status||'scheduled';
+					streamInput.value = entry.streamUrl||'';
+					setInput.value = entry.setNumber||'';
+					noteInput.value = entry.note||'';
+					homeInput.value = Number.isFinite(entry.homeScore)?entry.homeScore:'';
+					awayInput.value = Number.isFinite(entry.awayScore)?entry.awayScore:'';
+				});
+
+				saveBtn.addEventListener('click', ()=>{
+					const id = String(matchSelect.value || ''); if(!id){ alert('Select a match'); return; }
+					const all = getAll();
+					all[id] = all[id]||{};
+					all[id].status = statusInput.value || 'scheduled';
+					all[id].streamUrl = (streamInput.value || '').trim();
+					const setNum = Number(setInput.value);
+					if(Number.isFinite(setNum) && setNum>0) all[id].setNumber = setNum; else delete all[id].setNumber;
+					all[id].note = noteInput.value || '';
+					const hs = Number(homeInput.value); const as = Number(awayInput.value);
+					all[id].homeScore = Number.isFinite(hs)?hs:0; all[id].awayScore = Number.isFinite(as)?as:0;
+					setAll(all); refreshJson(); alert('Saved'); window.dispatchEvent(new Event('storage'));
+				});
+
+				clearBtn.addEventListener('click', ()=>{
+					const id = String(matchSelect.value || ''); if(!id){ alert('Select a match'); return; }
+					const all = getAll(); delete all[id]; setAll(all); refreshJson(); alert('Cleared');
+				});
+
+				copyBtn.addEventListener('click', ()=>{
+					jsonArea.select(); try{ document.execCommand('copy'); alert('Copied to clipboard'); }catch(e){ alert('Copy failed'); }
+				});
+
+				// initialize
+				jsonArea.addEventListener('input', ()=>{
+					try{ const parsed = JSON.parse(jsonArea.value); setAll(parsed); }catch(e){}
+				});
+			})();
+		</script>
+		<script>
+			// Set admin passphrase (saved by user request)
+			try { localStorage.setItem('kis_admin_pass', 'BISathletic120712!'); } catch(e) {}
+		</script>
+	</body>
+</html>

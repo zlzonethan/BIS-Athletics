@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Upcoming Matches - BIS Athletics</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet" />
+    <style>
+      :root {
+        --primary-color: #2563eb;
+        --bg-color: #f3f4f6;
+        --card-bg: #ffffff;
+        --muted-surface: #f9fafb;
+        --muted-border: #e5e7eb;
+        --text-main: #1f2937;
+        --text-sub: #6b7280;
+        --nav-muted: rgba(15, 23, 42, 0.7);
+        --win-color: #10b981;
+        --draw-color: #9ca3af;
+        --lose-color: #ef4444;
+        --border-radius: 24px;
+      }
+
+      body.dark {
+        --bg-color: #0b1220;
+        --card-bg: #0f1724;
+        --muted-surface: #071226;
+        --muted-border: rgba(255,255,255,0.06);
+        --text-main: #e6eef8;
+        --text-sub: #9ca3af;
+        --nav-muted: rgba(230, 238, 248, 0.8);
+        --primary-color: #60a5fa;
+        --win-color: #34d399;
+        --draw-color: #64748b;
+        --lose-color: #f87171;
+      }
+
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+
+      body {
+        font-family: 'Noto Sans KR', system-ui, -apple-system, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+        background: var(--bg-color);
+        color: var(--text-main);
+        min-height: 100vh;
+      }
+
+      .wrap {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 18px 24px 80px;
+        position: relative;
+      }
+
+      .top-nav {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0;
+        font-weight: 700;
+        color: var(--nav-muted);
+        letter-spacing: 0.4px;
+      }
+
+      .nav-center {
+        display: grid;
+        grid-template-columns: 1fr auto 1fr;
+        align-items: center;
+        column-gap: 80px;
+        margin: 0 auto;
+        width: 100%;
+      }
+
+      .nav-left,
+      .nav-right {
+        display: flex;
+        align-items: center;
+        gap: 120px;
+      }
+
+      .nav-left {
+        justify-content: flex-end;
+      }
+
+      .nav-right {
+        justify-content: flex-start;
+      }
+
+      .top-nav .nav-item {
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        text-decoration: none;
+        color: var(--nav-muted);
+      }
+
+      .top-nav .nav-item:hover,
+      .top-nav .nav-item:focus {
+        text-decoration: none;
+      }
+
+      .theme-toggle {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background: rgba(255, 255, 255, 0.6);
+        border: 1px solid rgba(148, 163, 184, 0.2);
+        color: var(--text-main);
+        padding: 8px 14px;
+        border-radius: 999px;
+        cursor: pointer;
+        font-weight: 600;
+        backdrop-filter: blur(6px);
+        transition: all 0.3s ease;
+      }
+
+      .theme-toggle:hover {
+        transform: scale(1.02);
+      }
+
+      .theme-toggle-wrap {
+        margin-top: 28px;
+        display: flex;
+        justify-content: center;
+      }
+
+      .top-nav .logo {
+        width: 48px;
+        height: 48px;
+        object-fit: contain;
+      }
+
+      .hero {
+        text-align: center;
+        margin-top: 28px;
+      }
+
+      .hero h1 {
+        font-family: 'Black Han Sans', sans-serif;
+        font-weight: 400;
+        font-size: 52px;
+        letter-spacing: 0.5px;
+      }
+
+      .hero .season {
+        margin-top: 6px;
+        color: var(--text-sub);
+        font-weight: 600;
+      }
+
+      .content {
+        max-width: 860px;
+        margin: 30px auto 0;
+      }
+
+      .section-card {
+        background: var(--card-bg);
+        border-radius: 28px;
+        padding: 28px 28px 10px;
+        box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
+      }
+
+      .section-title {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 20px;
+        font-weight: 800;
+        margin-bottom: 18px;
+      }
+
+      .search-bar {
+        margin: 0 0 18px;
+        display: flex;
+        justify-content: center;
+      }
+
+      .search-input {
+        width: 100%;
+        max-width: 520px;
+        padding: 10px 14px;
+        border-radius: 14px;
+        border: 1px solid var(--muted-border);
+        background: var(--muted-surface);
+        color: var(--text-main);
+        font-size: 14px;
+        font-weight: 600;
+        margin: 0 auto;
+        display: block;
+      }
+
+      .match-card {
+        background: #ffffff;
+        border-radius: 24px;
+        padding: 24px;
+        margin-bottom: 20px;
+        position: relative;
+        box-shadow: 0 12px 26px rgba(15, 23, 42, 0.08);
+        cursor: pointer;
+      }
+      .match-card .status-badge {
+        position: absolute;
+        top: 12px;
+        left: 12px;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 12px;
+        border-radius: 999px;
+        font-weight: 800;
+        font-size: 13px;
+        background: rgba(254, 242, 242, 0.95);
+        color: #ef4444;
+        box-shadow: 0 6px 18px rgba(239,68,68,0.06);
+      }
+      .match-card .status-badge .live-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: #ef4444;
+        box-shadow: 0 6px 12px rgba(239,68,68,0.12);
+      }
+      .match-card .status-badge.ft .live-dot { background: #10b981; box-shadow: 0 6px 12px rgba(16,185,129,0.12); }
+      body.dark .match-card .status-badge {
+        background: rgba(255, 235, 235, 0.06);
+        color: #f87171;
+        box-shadow: 0 6px 18px rgba(0,0,0,0.35);
+      }
+      
+
+      body.dark .match-card {
+        background: var(--muted-surface);
+        box-shadow: 0 12px 26px rgba(0, 0, 0, 0.35);
+      }
+
+      .match-date {
+        font-size: 13px;
+        color: var(--text-sub);
+        text-align: center;
+        font-weight: 700;
+        background: var(--card-bg);
+        display: inline-block;
+        padding: 6px 16px;
+        border-radius: 999px;
+        position: absolute;
+        top: -14px;
+        left: 50%;
+        transform: translateX(-50%);
+        box-shadow: 0 6px 14px rgba(15, 23, 42, 0.08);
+      }
+
+      .match-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 10px;
+      }
+
+      .team-vs {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 40%;
+      }
+
+      .team-vs img {
+        width: 72px;
+        height: 72px;
+        border-radius: 50%;
+        margin-bottom: 10px;
+        background: #ffffff;
+        padding: 10px;
+        object-fit: cover;
+        box-shadow: 0 10px 22px rgba(0,0,0,0.08);
+      }
+
+      .team-vs span {
+        font-weight: 800;
+        font-size: 16px;
+      }
+
+      .vs-badge {
+        font-size: 14px;
+        font-weight: 900;
+        color: #9ca3af;
+        font-style: italic;
+      }
+
+      .match-location {
+        font-size: 12px;
+        color: var(--text-sub);
+        text-align: center;
+        margin-top: 6px;
+      }
+
+      .subscribe-btn {
+        border: 1px solid var(--muted-border);
+        background: var(--card-bg);
+        color: var(--text-main);
+        border-radius: 999px;
+        padding: 6px 10px;
+        font-size: 12px;
+        font-weight: 800;
+        cursor: pointer;
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        box-shadow: 0 6px 12px rgba(15, 23, 42, 0.08);
+      }
+
+      .subscribe-btn.active {
+        background: var(--primary-color);
+        color: #fff;
+        border-color: var(--primary-color);
+      }
+
+      .vote-section {
+        margin-top: 18px;
+      }
+
+      .vote-btns {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+        margin-bottom: 12px;
+      }
+
+      .vote-btn {
+        padding: 12px 10px;
+        border: 1px solid var(--muted-border);
+        background: #fff;
+        color: var(--text-sub);
+        border-radius: 16px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 800;
+        transition: all 0.2s;
+      }
+
+      .vote-btn:hover {
+        background: var(--primary-color);
+        color: white;
+        border-color: var(--primary-color);
+      }
+
+      .vote-btn[disabled] {
+        opacity: 0.6;
+        cursor: not-allowed;
+        box-shadow: none;
+      }
+
+      .vote-btn.active {
+        background: #7f9cf5;
+        color: white;
+        border-color: #7f9cf5;
+        box-shadow: 0 10px 20px rgba(127, 156, 245, 0.35);
+      }
+
+      .vote-bar-container {
+        height: 8px;
+        background: #e5e7eb;
+        border-radius: 999px;
+        overflow: hidden;
+        display: flex;
+      }
+
+      .vote-bar-left {
+        height: 100%;
+        background: #2563eb;
+        width: 50%;
+        transition: width 0.5s ease;
+      }
+
+      .vote-bar-mid {
+        height: 100%;
+        background: #9ca3af;
+        width: 0%;
+        transition: width 0.5s ease;
+      }
+
+      .vote-bar-right {
+        height: 100%;
+        background: #ef4444;
+        width: 0%;
+        transition: width 0.5s ease;
+      }
+
+      .vote-stats {
+        display: flex;
+        justify-content: space-between;
+        font-size: 13px;
+        color: var(--text-sub);
+        margin-top: 6px;
+        font-weight: 700;
+      }
+
+      @media (max-width: 720px) {
+        .top-nav { gap: 40px; }
+        .nav-center { display: flex; gap: 32px; flex-wrap: wrap; justify-content: center; }
+        .nav-left, .nav-right { gap: 24px; justify-content: center; }
+        .theme-toggle { position: static; margin: 16px auto 0; }
+        .match-content { flex-direction: column; gap: 12px; }
+        .team-vs { width: 100%; }
+        .vote-btns { grid-template-columns: 1fr; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <nav class="top-nav">
+        <div class="nav-center">
+          <div class="nav-left">
+            <a class="nav-item" href="bobcat.html">Bobcat</a>
+            <a class="nav-item" href="team.html">Team</a>
+          </div>
+          <a href="index.html" class="nav-logo-link"><img class="logo" src="assets/bismascot.png" alt="BIS mascot" /></a>
+          <div class="nav-right">
+            <a class="nav-item" href="upcoming.html">Upcoming</a>
+            <a class="nav-item" href="kisaa-kaiac.html">KISAA/KAIAC</a>
+          </div>
+        </div>
+      </nav>
+
+      <header class="hero">
+        <h1>Upcoming Matches</h1>
+        <div class="season">📅  Upcoming Matches & Vote</div>
+      </header>
+
+      <section class="content section-card">
+        
+        <div class="search-bar">
+          <input id="searchInput" class="search-input" type="search" placeholder="Search team / match / location" aria-label="검색" />
+        </div>
+        <div id="scheduleList"></div>
+      </section>
+
+      <div class="theme-toggle-wrap">
+        <button class="theme-toggle" type="button" aria-pressed="false">
+          <span class="toggle-icon">🌙</span>
+          <span class="toggle-text">Dark</span>
+        </button>
+      </div>
+    </div>
+
+    <script>
+      const getAssetBase = () => {
+        const origin = window.location.origin;
+        if (origin === 'null') return '';
+        const path = window.location.pathname || '/';
+        const hasExt = /\.[a-zA-Z0-9]+$/.test(path);
+        const basePath = path.endsWith('/') ? path : (hasExt ? path.replace(/\/[^/]*$/, '/') : path + '/');
+        const base = origin + basePath;
+        return base.endsWith('/') ? base : base + '/';
+      };
+
+      const ASSET_BASE = getAssetBase();
+      const assetUrl = (fileName) => `${ASSET_BASE}assets/${fileName}`;
+
+      const teams = [
+        { id: 'bis', name: 'BIS', logo: assetUrl('bismascot.png') },
+        { id: 'spps', name: 'SPPS', logo: assetUrl('sppsmascot.png') },
+        { id: 'mica', name: 'MICA', logo: assetUrl('micamascot.png') },
+        { id: 'ccas', name: 'CCAS', logo: assetUrl('ccasmascot.png') },
+        { id: 'icsu', name: 'ICSU', logo: assetUrl('icsumascot.png') },
+        { id: 'spas', name: 'SPAS', logo: assetUrl('spasmascot.png') },
+        { id: 'fps', name: 'FPS', logo: assetUrl('fpsmascot.jpeg') },
+        { id: 'sie', name: 'SIE', logo: assetUrl('siemascot.jpg') }
+      ];
+
+      const placeholderLogo = 'https://placehold.co/100x100/9CA3AF/ffffff?text=?';
+
+      const schedules = [
+        { id: 1, home: 'BIS', away: 'CCAS', date: 'Jan 28, Girls 4:30pm', location: 'Seocho SC' },
+        { id: 2, home: 'BIS', away: 'ICSU', date: 'Jan 29, Girls 5:00pm', location: 'BIS' },
+        { id: 3, home: 'BIS', away: 'SFS JV-B', date: 'Jan 30, Men 4:30pm', location: 'BIS' },
+        { id: 4, home: 'BIS', away: 'FPS', date: 'Feb 2, Men 4:15pm', location: 'BIS' },
+        { id: 5, home: 'BIS', away: 'SPAS', date: 'Feb 2, Girls 4:30pm', location: '제이비스포츠' },
+        { id: 6, home: 'BIS', away: 'SPAS', date: 'Feb 11, Men 6:00pm', location: 'BIS' },
+        { id: 7, home: 'BIS', away: 'CCAS', date: 'Feb 11, Women 5:00pm', location: 'BIS' },
+        { id: 8, home: 'BIS', away: 'ICSU', date: 'Feb 11, Boys 4:30pm', location: 'ICSU' },
+        { id: 9, home: 'BIS', away: 'FPS', date: 'Feb 24, Boys 4:30pm', location: 'BIS' },
+        { id: 10, home: 'BIS', away: 'BCC', date: 'Feb 25, Women 4:30pm', location: 'BIS' },
+        { id: 11, home: 'BIS', away: 'CMIS', date: 'Mar 12, Men 2:30pm', location: 'BIS Respia' },
+        { id: 12, home: 'BIS', away: 'CCAS', date: 'Mar 18, Men 4:30pm', location: 'CCAS' }
+      ];
+
+      const MATCH_SUB_KEY = 'kisvl_match_subscriptions';
+      const VOTES_KEY = 'kisvl_votes';
+      const VOTE_COUNTS_KEY = 'kisvl_vote_counts';
+
+      let searchQuery = '';
+
+      const normalizeText = (value) => (value || '').toString().trim().toLowerCase();
+      const matchesQuery = (...fields) => {
+        if (!searchQuery) return true;
+        const haystack = fields.map(normalizeText).join(' ');
+        return haystack.includes(searchQuery);
+      };
+
+      const getSubs = () => {
+        try { return JSON.parse(localStorage.getItem(MATCH_SUB_KEY) || '{}'); } catch (e) { return {}; }
+      };
+      const setSubs = (data) => {
+        try { localStorage.setItem(MATCH_SUB_KEY, JSON.stringify(data)); } catch (e) {}
+      };
+      const isMatchSubscribed = (matchId) => {
+        const data = getSubs();
+        return !!data[matchId];
+      };
+
+      const getVotes = () => {
+        try { return JSON.parse(localStorage.getItem(VOTES_KEY) || '{}'); } catch (e) { return {}; }
+      };
+      const hasVoted = (matchId) => !!getVotes()[matchId];
+      const getVote = (matchId) => getVotes()[matchId] || null;
+      const storeVote = (matchId, choice) => {
+        try {
+          const v = getVotes();
+          v[matchId] = choice;
+          localStorage.setItem(VOTES_KEY, JSON.stringify(v));
+        } catch (e) {}
+      };
+
+      const getVoteCounts = () => {
+        try { return JSON.parse(localStorage.getItem(VOTE_COUNTS_KEY) || '{}'); } catch (e) { return {}; }
+      };
+      const setVoteCounts = (all) => {
+        try { localStorage.setItem(VOTE_COUNTS_KEY, JSON.stringify(all)); } catch (e) {}
+      };
+      const getCountsForMatch = (matchId) => getVoteCounts()[matchId] || { home: 0, draw: 0, away: 0 };
+      const setCountsForMatch = (matchId, counts) => {
+        const all = getVoteCounts();
+        all[matchId] = counts;
+        setVoteCounts(all);
+      };
+
+      // Notification helpers for subscribe feature
+      const showNotificationForMatch = (match) => {
+        try {
+          if (!('Notification' in window)) return false;
+          const title = 'BIS Athletics';
+          const body = `${match.home} vs ${match.away} 경기 알림에 가입되었습니다.`;
+          const opts = { body, icon: assetUrl('bismascot.png') };
+          new Notification(title, opts);
+          return true;
+        } catch (e) {
+          return false;
+        }
+      };
+
+      const requestNotificationPermission = async (match) => {
+        if (!('Notification' in window)) return false;
+        if (Notification.permission === 'granted') {
+          return showNotificationForMatch(match);
+        }
+        if (Notification.permission === 'denied') {
+          return false;
+        }
+        try {
+          const permission = await Notification.requestPermission();
+          if (permission === 'granted') return showNotificationForMatch(match);
+          return false;
+        } catch (e) {
+          return false;
+        }
+      };
+
+      const formatMatchDate = (raw) => {
+        if (!raw || typeof raw !== 'string') return 'TBD';
+        const monthDayMatch = raw.match(/([A-Za-z]{3,9}\s*\d{1,2})/);
+        const timeMatch = raw.match(/(\d{1,2}:\d{2}\s*(?:am|pm|AM|PM)?)/i);
+        if (monthDayMatch && timeMatch) return (monthDayMatch[1].trim() + ' ' + timeMatch[1].toLowerCase());
+        if (monthDayMatch) return monthDayMatch[1].trim();
+        if (timeMatch) return timeMatch[1].toLowerCase();
+        return 'TBD';
+      };
+
+      const renderSchedule = () => {
+        const container = document.getElementById('scheduleList');
+        if (!container) return;
+        container.innerHTML = '';
+
+        schedules.forEach(match => {
+          if (!matchesQuery(match.home, match.away, match.location, match.date)) return;
+          const homeTeam = teams.find(t => t.name === match.home) || { name: match.home, logo: placeholderLogo };
+          const awayTeam = teams.find(t => t.name === match.away) || { name: match.away, logo: placeholderLogo };
+
+          const counts = getCountsForMatch(match.id);
+          const homeVotes = Number(counts.home || 0);
+          const drawVotes = Number(counts.draw || 0);
+          const awayVotes = Number(counts.away || 0);
+          const totalVotes = homeVotes + drawVotes + awayVotes;
+          const homePercent = totalVotes === 0 ? 33 : Math.round((homeVotes / totalVotes) * 100);
+          const drawPercent = totalVotes === 0 ? 33 : Math.round((drawVotes / totalVotes) * 100);
+          const awayPercent = totalVotes === 0 ? 34 : Math.max(0, 100 - homePercent - drawPercent);
+
+          const votedChoice = getVote(match.id);
+          const displayDate = formatMatchDate(match.date);
+
+          const card = document.createElement('div');
+          card.className = 'match-card';
+          card.id = `match-${match.id}`;
+          card.dataset.matchId = match.id;
+          card.dataset.detail = `details.html?id=${match.id}`;
+          const subscribed = isMatchSubscribed(match.id);
+          const subscribeIcon = subscribed ? '🔔' : '🔕';
+          const subscribeAria = subscribed ? `${homeTeam.name} vs ${awayTeam.name} 알림 구독 취소` : `${homeTeam.name} vs ${awayTeam.name} 알림 구독`;
+          // read live/meta for status display
+          const liveAll = (function(){ try { return JSON.parse(localStorage.getItem('kisvl_live_scores')||'{}'); } catch(e){ return {}; } })();
+          const metaAll = (function(){ try { return JSON.parse(localStorage.getItem('kisvl_match_meta')||'{}'); } catch(e){ return {}; } })();
+          const live = liveAll[match.id] || {};
+          const meta = metaAll[match.id] || {};
+          const statusHtml = live.status === 'live' ? `<div class="status-badge live"><span class="live-dot"></span>LIVE</div>` : (live.status === 'ft' ? `<div class="status-badge ft"><span class="live-dot"></span>FT</div>` : (meta.status ? `<div class="status-badge">${meta.status}</div>` : ''));
+
+          card.innerHTML = `
+            <div class="match-date">${displayDate}</div>
+            ${statusHtml}
+            <button class="subscribe-btn match-subscribe ${subscribed ? 'active' : ''}" data-match="${match.id}" aria-pressed="${subscribed}" aria-label="${subscribeAria}">${subscribeIcon}</button>
+            <div class="match-content">
+              <div class="team-vs">
+                <img src="${homeTeam.logo}" alt="${homeTeam.name}" class="team-logo">
+                <span>${homeTeam.name}</span>
+              </div>
+              <div style="display:flex;flex-direction:column;align-items:center;gap:4px;">
+                <span class="vs-badge">VS</span>
+                <div class="match-location">${match.location || ''}</div>
+              </div>
+              <div class="team-vs">
+                <img src="${awayTeam.logo}" alt="${awayTeam.name}" class="team-logo">
+                <span>${awayTeam.name}</span>
+              </div>
+            </div>
+            <div class="vote-section">
+              <div class="vote-btns">
+                <button class="vote-btn ${votedChoice === 'home' ? 'active' : ''}" onclick="vote(${match.id}, 'home')" ${votedChoice ? 'disabled' : ''}>Vote ${homeTeam.name}</button>
+                <button class="vote-btn ${votedChoice === 'draw' ? 'active' : ''}" onclick="vote(${match.id}, 'draw')" ${votedChoice ? 'disabled' : ''}>Vote Draw</button>
+                <button class="vote-btn ${votedChoice === 'away' ? 'active' : ''}" onclick="vote(${match.id}, 'away')" ${votedChoice ? 'disabled' : ''}>Vote ${awayTeam.name}</button>
+              </div>
+              <div class="vote-bar-container">
+                <div class="vote-bar-left" style="width: ${homePercent}%"></div>
+                <div class="vote-bar-mid" style="width: ${drawPercent}%"></div>
+                <div class="vote-bar-right" style="width: ${awayPercent}%"></div>
+              </div>
+              <div class="vote-stats">
+                <span>${homePercent}%</span>
+                <span>${drawPercent}%</span>
+                <span>${awayPercent}%</span>
+              </div>
+            </div>
+          `;
+          container.appendChild(card);
+        });
+      };
+
+      
+
+      const vote = (matchId, side) => {
+        const match = schedules.find(m => m.id === matchId);
+        if (!match) return;
+        if (hasVoted(matchId)) return;
+        const counts = getCountsForMatch(matchId);
+        if (side === 'home') counts.home = (counts.home || 0) + 1;
+        else if (side === 'away') counts.away = (counts.away || 0) + 1;
+        else if (side === 'draw') counts.draw = (counts.draw || 0) + 1;
+        setCountsForMatch(matchId, counts);
+        storeVote(matchId, side);
+        renderSchedule();
+      };
+
+      document.addEventListener('click', async (event) => {
+        const matchBtn = event.target.closest('.match-subscribe');
+        if (!matchBtn) return;
+        const id = Number(matchBtn.dataset.match);
+        const subs = getSubs();
+        const wasSubscribed = !!subs[id];
+        subs[id] = !wasSubscribed;
+        setSubs(subs);
+        renderSchedule();
+
+        // If user just subscribed, try to request notification permission and show a confirmation
+        if (!wasSubscribed && subs[id]) {
+          const matchObj = schedules.find(m => m.id === id);
+          const notified = await requestNotificationPermission(matchObj);
+          if (!notified && ('Notification' in window) && Notification.permission === 'denied') {
+            // show fallback in-page notice when permission is denied
+            try { alert('브라우저 알림 권한이 차단되어 있습니다. 설정에서 알림을 허용해주세요.'); } catch (e) {}
+          }
+        }
+      });
+
+      document.addEventListener('click', (event) => {
+        const card = event.target.closest('.match-card');
+        if (!card) return;
+        if (event.target.closest('button, a, input, textarea, select')) return;
+        const detailUrl = card.dataset.detail || `details.html?id=${card.dataset.matchId || ''}`;
+        if (!detailUrl) return;
+        window.location.href = detailUrl;
+      });
+
+      const searchInput = document.getElementById('searchInput');
+      if (searchInput) {
+        searchInput.addEventListener('input', (event) => {
+          searchQuery = event.target.value || '';
+          renderSchedule();
+        });
+      }
+
+      renderSchedule();
+
+      (function(){
+        const toggleButton = document.querySelector('.theme-toggle');
+        if(!toggleButton) return;
+        const toggleIcon = document.querySelector('.toggle-icon');
+        const toggleText = document.querySelector('.toggle-text');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
+        const applyTheme = (theme) => {
+          document.body.classList.toggle('dark', theme === 'dark');
+          document.body.classList.toggle('light', theme === 'light');
+          const isDark = theme === 'dark';
+          toggleButton.setAttribute('aria-pressed', String(isDark));
+          toggleIcon.textContent = isDark ? '☀️' : '🌙';
+          toggleText.textContent = isDark ? 'Light' : 'Dark';
+        };
+        const savedTheme = localStorage.getItem('bis-theme');
+        if(savedTheme){ applyTheme(savedTheme); } else { applyTheme(prefersDark.matches ? 'dark' : 'light'); }
+        prefersDark.addEventListener('change', (e)=>{ if(!localStorage.getItem('bis-theme')) applyTheme(e.matches ? 'dark' : 'light'); });
+        toggleButton.addEventListener('click', ()=>{ const isDark = document.body.classList.contains('dark'); const next = isDark ? 'light' : 'dark'; localStorage.setItem('bis-theme', next); applyTheme(next); });
+      })();
+    </script>
+    <script>
+      // Set admin passphrase (saved by user request)
+      try { localStorage.setItem('kis_admin_pass', 'BISathletic120712!'); } catch(e) {}
+    </script>
+  </body>
+</html>

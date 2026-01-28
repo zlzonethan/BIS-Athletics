@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>KISAA / KAIAC</title>
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet" />
+		<style>
+			:root {
+				--bg: #f4f5f7;
+				--text: #0f172a;
+				--muted: #6b7280;
+				--card: #ffffff;
+				--shadow: 0 20px 60px rgba(15, 23, 42, 0.12);
+				--accent: #0b1b3a;
+				--panel: #fefefe;
+				--nav-muted: rgba(15, 23, 42, 0.7);
+				--glass: rgba(255, 255, 255, 0.6);
+				--tab-accent: #2563eb;
+			}
+
+			body.dark {
+				--bg: #0a1120;
+				--text: #f8fafc;
+				--muted: #9aa4b2;
+				--card: #0f1a2b;
+				--shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
+				--accent: #e2e8f0;
+				--panel: #121d2e;
+				--nav-muted: rgba(248, 250, 252, 0.8);
+				--glass: rgba(12, 20, 36, 0.75);
+			}
+
+			@media (prefers-color-scheme: dark) {
+				body:not(.light) {
+					--bg: #0a1120;
+					--text: #f8fafc;
+					--muted: #9aa4b2;
+					--card: #0f1a2b;
+					--shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
+					--accent: #e2e8f0;
+					--panel: #121d2e;
+					--nav-muted: rgba(248, 250, 252, 0.8);
+					--glass: rgba(12, 20, 36, 0.75);
+				}
+			}
+
+			* {
+				box-sizing: border-box;
+				margin: 0;
+				padding: 0;
+			}
+
+			body {
+				font-family: 'Noto Sans KR', system-ui, -apple-system, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+				background: var(--bg);
+				color: var(--text);
+				min-height: 100vh;
+				transition: background 0.3s ease, color 0.3s ease;
+			}
+
+			.wrap {
+				max-width: 1200px;
+				margin: 0 auto;
+				padding: 18px 24px 80px;
+			}
+
+			.top-nav {
+				position: relative;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				gap: 0;
+				color: var(--nav-muted);
+				font-weight: 700;
+				letter-spacing: 0.4px;
+			}
+
+			.nav-center {
+				display: grid;
+				grid-template-columns: 1fr auto 1fr;
+				align-items: center;
+				column-gap: 80px;
+				margin: 0 auto;
+				width: 100%;
+			}
+
+			.nav-left,
+			.nav-right {
+				display: flex;
+				align-items: center;
+				gap: 120px;
+			}
+
+			.nav-left {
+				justify-content: flex-end;
+			}
+
+			.nav-right {
+				justify-content: flex-start;
+			}
+
+			.top-nav .nav-item {
+				position: relative;
+				display: flex;
+				align-items: center;
+				gap: 10px;
+				color: var(--nav-muted);
+				text-decoration: none;
+			}
+
+			.top-nav .nav-item:hover,
+			.top-nav .nav-item:focus {
+				text-decoration: none;
+			}
+
+			.theme-toggle {
+				display: flex;
+				align-items: center;
+				gap: 10px;
+				background: var(--glass);
+				border: 1px solid rgba(148, 163, 184, 0.2);
+				color: var(--text);
+				padding: 8px 14px;
+				border-radius: 999px;
+				cursor: pointer;
+				font-weight: 600;
+				backdrop-filter: blur(6px);
+				transition: all 0.3s ease;
+			}
+
+			.theme-toggle:hover {
+				transform: scale(1.02);
+			}
+
+			.theme-toggle-wrap {
+				margin-top: 28px;
+				display: flex;
+				justify-content: center;
+			}
+
+			.top-nav .logo {
+				width: 48px;
+				height: 48px;
+				object-fit: contain;
+			}
+
+			.hero {
+				text-align: center;
+				margin-top: 18px;
+			}
+
+			.hero h1 {
+				font-family: 'Black Han Sans', 'Noto Sans KR', sans-serif;
+				font-weight: 400;
+				font-size: clamp(40px, 7vw, 80px);
+				letter-spacing: 1px;
+			}
+
+			.panel {
+				margin-top: 28px;
+				background: var(--card);
+				border-radius: 30px;
+				padding: 38px 44px 48px;
+				box-shadow: 0 18px 50px rgba(15, 23, 42, 0.12);
+				border: 1px solid rgba(148, 163, 184, 0.14);
+				transition: background 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+			}
+
+			.panel-title {
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				gap: 12px;
+				font-size: 26px;
+				font-weight: 800;
+				letter-spacing: 0.6px;
+				margin-bottom: 26px;
+				color: var(--accent);
+			}
+
+			.panel-subtitle {
+				text-align: center;
+				color: var(--muted);
+				font-weight: 600;
+				margin-top: -12px;
+				margin-bottom: 24px;
+			}
+
+			.info-grid {
+				display: grid;
+				grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+				gap: 20px;
+			}
+
+			.info-card {
+				background: var(--panel);
+				border-radius: 20px;
+				padding: 20px 18px 18px;
+				box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
+				display: grid;
+				gap: 12px;
+				border: 1px solid rgba(148, 163, 184, 0.12);
+			}
+
+			.info-card h3 {
+				font-size: 18px;
+				font-weight: 800;
+				text-align: center;
+			}
+
+			.info-card p {
+				text-align: center;
+				color: var(--muted);
+				font-weight: 600;
+			}
+
+			.info-list {
+				list-style: none;
+				display: grid;
+				gap: 8px;
+				font-weight: 600;
+				color: var(--muted);
+				text-align: center;
+			}
+
+			.info-list li {
+				padding: 6px 10px;
+				background: rgba(15, 23, 42, 0.05);
+				border-radius: 999px;
+			}
+
+			.badge-row {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 10px;
+				justify-content: center;
+			}
+
+			.badge {
+				padding: 8px 14px;
+				border-radius: 999px;
+				background: rgba(37, 99, 235, 0.12);
+				color: #1e3a8a;
+				font-weight: 700;
+				font-size: 14px;
+			}
+
+			body.dark .badge {
+				background: rgba(96, 165, 250, 0.18);
+				color: #dbeafe;
+			}
+
+			.section-grid {
+				display: grid;
+				gap: 18px;
+			}
+
+			@media (max-width: 860px) {
+				.top-nav {
+					gap: 40px;
+				}
+
+				.nav-center {
+					display: flex;
+					gap: 32px;
+					flex-wrap: wrap;
+					justify-content: center;
+				}
+
+				.nav-left,
+				.nav-right {
+					gap: 24px;
+					justify-content: center;
+				}
+
+				.theme-toggle {
+					margin-top: 0;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<div class="wrap">
+			<nav class="top-nav">
+				<div class="nav-center">
+					<div class="nav-left">
+						<a class="nav-item" href="bobcat.html">Bobcat</a>
+						<a class="nav-item" href="team.html">Team</a>
+					</div>
+					<a class="nav-logo-link" href="index.html">
+						<img class="logo" src="assets/bismascot.png" alt="BIS mascot" />
+					</a>
+					<div class="nav-right">
+						<a class="nav-item" href="upcoming.html">Upcoming</a>
+						<a class="nav-item" href="kisaa-kaiac.html">KISAA/KAIAC</a>
+					</div>
+				</div>
+			</nav>
+
+			<header class="hero">
+				<h1>KISAA / KAIAC</h1>
+			</header>
+
+			<section class="panel">
+				<div class="panel-title">
+					<span>🏫</span>
+					<span>KISAA Schools</span>
+					<span>🏫</span>
+				</div>
+
+				<div class="info-grid">
+					<div class="info-card">
+						<h3>Full Members</h3>
+						<!-- <p>정규 회원 학교</p> -->
+						<div class="badge-row">
+							<span class="badge">BIS</span>
+							<span class="badge">FPS</span>
+							<span class="badge">CCAS</span>
+							<span class="badge">SPPS</span>
+							<span class="badge">SPAS</span>
+							<span class="badge">SSI-Daechi</span>
+							<span class="badge">MCAS</span>
+							<span class="badge">IEWCA</span>
+							<span class="badge">ICS-U</span>
+							<span class="badge">SPAS-CSIS</span>
+						</div>
+					</div>
+					<div class="info-card">
+						<h3>Provisional Members</h3>
+						<!-- <p>임시 회원 학교</p> -->
+						<div class="badge-row">
+							<span class="badge">MICA</span>
+							<span class="badge">BCC</span>
+							<span class="badge">QCS</span>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<section class="panel">
+				<div class="panel-title">
+					<span>🏐</span>
+					<span>KAIAC / KISAC who play BIS</span>
+					<span>🏀</span>
+				</div>
+				<!-- <p class="panel-subtitle">BIS와 교류하는 KAIAC/KISAC 학교들입니다.</p> -->
+				<div class="section-grid">
+					<div class="info-card">
+						<div class="badge-row">
+							<span class="badge">ICS-P</span>
+							<span class="badge">KKFS</span>
+							<span class="badge">CMIS</span>
+							<span class="badge">GSIS</span>
+							<span class="badge">KISJ</span>
+							<span class="badge">SJA</span>
+							<span class="badge">SFS</span>
+							<span class="badge">YISS</span>
+							<span class="badge">KIS</span>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<section class="panel">
+				<div class="panel-title">
+					<span>📌</span>
+					<span>Schools not in a League</span>
+					<span>📌</span>
+				</div>
+				<!-- <p class="panel-subtitle">리그 비소속 학교</p> -->
+				<div class="section-grid">
+					<div class="info-card">
+						<div class="badge-row">
+							<span class="badge">SCI</span>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<section class="panel">
+				<div class="panel-title">
+					<span>🤝</span>
+					<span>Friendly Games</span>
+					<span>🤝</span>
+				</div>
+				<!-- <p class="panel-subtitle">친선 경기에서 만나게 되는 학교들</p> -->
+				<div class="section-grid">
+					<div class="info-card">
+						<div class="badge-row">
+							<span class="badge">SPAS</span>
+							<span class="badge">ICS-P</span>
+							<span class="badge">YISS</span>
+							<span class="badge">SFS</span>
+							<span class="badge">KKFS</span>
+							<span class="badge">CMIS</span>
+							<span class="badge">GSIS</span>
+							<span class="badge">MICA</span>
+							<span class="badge">SCI</span>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<div class="theme-toggle-wrap">
+				<button class="theme-toggle" type="button" aria-pressed="false">
+					<span class="toggle-icon">🌙</span>
+					<span class="toggle-text">Dark</span>
+				</button>
+			</div>
+		</div>
+		<script>
+			const toggleButton = document.querySelector(".theme-toggle");
+			const toggleIcon = document.querySelector(".toggle-icon");
+			const toggleText = document.querySelector(".toggle-text");
+			const prefersDark = window.matchMedia("(prefers-color-scheme: dark)");
+
+			const applyTheme = (theme) => {
+				document.body.classList.toggle("dark", theme === "dark");
+				document.body.classList.toggle("light", theme === "light");
+				const isDark = theme === "dark";
+				toggleButton.setAttribute("aria-pressed", String(isDark));
+				toggleIcon.textContent = isDark ? "☀️" : "🌙";
+				toggleText.textContent = isDark ? "Light" : "Dark";
+			};
+
+			const savedTheme = localStorage.getItem("bis-theme");
+			if (savedTheme) {
+				applyTheme(savedTheme);
+			} else {
+				applyTheme(prefersDark.matches ? "dark" : "light");
+			}
+
+			prefersDark.addEventListener("change", (event) => {
+				const stored = localStorage.getItem("bis-theme");
+				if (!stored) {
+					applyTheme(event.matches ? "dark" : "light");
+				}
+			});
+
+			toggleButton.addEventListener("click", () => {
+				const isDark = document.body.classList.contains("dark");
+				const nextTheme = isDark ? "light" : "dark";
+				localStorage.setItem("bis-theme", nextTheme);
+				applyTheme(nextTheme);
+			});
+		</script>
+	</body>
+</html>
