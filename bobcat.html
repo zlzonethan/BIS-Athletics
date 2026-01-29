@@ -7,68 +7,60 @@
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 		<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet" />
-		<script>
-			(function(){
-				const tabs = document.querySelectorAll('.tab-btn');
-				const cards = document.querySelectorAll('.bobcat-card');
-				function setActive(key){
-					cards.forEach(c => c.classList.toggle('active', c.dataset.key === key));
-					tabs.forEach(t => t.classList.toggle('active', t.dataset.target === key));
-				}
-				tabs.forEach(t => t.addEventListener('click', ()=> setActive(t.dataset.target)));
-			})();
-		</script>
 		<style>
 			:root {
 				--bg: #f4f5f7;
 				--text: #0f172a;
 				--muted: #6b7280;
-				--card: #ffffff;
-				--shadow: 0 20px 60px rgba(15, 23, 42, 0.12);
-				--accent: #0b1b3a;
-				--panel: #fefefe;
-				--nav-muted: rgba(15, 23, 42, 0.7);
-				--glass: rgba(255, 255, 255, 0.6);
-				--tab-accent: #2563eb;
-			}
+				</div>
 
-			body.dark {
-				--bg: #0a1120;
-				--text: #f8fafc;
-				--muted: #9aa4b2;
-				--card: #0f1a2b;
-				--shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
-				--accent: #e2e8f0;
-				--panel: #121d2e;
-				--nav-muted: rgba(248, 250, 252, 0.8);
-				--glass: rgba(12, 20, 36, 0.75);
-			}
+				<div class="theme-toggle-wrap">
+					<button class="theme-toggle" type="button" aria-pressed="false">
+						<span class="toggle-icon">🌙</span>
+						<span class="toggle-text">Dark</span>
+					</button>
+				</div>
+			</div>
 
-			@media (prefers-color-scheme: dark) {
-				body:not(.light) {
-					--bg: #0a1120;
-					--text: #f8fafc;
-					--muted: #9aa4b2;
-					--card: #0f1a2b;
-					--shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
-					--accent: #e2e8f0;
-					--panel: #121d2e;
-					--nav-muted: rgba(248, 250, 252, 0.8);
-					--glass: rgba(12, 20, 36, 0.75);
-				}
-			}
+			<script>
+				// Tab behavior
+				(function(){
+					const tabs = document.querySelectorAll('.tab-btn');
+					const contents = document.querySelectorAll('.tab-content');
+					function activate(targetId){
+						tabs.forEach(b=> b.classList.toggle('active', b.dataset.target===targetId));
+						contents.forEach(c=> c.classList.toggle('active', c.id===targetId));
+					}
+					document.addEventListener('click', (e)=>{
+						const btn = e.target.closest('.tab-btn');
+						if(!btn) return;
+						activate(btn.dataset.target);
+					});
+				})();
 
-			* {
-				box-sizing: border-box;
-				margin: 0;
-				padding: 0;
-			}
+				const toggleButton = document.querySelector('.theme-toggle');
+				const toggleIcon = document.querySelector('.toggle-icon');
+				const toggleText = document.querySelector('.toggle-text');
+				const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
 
-			body {
-				font-family: 'Noto Sans KR', system-ui, -apple-system, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
-				background: var(--bg);
-				color: var(--text);
-				min-height: 100vh;
+				const applyTheme = (theme) => {
+					document.body.classList.toggle('dark', theme === 'dark');
+					document.body.classList.toggle('light', theme === 'light');
+					const isDark = theme === 'dark';
+					toggleButton.setAttribute('aria-pressed', String(isDark));
+					toggleIcon.textContent = isDark ? '☀️' : '🌙';
+					toggleText.textContent = isDark ? 'Light' : 'Dark';
+				};
+
+				const savedTheme = localStorage.getItem('bis-theme');
+				if (savedTheme) { applyTheme(savedTheme); } else { applyTheme(prefersDark.matches ? 'dark' : 'light'); }
+
+				prefersDark.addEventListener('change', (event) => { const stored = localStorage.getItem('bis-theme'); if (!stored) applyTheme(event.matches ? 'dark' : 'light'); });
+
+				toggleButton.addEventListener('click', () => { const isDark = document.body.classList.contains('dark'); const nextTheme = isDark ? 'light' : 'dark'; localStorage.setItem('bis-theme', nextTheme); applyTheme(nextTheme); });
+			</script>
+		</body>
+	</html>
 				transition: background 0.3s ease, color 0.3s ease;
 			}
 
@@ -213,68 +205,34 @@
 				font-weight: 800;
 			}
 
-			.bobcat-img {
-				width: 100%;
-				max-height: 240px;
-				object-fit: contain;
-			}
+				  <div class="tabs" role="tablist" aria-label="Bobcat categories">
+					  <button class="tab-btn active" data-target="tab-main" type="button">Main</button>
+					  <button class="tab-btn" data-target="tab-retro" type="button">Retro</button>
+					  <button class="tab-btn" data-target="tab-colors" type="button">Official Colors</button>
+				  </div>
 
-			.bobcat-note {
-				margin-top: 16px;
-				color: var(--muted);
-				font-weight: 600;
-				text-align: center;
-			}
+				  <div class="tab-contents">
+					  <div id="tab-main" class="tab-content active">
+						  <div class="bobcat-card">
+							  <h3>Main 2025 Bobcat</h3>
+							  <img class="bobcat-img" src="https://lh3.googleusercontent.com/sitesv/APaQ0ST0tIHn3E0LhFovVFM9z2JoCAg8hMiB8JOrG4k0yQheJqTC4RBOtPbtoB5qsfp7KG181hKZsaHjtunpRJvsqXSG2BhFiB2WHG7AaMrC0G8GB2jjJgLoewCaghCHLQXqP-tNmI5KZXesUm4DD4oJsMRiJ--O2lDCmKmHgkNkzQkQg9pjTeElkGfbhdJMf6LzLyhV7h5HLTX9ZbNiv4FTQBSOWcOw_KJTAMDFX8A=w1280" alt="Main 2025 Bobcat logo" />
+						  </div>
+					  </div>
 
-			.bobcat-link {
-				color: var(--tab-accent);
-				font-weight: 700;
-				text-decoration: none;
-			}
+					  <div id="tab-retro" class="tab-content">
+						  <div class="bobcat-card">
+							  <h3>Retro Alternate Bobcat</h3>
+							  <img class="bobcat-img" src="https://lh3.googleusercontent.com/sitesv/APaQ0SRuLOMbIV870R05e7iyQ5aEwp7peZ0Q5XDqjDUGPMWKinQ5Djw5d5LGk8Vx5A_sTQftwzG9q8DjB1qW_iiLYUNDdu9kuZzHrzzEFk-ik2SPzSnwS3Uaffdgd_fMqFOe8zVlEVfmnaTjyrydaR9Zqtho2-Sk9zzkjmL_z2sc8Kb6g4bHKtzzHmDmv2cPH0i_7ta6pc8GiFVdxQQu3De1MIesQ_qOO_D3rEzb=w1280" alt="Retro alternate Bobcat logo" />
+						  </div>
+					  </div>
 
-			.bobcat-link:hover {
-				text-decoration: underline;
-			}
-
-			/* Tabs for single-card-per-menu */
-			.tabs { display:flex; gap:8px; justify-content:center; margin: 8px 0 18px; }
-			.tab-btn { padding:8px 12px; border-radius:999px; border:1px solid rgba(15,23,42,0.06); background:transparent; font-weight:800; cursor:pointer; color:var(--muted); }
-			.tab-btn.active { background:var(--panel); box-shadow:0 8px 20px rgba(15,23,42,0.08); color:var(--text); }
-
-			.bobcat-grid .bobcat-card { display:none; }
-			.bobcat-grid .bobcat-card.active { display:block; }
-
-			@media (max-width: 860px) {
-				.top-nav {
-					gap: 40px;
-				}
-
-				.nav-center {
-					display: flex;
-					gap: 32px;
-					flex-wrap: wrap;
-					justify-content: center;
-				}
-
-				.nav-left,
-				.nav-right {
-					gap: 24px;
-					justify-content: center;
-				}
-
-				.theme-toggle {
-					margin-top: 0;
-				}
-
-				.panel {
-					padding: 24px 20px 32px;
-				}
-			}
-
-			@media (max-width: 600px) {
-				.wrap {
-					padding: 12px 16px 60px;
-				}
+					  <div id="tab-colors" class="tab-content">
+						  <div class="bobcat-card">
+							  <h3>Official Colors & HEX Codes</h3>
+							  <img class="bobcat-img" src="https://lh3.googleusercontent.com/sitesv/APaQ0SQqepzSn7ttBX38GJNkYVczjRDDOJOMrBeStIgJK2lrvsmt5iBhqYbImidygRLiBF7zLRT691SceM5_VLL7otlp-VvsWJ-EI24jBcyj_c3Q2PGeLWQibRSH30Lk_cXLTdILC4j0xCqmFsUrVyctQQyeOGIQ1VGY-p22knRc78GHafRdnRmmx4JwcQgI-P73Cpg8eImSeu5VOxm3bauCWy5aHYD9kFJNdDMo=w1280" alt="Official BIS Athletics colors and HEX codes" />
+						  </div>
+					  </div>
+				  </div>
 
 				.top-nav {
 					gap: 20px;
@@ -394,28 +352,41 @@
 	</head>
 	<body>
 		<div class="wrap">
-				  <div class="tabs" role="tablist" aria-label="Bobcat tabs">
-					  <button class="tab-btn active" data-target="main" type="button">Main</button>
-					  <button class="tab-btn" data-target="retro" type="button">Retro</button>
-					  <button class="tab-btn" data-target="colors" type="button">Colors</button>
-				  </div>
+			<nav class="top-nav">
+				<div class="nav-center">
+					<div class="nav-left">
+						<a class="nav-item" href="bobcat.html">Bobcat</a>
+						<a class="nav-item" href="team.html">Team</a>
+					</div>
+					<a class="nav-logo-link" href="index.html">
+						<img class="logo" src="assets/bismascot.png" alt="BIS mascot" />
+					</a>
+					<div class="nav-right">
+						<a class="nav-item" href="upcoming.html">Upcoming</a>
+						<a class="nav-item" href="kisaa-kaiac.html">KISAA/KAIAC</a>
+					</div>
+				</div>
+			</nav>
 
-				  <div class="bobcat-grid">
-					  <div class="bobcat-card active" data-key="main">
-						  <h3>Main 2025 Bobcat</h3>
-						  <img class="bobcat-img" src="https://lh3.googleusercontent.com/sitesv/APaQ0ST0tIHn3E0LhFovVFM9z2JoCAg8hMiB8JOrG4k0yQheJqTC4RBOtPbtoB5qsfp7KG181hKZsaHjtunpRJvsqXSG2BhFiB2WHG7AaMrC0G8GB2jjJgLoewCaghCHLQXqP-tNmI5KZXesUm4DD4oJsMRiJ--O2lDCmKmHgkNkzQkQg9pjTeElkGfbhdJMf6LzLyhV7h5HLTX9ZbNiv4FTQBSOWcOw_KJTAMDFX8A=w1280" alt="Main 2025 Bobcat logo" />
-					  </div>
+			<header class="hero">
+				<h1>BIS BOBCAT</h1>
+			</header>
 
-					  <div class="bobcat-card" data-key="retro">
-						  <h3>Retro Alternate Bobcat</h3>
-						  <img class="bobcat-img" src="https://lh3.googleusercontent.com/sitesv/APaQ0SRuLOMbIV870R05e7iyQ5aEwp7peZ0Q5XDqjDUGPMWKinQ5Djw5d5LGk8Vx5A_sTQftwzG9q8DjB1qW_iiLYUNDdu9kuZzHrzzEFk-ik2SPzSnwS3Uaffdgd_fMqFOe8zVlEVfmnaTjyrydaR9Zqtho2-Sk9zzkjmL_z2sc8Kb6g4bHKtzzHmDmv2cPH0i_7ta6pc8GiFVdxQQu3De1MIesQ_qOO_D3rEzb=w1280" alt="Retro alternate Bobcat logo" />
-					  </div>
+			<section class="panel">
+				<div class="panel-title">
+					<span>🐾</span>
+					<span>BIS Bobcat</span>
+					<span>🐾</span>
+				</div>
 
-					  <div class="bobcat-card" data-key="colors">
-						  <h3>Official Colors & HEX Codes</h3>
-						  <img class="bobcat-img" src="https://lh3.googleusercontent.com/sitesv/APaQ0SQqepzSn7ttBX38GJNkYVczjRDDOJOMrBeStIgJK2lrvsmt5iBhqYbImidygRLiBF7zLRT691SceM5_VLL7otlp-VvsWJ-EI24jBcyj_c3Q2PGeLWQibRSH30Lk_cXLTdILC4j0xCqmFsUrVyctQQyeOGIQ1VGY-p22knRc78GHafRdnRmmx4JwcQgI-P73Cpg8eImSeu5VOxm3bauCWy5aHYD9kFJNdDMo=w1280" alt="Official BIS Athletics colors and HEX codes" />
-					  </div>
-				  </div>
+				<div class="bobcat-grid">
+					<div class="bobcat-card">
+						<h3>Main 2025 Bobcat</h3>
+						<img class="bobcat-img" src="https://lh3.googleusercontent.com/sitesv/APaQ0ST0tIHn3E0LhFovVFM9z2JoCAg8hMiB8JOrG4k0yQheJqTC4RBOtPbtoB5qsfp7KG181hKZsaHjtunpRJvsqXSG2BhFiB2WHG7AaMrC0G8GB2jjJgLoewCaghCHLQXqP-tNmI5KZXesUm4DD4oJsMRiJ--O2lDCmKmHgkNkzQkQg9pjTeElkGfbhdJMf6LzLyhV7h5HLTX9ZbNiv4FTQBSOWcOw_KJTAMDFX8A=w1280" alt="Main 2025 Bobcat logo" />
+					</div>
+					<div class="bobcat-card">
+						<h3>Retro Alternate Bobcat</h3>
+						<img class="bobcat-img" src="https://lh3.googleusercontent.com/sitesv/APaQ0SRuLOMbIV870R05e7iyQ5aEwp7peZ0Q5XDqjDUGPMWKinQ5Djw5d5LGk8Vx5A_sTQftwzG9q8DjB1qW_iiLYUNDdu9kuZzHrzzEFk-ik2SPzSnwS3Uaffdgd_fMqFOe8zVlEVfmnaTjyrydaR9Zqtho2-Sk9zzkjmL_z2sc8Kb6g4bHKtzzHmDmv2cPH0i_7ta6pc8GiFVdxQQu3De1MIesQ_qOO_D3rEzb=w1280" alt="Retro alternate Bobcat logo" />
 					</div>
 					<div class="bobcat-card">
 						<h3>Black and White</h3>
