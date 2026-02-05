@@ -173,18 +173,6 @@
         .status-badge.live { background: rgba(254,242,242,0.95); color: var(--lose-color); }
         .status-badge.ft { background: rgba(236,253,245,0.95); color: var(--win-color); box-shadow: 0 6px 18px rgba(16,185,129,0.06); }
         body.dark .status-badge { background: rgba(255,235,235,0.06); color: var(--lose-color); box-shadow: 0 6px 18px rgba(0,0,0,0.35) }
-        .gender-badge {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            padding: 2px 8px;
-            border-radius: 999px;
-            font-size: 11px;
-            font-weight: 800;
-            background: var(--muted-border);
-            color: var(--text-main);
-            margin-top: 8px;
-        }
         .live-dot {
             width: 6px; height: 6px; border-radius: 50%;
             background: currentColor; box-shadow: 0 0 8px currentColor;
@@ -302,21 +290,6 @@
             .score-row { margin-top: 10px; gap: 14px; }
             .score-num { font-size: 18px; }
             .status-badge { padding: 6px 10px; font-size: 12px; }
-            .gender-badge { padding: 4px 8px; font-size: 10px; }
-            .timeline { margin-top: 16px; padding: 14px; }
-            .timeline-item { font-size: 13px; padding: 6px 0; }
-            .stream { margin-top: 16px; padding: 14px; }
-            .stream iframe { height: 180px; }
-            #voteCard { padding: 14px; margin-top: 16px; }
-            #voteCard h4 { font-size: 14px; margin-bottom: 10px; }
-            .vote-btns { gap: 8px; }
-            .vote-btn { padding: 10px; font-size: 13px; }
-            .vote-stats { font-size: 11px; }
-            .top-actions { top: auto; bottom: 12px; right: 12px; gap: 8px; }
-            .theme-toggle { padding: 6px 10px; font-size: 13px; }
-            .admin-modal { padding: 12px; }
-            .admin-panel { padding: 14px; border-radius: 14px; }
-        }
 
         @media (max-width: 380px) {
             body { padding: 10px 8px; }
@@ -341,18 +314,6 @@
             .score-row { gap: 10px; }
             .score-num { font-size: 14px; }
             .status-badge { padding: 5px 8px; font-size: 10px; }
-            .gender-badge { padding: 3px 6px; font-size: 9px; }
-            .timeline { padding: 10px; }
-            .timeline-item { font-size: 11px; }
-            .stream { padding: 10px; }
-            .stream iframe { height: 130px; }
-            #voteCard { padding: 10px; }
-            #voteCard h4 { font-size: 12px; }
-            .vote-btn { padding: 8px; font-size: 11px; }
-            .vote-stats { font-size: 10px; }
-            .top-actions { bottom: 8px; right: 8px; }
-            .theme-toggle { padding: 5px 8px; font-size: 11px; }
-        }
     </style>
     <!-- Firebase SDKs (replace with modular SDK if preferred) -->
     <script>
@@ -378,10 +339,11 @@
         <div class="card">
             <div class="header">
                 <a class="back" href="upcoming.html">← Back</a>
-                <div class="match-date" id="matchDate"></div>
+                <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;">
+                    <div class="match-date" id="matchDate"></div>
+                </div>
             </div>
             <div id="statusBadge"></div>
-            <div id="matchGender" class="gender-badge" style="display:none;"></div>
             <div class="stream" id="streamContainer"></div>
             <div class="match-content">
                 <div class="team-vs">
@@ -550,15 +512,6 @@
             else if (live.status === 'ft') badge.innerHTML = `<div class="status-badge ft">FINAL${extra ? ' • ' + extra : ''}</div>`;
             else badge.innerHTML = '';
 
-            const genderEl = document.getElementById('matchGender');
-            if (genderEl) {
-                if (gender) {
-                    genderEl.textContent = gender === 'boys' ? '남자' : '여자';
-                    genderEl.style.display = 'inline-flex';
-                } else {
-                    genderEl.style.display = 'none';
-                }
-            }
 
             const streamContainer = document.getElementById('streamContainer');
             const streamUrl = live.streamUrl || '';
@@ -882,6 +835,8 @@
             const btn = document.getElementById('themeToggle');
             if (btn) btn.addEventListener('click', toggleTheme);
         })();
+
+        // Gender filter: persist selection and navigate to a matching match if needed
 
     </script>
     <script>

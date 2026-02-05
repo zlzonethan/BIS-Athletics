@@ -1,449 +1,400 @@
 <!DOCTYPE html>
 <html lang="ko">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>BIS Bobcat</title>
-		<link rel="preconnect" href="https://fonts.googleapis.com" />
-		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-		<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet" />
-		<style>
-			:root {
-				--bg: #f4f5f7;
-				--text: #0f172a;
-				--muted: #6b7280;
-				</div>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>BIS Bobcat</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #f4f5f7;
+      --text: #0f172a;
+      --muted: #6b7280;
+      --panel: #ffffff;
+      --accent: #0b1b3a;
+      --nav-muted: rgba(15, 23, 42, 0.7);
+      --border: rgba(148, 163, 184, 0.12);
+    }
+    body.dark {
+      --bg: #0a1120;
+      --text: #f8fafc;
+      --muted: #9aa4b2;
+      --panel: #0f1a2b;
+      --nav-muted: rgba(248, 250, 252, 0.8);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Noto Sans KR', system-ui, -apple-system, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+    .wrap { max-width: 1100px; margin: 0 auto; padding: 18px 24px 60px; }
 
-				<div class="theme-toggle-wrap">
-					<button class="theme-toggle" type="button" aria-pressed="false">
-						<span class="toggle-icon">🌙</span>
-						<span class="toggle-text">Dark</span>
-					</button>
-				</div>
-			</div>
+    /* Navigation */
+    .top-nav { position: relative; display: flex; align-items: center; justify-content: center; gap: 0; color: var(--nav-muted); font-weight: 700; letter-spacing: 0.4px; }
+    .nav-center { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; column-gap: 80px; margin: 0 auto; width: 100%; }
+    .nav-left, .nav-right { display: flex; align-items: center; gap: 120px; }
+    .nav-left { justify-content: flex-end; }
+    .nav-right { justify-content: flex-start; }
+    .nav-item { position: relative; display: flex; align-items: center; gap: 10px; color: var(--nav-muted); text-decoration: none; }
+    .nav-item:hover, .nav-item:focus { text-decoration: none; }
+    .logo { width: 48px; height: 48px; object-fit: contain; }
 
-			<script>
-				// Tab behavior
-				(function(){
-					const tabs = document.querySelectorAll('.tab-btn');
-					const contents = document.querySelectorAll('.tab-content');
-					function activate(targetId){
-						tabs.forEach(b=> b.classList.toggle('active', b.dataset.target===targetId));
-						contents.forEach(c=> c.classList.toggle('active', c.id===targetId));
-					}
-					document.addEventListener('click', (e)=>{
-						const btn = e.target.closest('.tab-btn');
-						if(!btn) return;
-						activate(btn.dataset.target);
-					});
-				})();
+    /* Hero */
+    .hero { text-align: center; margin: 24px 0 28px; }
+    .hero h1 {
+      font-family: 'Black Han Sans', 'Noto Sans KR', sans-serif;
+      font-weight: 400;
+      font-size: clamp(36px, 7vw, 64px);
+      letter-spacing: 1px;
+    }
 
-				const toggleButton = document.querySelector('.theme-toggle');
-				const toggleIcon = document.querySelector('.toggle-icon');
-				const toggleText = document.querySelector('.toggle-text');
-				const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
+    /* Panel Card */
+    .panel {
+      background: var(--panel);
+      border-radius: 24px;
+      padding: 40px 32px 48px;
+      box-shadow: 0 16px 40px rgba(15, 23, 42, 0.08);
+      border: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+    .bobcat-img-main {
+      width: 100%;
+      max-width: 320px;
+      height: auto;
+      object-fit: contain;
+    }
+    .bobcat-title {
+      margin-top: 24px;
+      font-family: 'Black Han Sans', 'Noto Sans KR', sans-serif;
+      font-weight: 400;
+      font-size: 28px;
+      letter-spacing: 0.5px;
+    }
 
-				const applyTheme = (theme) => {
-					document.body.classList.toggle('dark', theme === 'dark');
-					document.body.classList.toggle('light', theme === 'light');
-					const isDark = theme === 'dark';
-					toggleButton.setAttribute('aria-pressed', String(isDark));
-					toggleIcon.textContent = isDark ? '☀️' : '🌙';
-					toggleText.textContent = isDark ? 'Light' : 'Dark';
-				};
+    /* Retro Grid */
+    .retro-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      width: 100%;
+    }
+    .retro-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+    .retro-item img {
+      width: 100%;
+      max-width: 200px;
+      height: auto;
+      object-fit: contain;
+    }
+    .retro-item-title {
+      margin-top: 14px;
+      font-family: 'Black Han Sans', 'Noto Sans KR', sans-serif;
+      font-weight: 400;
+      font-size: 18px;
+      letter-spacing: 0.3px;
+    }
+    @media (max-width: 720px) {
+      .retro-grid {
+        grid-template-columns: 1fr;
+        gap: 28px;
+      }
+      .retro-item img {
+        max-width: 180px;
+      }
+    }
 
-				const savedTheme = localStorage.getItem('bis-theme');
-				if (savedTheme) { applyTheme(savedTheme); } else { applyTheme(prefersDark.matches ? 'dark' : 'light'); }
+    /* Color Grid */
+    .color-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 20px;
+      width: 100%;
+    }
+    .color-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+    .color-swatch {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+      border: 3px solid rgba(148, 163, 184, 0.2);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .color-swatch:hover {
+      transform: scale(1.08);
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.18);
+    }
+    .color-name {
+      margin-top: 12px;
+      font-weight: 700;
+      font-size: 14px;
+    }
+    .color-code {
+      margin-top: 4px;
+      font-size: 12px;
+      color: var(--muted);
+      font-family: 'Courier New', monospace;
+      font-weight: 600;
+      background: var(--border);
+      padding: 4px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .color-code:hover {
+      background: var(--accent);
+      color: #fff;
+    }
+    @media (max-width: 720px) {
+      .color-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+      }
+      .color-swatch {
+        width: 64px;
+        height: 64px;
+      }
+    }
+    @media (max-width: 480px) {
+      .color-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
 
-				prefersDark.addEventListener('change', (event) => { const stored = localStorage.getItem('bis-theme'); if (!stored) applyTheme(event.matches ? 'dark' : 'light'); });
+    /* Tabs */
+    .tabs {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin-bottom: 24px;
+    }
+    .tab-btn {
+      padding: 10px 28px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text);
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .tab-btn.active {
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+    }
+    .tab-btn:hover:not(.active) {
+      background: var(--border);
+    }
+    .tab-content {
+      display: none;
+    }
+    .tab-content.active {
+      display: block;
+    }
 
-				toggleButton.addEventListener('click', () => { const isDark = document.body.classList.contains('dark'); const nextTheme = isDark ? 'light' : 'dark'; localStorage.setItem('bis-theme', nextTheme); applyTheme(nextTheme); });
-			</script>
-		</body>
-	</html>
-				transition: background 0.3s ease, color 0.3s ease;
-			}
+    /* Theme toggle */
+    .theme-toggle-wrap { display: flex; justify-content: center; margin-top: 24px; }
+    .theme-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.6);
+      color: var(--text);
+      cursor: pointer;
+      font-weight: 600;
+      backdrop-filter: blur(6px);
+      transition: transform 0.2s;
+    }
+    .theme-toggle:hover { transform: scale(1.02); }
 
-			.wrap {
-				max-width: 1200px;
-				margin: 0 auto;
-				padding: 18px 24px 80px;
-			}
+    /* Responsive */
+    @media (max-width: 720px) {
+      .nav-center { display: flex; gap: 32px; flex-wrap: wrap; justify-content: center; }
+      .nav-left, .nav-right { gap: 24px; justify-content: center; }
+    }
+    @media (max-width: 600px) {
+      .wrap { padding: 12px 16px 40px; }
+      .top-nav { gap: 20px; }
+      .nav-center { gap: 16px; }
+      .nav-left, .nav-right { gap: 16px; font-size: 14px; }
+      .logo { width: 40px; height: 40px; }
+      .panel { padding: 28px 20px 36px; border-radius: 18px; }
+      .bobcat-img-main { max-width: 240px; }
+      .bobcat-title { font-size: 22px; margin-top: 18px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <nav class="top-nav">
+      <div class="nav-center">
+        <div class="nav-left">
+          <a class="nav-item" href="bobcat.html">Bobcat</a>
+          <a class="nav-item" href="team.html">Team</a>
+        </div>
+        <a class="nav-logo-link" href="index.html">
+          <img class="logo" src="assets/bismascot.png" alt="BIS mascot" />
+        </a>
+        <div class="nav-right">
+          <a class="nav-item" href="upcoming.html">Upcoming</a>
+          <a class="nav-item" href="kisaa-kaiac.html">KISAA/KAIAC</a>
+        </div>
+      </div>
+    </nav>
 
-			.top-nav {
-				position: relative;
-				display: flex;
-				align-items: center;
-				justify-content: center;
-				gap: 0;
-				color: var(--nav-muted);
-				font-weight: 700;
-				letter-spacing: 0.4px;
-			}
+    <header class="hero">
+      <h1>Bobcat</h1>
+    </header>
 
-			.nav-center {
-				display: grid;
-				grid-template-columns: 1fr auto 1fr;
-				align-items: center;
-				column-gap: 80px;
-				margin: 0 auto;
-				width: 100%;
-			}
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="bobcat">Bobcat</button>
+      <button class="tab-btn" data-tab="retro">Retro Bobcat</button>
+      <button class="tab-btn" data-tab="color">Color</button>
+    </div>
 
-			.nav-left,
-			.nav-right {
-				display: flex;
-				align-items: center;
-				gap: 120px;
-			}
+    <div id="bobcat" class="tab-content active">
+      <section class="panel">
+        <img class="bobcat-img-main" src="assets/bismascot.png" alt="Main Bobcat logo" />
+        <h2 class="bobcat-title">Main Bobcat</h2>
+      </section>
+    </div>
 
-			.nav-left {
-				justify-content: flex-end;
-			}
+    <div id="retro" class="tab-content">
+      <section class="panel">
+        <h2 class="bobcat-title" style="margin-top:0;margin-bottom:28px;">Retro Bobcat</h2>
+        <div class="retro-grid">
+          <div class="retro-item">
+            <img src="assets/retro-bobcat-1.png" alt="Retro Bobcat 1" />
+            <span class="retro-item-title">Retro 1</span>
+          </div>
+          <div class="retro-item">
+            <img src="assets/retro-bobcat-2.png" alt="Retro Bobcat 2" />
+            <span class="retro-item-title">Retro 2</span>
+          </div>
+          <div class="retro-item">
+            <img src="assets/retro-bobcat-3.png" alt="Retro Bobcat 3" />
+            <span class="retro-item-title">Retro 3</span>
+          </div>
+        </div>
+      </section>
+    </div>
 
-			.nav-right {
-				justify-content: flex-start;
-			}
+    <div id="color" class="tab-content">
+      <section class="panel">
+        <h2 class="bobcat-title" style="margin-top:0;margin-bottom:28px;">Brand Colors</h2>
+        <div class="color-grid">
+          <div class="color-item">
+            <div class="color-swatch" style="background: #000000;"></div>
+            <span class="color-name">Black</span>
+            <span class="color-code" onclick="copyColor('#000000')">#000000</span>
+          </div>
+          <div class="color-item">
+            <div class="color-swatch" style="background: #00205B;"></div>
+            <span class="color-name">Bobcat Blue</span>
+            <span class="color-code" onclick="copyColor('#00205B')">#00205B</span>
+          </div>
+          <div class="color-item">
+            <div class="color-swatch" style="background: #A7A7A7;"></div>
+            <span class="color-name">Grey</span>
+            <span class="color-code" onclick="copyColor('#A7A7A7')">#A7A7A7</span>
+          </div>
+          <div class="color-item">
+            <div class="color-swatch" style="background: #13B5EA;"></div>
+            <span class="color-name">Sky Blue</span>
+            <span class="color-code" onclick="copyColor('#13B5EA')">#13B5EA</span>
+          </div>
+          <div class="color-item">
+            <div class="color-swatch" style="background: #FFFFFF; border-color: #ddd;"></div>
+            <span class="color-name">White</span>
+            <span class="color-code" onclick="copyColor('#FFFFFF')">#FFFFFF</span>
+          </div>
+        </div>
+      </section>
+    </div>
 
-			.top-nav .nav-item {
-				position: relative;
-				display: flex;
-				align-items: center;
-				gap: 10px;
-				color: var(--nav-muted);
-				text-decoration: none;
-			}
+    <div class="theme-toggle-wrap">
+      <button class="theme-toggle" type="button" aria-pressed="false">
+        <span class="toggle-icon">🌙</span>
+        <span class="toggle-text">Dark</span>
+      </button>
+    </div>
+  </div>
 
-			.top-nav .nav-item:hover,
-			.top-nav .nav-item:focus {
-				text-decoration: none;
-			}
+  <script>
+    const toggleButton = document.querySelector('.theme-toggle');
+    const toggleIcon = document.querySelector('.toggle-icon');
+    const toggleText = document.querySelector('.toggle-text');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
 
-			.theme-toggle {
-				display: flex;
-				align-items: center;
-				gap: 10px;
-				background: var(--glass);
-				border: 1px solid rgba(148, 163, 184, 0.2);
-				color: var(--text);
-				padding: 8px 14px;
-				border-radius: 999px;
-				cursor: pointer;
-				font-weight: 600;
-				backdrop-filter: blur(6px);
-				transition: all 0.3s ease;
-			}
+    const applyTheme = (theme) => {
+      document.body.classList.toggle('dark', theme === 'dark');
+      document.body.classList.toggle('light', theme === 'light');
+      const isDark = theme === 'dark';
+      toggleButton.setAttribute('aria-pressed', String(isDark));
+      toggleIcon.textContent = isDark ? '☀️' : '🌙';
+      toggleText.textContent = isDark ? 'Light' : 'Dark';
+    };
 
-			.theme-toggle:hover {
-				transform: scale(1.02);
-			}
+    const saved = localStorage.getItem('bis-theme');
+    if (saved) applyTheme(saved);
+    else applyTheme(prefersDark.matches ? 'dark' : 'light');
 
-			.theme-toggle-wrap {
-				margin-top: 28px;
-				display: flex;
-				justify-content: center;
-			}
+    prefersDark.addEventListener('change', (e) => {
+      if (!localStorage.getItem('bis-theme')) applyTheme(e.matches ? 'dark' : 'light');
+    });
 
-			.top-nav .logo {
-				width: 48px;
-				height: 48px;
-				object-fit: contain;
-			}
+    toggleButton.addEventListener('click', () => {
+      const next = document.body.classList.contains('dark') ? 'light' : 'dark';
+      localStorage.setItem('bis-theme', next);
+      applyTheme(next);
+    });
 
-			.hero {
-				text-align: center;
-				margin-top: 18px;
-			}
+    // Tab functionality
+    const tabBtns = document.querySelectorAll('.tab-btn');
+    const tabContents = document.querySelectorAll('.tab-content');
 
-			.hero h1 {
-				font-family: 'Black Han Sans', 'Noto Sans KR', sans-serif;
-				font-weight: 400;
-				font-size: clamp(40px, 7vw, 80px);
-				letter-spacing: 1px;
-			}
+    tabBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const targetTab = btn.dataset.tab;
+        
+        tabBtns.forEach(b => b.classList.remove('active'));
+        tabContents.forEach(c => c.classList.remove('active'));
+        
+        btn.classList.add('active');
+        document.getElementById(targetTab).classList.add('active');
+      });
+    });
 
-			.panel {
-				margin-top: 28px;
-				background: var(--card);
-				border-radius: 30px;
-				padding: 38px 44px 48px;
-				box-shadow: 0 18px 50px rgba(15, 23, 42, 0.12);
-				border: 1px solid rgba(148, 163, 184, 0.14);
-				transition: background 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
-			}
-
-			.panel-title {
-				display: flex;
-				justify-content: center;
-				align-items: center;
-				gap: 12px;
-				font-size: 26px;
-				font-weight: 800;
-				letter-spacing: 0.6px;
-				margin-bottom: 26px;
-				color: var(--accent);
-			}
-
-			.bobcat-grid {
-				display: grid;
-				grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-				gap: 20px;
-			}
-
-			.bobcat-card {
-				background: var(--panel);
-				border-radius: 20px;
-				padding: 20px 18px 18px;
-				box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
-				display: grid;
-				gap: 10px;
-				text-align: center;
-			}
-
-			.bobcat-card h3 {
-				font-size: 18px;
-				font-weight: 800;
-			}
-
-				  <div class="tabs" role="tablist" aria-label="Bobcat categories">
-					  <button class="tab-btn active" data-target="tab-main" type="button">Main</button>
-					  <button class="tab-btn" data-target="tab-retro" type="button">Retro</button>
-					  <button class="tab-btn" data-target="tab-colors" type="button">Official Colors</button>
-				  </div>
-
-				  <div class="tab-contents">
-					  <div id="tab-main" class="tab-content active">
-						  <div class="bobcat-card">
-							  <h3>Main 2025 Bobcat</h3>
-							  <img class="bobcat-img" src="https://lh3.googleusercontent.com/sitesv/APaQ0ST0tIHn3E0LhFovVFM9z2JoCAg8hMiB8JOrG4k0yQheJqTC4RBOtPbtoB5qsfp7KG181hKZsaHjtunpRJvsqXSG2BhFiB2WHG7AaMrC0G8GB2jjJgLoewCaghCHLQXqP-tNmI5KZXesUm4DD4oJsMRiJ--O2lDCmKmHgkNkzQkQg9pjTeElkGfbhdJMf6LzLyhV7h5HLTX9ZbNiv4FTQBSOWcOw_KJTAMDFX8A=w1280" alt="Main 2025 Bobcat logo" />
-						  </div>
-					  </div>
-
-					  <div id="tab-retro" class="tab-content">
-						  <div class="bobcat-card">
-							  <h3>Retro Alternate Bobcat</h3>
-							  <img class="bobcat-img" src="https://lh3.googleusercontent.com/sitesv/APaQ0SRuLOMbIV870R05e7iyQ5aEwp7peZ0Q5XDqjDUGPMWKinQ5Djw5d5LGk8Vx5A_sTQftwzG9q8DjB1qW_iiLYUNDdu9kuZzHrzzEFk-ik2SPzSnwS3Uaffdgd_fMqFOe8zVlEVfmnaTjyrydaR9Zqtho2-Sk9zzkjmL_z2sc8Kb6g4bHKtzzHmDmv2cPH0i_7ta6pc8GiFVdxQQu3De1MIesQ_qOO_D3rEzb=w1280" alt="Retro alternate Bobcat logo" />
-						  </div>
-					  </div>
-
-					  <div id="tab-colors" class="tab-content">
-						  <div class="bobcat-card">
-							  <h3>Official Colors & HEX Codes</h3>
-							  <img class="bobcat-img" src="https://lh3.googleusercontent.com/sitesv/APaQ0SQqepzSn7ttBX38GJNkYVczjRDDOJOMrBeStIgJK2lrvsmt5iBhqYbImidygRLiBF7zLRT691SceM5_VLL7otlp-VvsWJ-EI24jBcyj_c3Q2PGeLWQibRSH30Lk_cXLTdILC4j0xCqmFsUrVyctQQyeOGIQ1VGY-p22knRc78GHafRdnRmmx4JwcQgI-P73Cpg8eImSeu5VOxm3bauCWy5aHYD9kFJNdDMo=w1280" alt="Official BIS Athletics colors and HEX codes" />
-						  </div>
-					  </div>
-				  </div>
-
-				.top-nav {
-					gap: 20px;
-				}
-
-				.nav-center {
-					gap: 16px;
-				}
-
-				.nav-left,
-				.nav-right {
-					gap: 16px;
-					font-size: 14px;
-				}
-
-				.top-nav .logo {
-					width: 40px;
-					height: 40px;
-				}
-
-				.hero h1 {
-					font-size: clamp(32px, 10vw, 60px);
-				}
-
-				.panel {
-					margin-top: 20px;
-					padding: 20px 16px 28px;
-					border-radius: 20px;
-				}
-
-				.panel-title {
-					font-size: 20px;
-					margin-bottom: 20px;
-				}
-
-				.bobcat-grid {
-					grid-template-columns: 1fr;
-					gap: 16px;
-				}
-
-				.bobcat-card {
-					padding: 16px 14px 14px;
-				}
-
-				.bobcat-card h3 {
-					font-size: 16px;
-				}
-
-				.bobcat-img {
-					max-height: 200px;
-				}
-
-				.bobcat-note {
-					font-size: 14px;
-				}
-
-				.theme-toggle {
-					padding: 6px 12px;
-					font-size: 14px;
-				}
-			}
-
-			@media (max-width: 360px) {
-				.wrap {
-					padding: 10px 12px 50px;
-				}
-
-				.nav-left,
-				.nav-right {
-					gap: 12px;
-					font-size: 12px;
-				}
-
-				.top-nav .logo {
-					width: 36px;
-					height: 36px;
-				}
-
-				.hero h1 {
-					font-size: 28px;
-				}
-
-				.panel {
-					margin-top: 16px;
-					padding: 16px 12px 24px;
-					border-radius: 16px;
-				}
-
-				.panel-title {
-					font-size: 18px;
-					margin-bottom: 16px;
-				}
-
-				.bobcat-card {
-					padding: 14px 12px 12px;
-					border-radius: 16px;
-				}
-
-				.bobcat-card h3 {
-					font-size: 14px;
-				}
-
-				.bobcat-img {
-					max-height: 160px;
-				}
-
-				.bobcat-note {
-					font-size: 12px;
-				}
-
-				.theme-toggle {
-					padding: 5px 10px;
-					font-size: 12px;
-				}
-			}
-		</style>
-	</head>
-	<body>
-		<div class="wrap">
-			<nav class="top-nav">
-				<div class="nav-center">
-					<div class="nav-left">
-						<a class="nav-item" href="bobcat.html">Bobcat</a>
-						<a class="nav-item" href="team.html">Team</a>
-					</div>
-					<a class="nav-logo-link" href="index.html">
-						<img class="logo" src="assets/bismascot.png" alt="BIS mascot" />
-					</a>
-					<div class="nav-right">
-						<a class="nav-item" href="upcoming.html">Upcoming</a>
-						<a class="nav-item" href="kisaa-kaiac.html">KISAA/KAIAC</a>
-					</div>
-				</div>
-			</nav>
-
-			<header class="hero">
-				<h1>BIS BOBCAT</h1>
-			</header>
-
-			<section class="panel">
-				<div class="panel-title">
-					<span>🐾</span>
-					<span>BIS Bobcat</span>
-					<span>🐾</span>
-				</div>
-
-				<div class="bobcat-grid">
-					<div class="bobcat-card">
-						<h3>Main 2025 Bobcat</h3>
-						<img class="bobcat-img" src="https://lh3.googleusercontent.com/sitesv/APaQ0ST0tIHn3E0LhFovVFM9z2JoCAg8hMiB8JOrG4k0yQheJqTC4RBOtPbtoB5qsfp7KG181hKZsaHjtunpRJvsqXSG2BhFiB2WHG7AaMrC0G8GB2jjJgLoewCaghCHLQXqP-tNmI5KZXesUm4DD4oJsMRiJ--O2lDCmKmHgkNkzQkQg9pjTeElkGfbhdJMf6LzLyhV7h5HLTX9ZbNiv4FTQBSOWcOw_KJTAMDFX8A=w1280" alt="Main 2025 Bobcat logo" />
-					</div>
-					<div class="bobcat-card">
-						<h3>Retro Alternate Bobcat</h3>
-						<img class="bobcat-img" src="https://lh3.googleusercontent.com/sitesv/APaQ0SRuLOMbIV870R05e7iyQ5aEwp7peZ0Q5XDqjDUGPMWKinQ5Djw5d5LGk8Vx5A_sTQftwzG9q8DjB1qW_iiLYUNDdu9kuZzHrzzEFk-ik2SPzSnwS3Uaffdgd_fMqFOe8zVlEVfmnaTjyrydaR9Zqtho2-Sk9zzkjmL_z2sc8Kb6g4bHKtzzHmDmv2cPH0i_7ta6pc8GiFVdxQQu3De1MIesQ_qOO_D3rEzb=w1280" alt="Retro alternate Bobcat logo" />
-					</div>
-					<div class="bobcat-card">
-						<h3>Black and White</h3>
-						<img class="bobcat-img" src="https://lh3.googleusercontent.com/sitesv/APaQ0SRlgXjEdn02tQG7BqQL-SLY2SyTkmb83DLj9TybCRuzdS-1lf41guY--Oq_kiNmjBDUUkrGOQBAKPRNS4-m8RYlTMG9aMYyy9cxoUKBCZDLFeVaDUI3Kre9HGy9S9S11dMZSW7TXOv-CUIkHr0_XiIY1c15q32Ia2rFEkA6L5zft18Mo3bYS9hcs3ZemtYkP4E2uInABK7dBKGqNBi4XnLUtHcvLLcSPZVNfvQ=w1280" alt="Bobcat logo black and white" />
-					</div>
-					<div class="bobcat-card">
-						<h3>In Color</h3>
-						<img class="bobcat-img" src="https://lh3.googleusercontent.com/sitesv/APaQ0SS-QFtIWElTK2gI1p_GokjajhopF34FP14a3kRZ5EVcE3-qx8tGko0zYMsks35ziZkTCCVbtLf0VD7lyfRVK-X84bf5rskjNk1HjiICS6OdQTQlWhDZM4Qh86H2Ml6DKrWrp1cnMVJTw-xyIiHPrOD1G0MdRs9iwH02SHWeV-zUJPr4NELwj7t18FdCR2K63gzTHLgtnhlQMiHnjW2Z4Gz84mtswBloGsaCTIY=w1280" alt="Bobcat logo in color" />
-					</div>
-					<div class="bobcat-card">
-						<h3>Official Colors & HEX Codes</h3>
-						<img class="bobcat-img" src="https://lh3.googleusercontent.com/sitesv/APaQ0SQqepzSn7ttBX38GJNkYVczjRDDOJOMrBeStIgJK2lrvsmt5iBhqYbImidygRLiBF7zLRT691SceM5_VLL7otlp-VvsWJ-EI24jBcyj_c3Q2PGeLWQibRSH30Lk_cXLTdILC4j0xCqmFsUrVyctQQyeOGIQ1VGY-p22knRc78GHafRdnRmmx4JwcQgI-P73Cpg8eImSeu5VOxm3bauCWy5aHYD9kFJNdDMo=w1280" alt="Official BIS Athletics colors and HEX codes" />
-					</div>
-				</div>
-
-				<div class="bobcat-grid">
-					<div class="bobcat-card">
-						<h3>Main 2025 Bobcat</h3>
-						<img class="bobcat-img" src="https://lh3.googleusercontent.com/sitesv/APaQ0ST0tIHn3E0LhFovVFM9z2JoCAg8hMiB8JOrG4k0yQheJqTC4RBOtPbtoB5qsfp7KG181hKZsaHjtunpRJvsqXSG2BhFiB2WHG7AaMrC0G8GB2jjJgLoewCaghCHLQXqP-tNmI5KZXesUm4DD4oJsMRiJ--O2lDCmKmHgkNkzQkQg9pjTeElkGfbhdJMf6LzLyhV7h5HLTX9ZbNiv4FTQBSOWcOw_KJTAMDFX8A=w1280" alt="Main 2025 Bobcat logo" />
-					</div>
-
-					<div class="bobcat-card">
-						<h3>Retro Alternate Bobcat</h3>
-						<img class="bobcat-img" src="https://lh3.googleusercontent.com/sitesv/APaQ0SRuLOMbIV870R05e7iyQ5aEwp7peZ0Q5XDqjDUGPMWKinQ5Djw5d5LGk8Vx5A_sTQftwzG9q8DjB1qW_iiLYUNDdu9kuZzHrzzEFk-ik2SPzSnwS3Uaffdgd_fMqFOe8zVlEVfmnaTjyrydaR9Zqtho2-Sk9zzkjmL_z2sc8Kb6g4bHKtzzHmDmv2cPH0i_7ta6pc8GiFVdxQQu3De1MIesQ_qOO_D3rEzb=w1280" alt="Retro alternate Bobcat logo" />
-					</div>
-
-					<div class="bobcat-card">
-						<h3>Official Colors & HEX Codes</h3>
-						<img class="bobcat-img" src="https://lh3.googleusercontent.com/sitesv/APaQ0SQqepzSn7ttBX38GJNkYVczjRDDOJOMrBeStIgJK2lrvsmt5iBhqYbImidygRLiBF7zLRT691SceM5_VLL7otlp-VvsWJ-EI24jBcyj_c3Q2PGeLWQibRSH30Lk_cXLTdILC4j0xCqmFsUrVyctQQyeOGIQ1VGY-p22knRc78GHafRdnRmmx4JwcQgI-P73Cpg8eImSeu5VOxm3bauCWy5aHYD9kFJNdDMo=w1280" alt="Official BIS Athletics colors and HEX codes" />
-					</div>
-				</div>
-				const isDark = theme === "dark";
-				toggleButton.setAttribute("aria-pressed", String(isDark));
-				toggleIcon.textContent = isDark ? "☀️" : "🌙";
-				toggleText.textContent = isDark ? "Light" : "Dark";
-			};
-
-			const savedTheme = localStorage.getItem("bis-theme");
-			if (savedTheme) {
-				applyTheme(savedTheme);
-			} else {
-				applyTheme(prefersDark.matches ? "dark" : "light");
-			}
-
-			prefersDark.addEventListener("change", (event) => {
-				const stored = localStorage.getItem("bis-theme");
-				if (!stored) {
-					applyTheme(event.matches ? "dark" : "light");
-				}
-			});
-
-			toggleButton.addEventListener("click", () => {
-				const isDark = document.body.classList.contains("dark");
-				const nextTheme = isDark ? "light" : "dark";
-				localStorage.setItem("bis-theme", nextTheme);
-				applyTheme(nextTheme);
-			});
-		</script>
-	</body>
+    // Copy color code to clipboard
+    function copyColor(code) {
+      navigator.clipboard.writeText(code).then(() => {
+        const toast = document.createElement('div');
+        toast.textContent = `${code} copied!`;
+        toast.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#0b1b3a;color:#fff;padding:12px 24px;border-radius:12px;font-weight:700;font-size:14px;z-index:9999;box-shadow:0 8px 24px rgba(0,0,0,0.2);';
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 2000);
+      });
+    }
+  </script>
+</body>
 </html>

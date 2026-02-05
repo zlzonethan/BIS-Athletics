@@ -73,20 +73,14 @@
         width: 100%;
       }
 
-      .nav-left,
-      .nav-right {
+      .nav-left, .nav-right {
         display: flex;
         align-items: center;
         gap: 120px;
       }
 
-      .nav-left {
-        justify-content: flex-end;
-      }
-
-      .nav-right {
-        justify-content: flex-start;
-      }
+      .nav-left { justify-content: flex-end; }
+      .nav-right { justify-content: flex-start; }
 
       .top-nav .nav-item {
         position: relative;
@@ -97,10 +91,7 @@
         color: var(--nav-muted);
       }
 
-      .top-nav .nav-item:hover,
-      .top-nav .nav-item:focus {
-        text-decoration: none;
-      }
+      .top-nav .nav-item:hover, .top-nav .nav-item:focus { text-decoration: none; }
 
       .theme-toggle {
         display: flex;
@@ -117,9 +108,7 @@
         transition: all 0.3s ease;
       }
 
-      .theme-toggle:hover {
-        transform: scale(1.02);
-      }
+      .theme-toggle:hover { transform: scale(1.02); }
 
       .theme-toggle-wrap {
         margin-top: 28px;
@@ -163,13 +152,86 @@
         box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
       }
 
-      .section-title {
+      /* Tabs */
+      .tabs {
         display: flex;
-        align-items: center;
         gap: 10px;
-        font-size: 20px;
-        font-weight: 800;
+        justify-content: center;
+        margin-bottom: 12px;
+      }
+      .tab-btn {
+        padding: 10px 24px;
+        border-radius: 999px;
+        border: 1px solid var(--muted-border);
+        background: transparent;
+        color: var(--text-main);
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .tab-btn.active {
+        background: var(--primary-color);
+        color: #fff;
+        border-color: var(--primary-color);
+      }
+      .tab-btn:hover:not(.active) {
+        background: var(--muted-surface);
+      }
+
+      /* Sport Filter Tabs */
+      .sport-tabs {
+        display: flex;
+        gap: 8px;
+        justify-content: center;
         margin-bottom: 18px;
+      }
+      .sport-tab {
+        padding: 6px 16px;
+        border-radius: 999px;
+        border: 1px solid var(--muted-border);
+        background: transparent;
+        color: var(--text-sub);
+        font-weight: 600;
+        font-size: 13px;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .sport-tab.active {
+        background: var(--text-main);
+        color: var(--card-bg);
+        border-color: var(--text-main);
+      }
+      .sport-tab:hover:not(.active) {
+        background: var(--muted-surface);
+      }
+
+      /* Sport Badge */
+      .sport-badge {
+        position: absolute;
+        top: 12px;
+        left: 12px;
+        padding: 4px 10px;
+        border-radius: 999px;
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+      }
+      .sport-badge.basketball {
+        background: #f97316;
+        color: #fff;
+      }
+      .sport-badge.volleyball {
+        background: #8b5cf6;
+        color: #fff;
+      }
+      .sport-badge.soccer {
+        background: #22c55e;
+        color: #fff;
+      }
+
+      /* Level Badge */
+      .level-badge {
+        display: none;
       }
 
       .search-bar {
@@ -196,41 +258,12 @@
         background: #ffffff;
         border-radius: 24px;
         padding: 24px;
+        padding-top: 36px;
         margin-bottom: 20px;
         position: relative;
         box-shadow: 0 12px 26px rgba(15, 23, 42, 0.08);
         cursor: pointer;
       }
-      .match-card .status-badge {
-        position: absolute;
-        top: 12px;
-        left: 12px;
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        padding: 8px 12px;
-        border-radius: 999px;
-        font-weight: 800;
-        font-size: 13px;
-        background: rgba(254, 242, 242, 0.95);
-        color: #ef4444;
-        box-shadow: 0 6px 18px rgba(239,68,68,0.06);
-      }
-      .match-card .status-badge .live-dot {
-        width: 10px;
-        height: 10px;
-        border-radius: 50%;
-        background: #ef4444;
-        box-shadow: 0 6px 12px rgba(239,68,68,0.12);
-      }
-      .match-card .status-badge.ft .live-dot { background: #10b981; box-shadow: 0 6px 12px rgba(16,185,129,0.12); }
-      body.dark .match-card .status-badge {
-        background: rgba(255, 235, 235, 0.06);
-        color: #f87171;
-        box-shadow: 0 6px 18px rgba(0,0,0,0.35);
-      }
-      
-
       body.dark .match-card {
         background: var(--muted-surface);
         box-shadow: 0 12px 26px rgba(0, 0, 0, 0.35);
@@ -277,10 +310,7 @@
         box-shadow: 0 10px 22px rgba(0,0,0,0.08);
       }
 
-      .team-vs span {
-        font-weight: 800;
-        font-size: 16px;
-      }
+      .team-vs span { font-weight: 800; font-size: 16px; }
 
       .vs-badge {
         font-size: 14px;
@@ -317,9 +347,7 @@
         border-color: var(--primary-color);
       }
 
-      .vote-section {
-        margin-top: 18px;
-      }
+      .vote-section { margin-top: 18px; }
 
       .vote-btns {
         display: grid;
@@ -397,6 +425,27 @@
         font-weight: 700;
       }
 
+      /* Final Score Display */
+      .final-score {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 16px;
+        margin-top: 12px;
+        font-size: 28px;
+        font-weight: 900;
+      }
+      .final-score .score-home { color: var(--primary-color); }
+      .final-score .score-away { color: var(--lose-color); }
+      .final-score .score-sep { color: var(--text-sub); }
+
+      .empty-msg {
+        text-align: center;
+        padding: 40px 20px;
+        color: var(--text-sub);
+        font-weight: 600;
+      }
+
       @media (max-width: 720px) {
         .top-nav { gap: 40px; }
         .nav-center { display: flex; gap: 32px; flex-wrap: wrap; justify-content: center; }
@@ -405,6 +454,8 @@
         .match-content { flex-direction: column; gap: 12px; }
         .team-vs { width: 100%; }
         .vote-btns { grid-template-columns: 1fr; }
+        .sport-tabs { flex-wrap: wrap; }
+        .sport-tab { font-size: 12px; padding: 5px 12px; }
       }
 
       @media (max-width: 480px) {
@@ -417,14 +468,19 @@
         .hero .season { font-size: 14px; }
         .content { margin-top: 20px; }
         .section-card { padding: 20px 16px 10px; border-radius: 20px; }
-        .section-title { font-size: 18px; margin-bottom: 14px; }
+        .tabs { gap: 8px; }
+        .tab-btn { padding: 8px 16px; font-size: 14px; }
+        .sport-tabs { gap: 6px; }
+        .sport-tab { font-size: 11px; padding: 4px 10px; }
         .search-input { padding: 8px 12px; font-size: 13px; }
-        .match-card { padding: 18px 16px; border-radius: 18px; margin-bottom: 16px; }
+        .match-card { padding: 18px 16px; padding-top: 32px; border-radius: 18px; margin-bottom: 16px; }
         .match-date { font-size: 12px; }
-        .team-vs img { width: 40px; height: 40px; }
-        .team-vs span { font-size: 13px; }
+        .sport-badge { font-size: 9px; padding: 3px 8px; }
+        .team-vs img { width: 56px; height: 56px; }
+        .team-vs span { font-size: 14px; }
         .vs-badge { font-size: 12px; }
         .match-location { font-size: 11px; }
+        .level-badge { font-size: 9px; }
         .subscribe-btn { padding: 6px 10px; font-size: 11px; }
         .vote-btn { padding: 8px; font-size: 13px; }
         .vote-stats { font-size: 11px; }
@@ -438,19 +494,23 @@
         .hero h1 { font-size: 28px; }
         .hero .season { font-size: 12px; }
         .section-card { padding: 16px 12px 8px; border-radius: 16px; }
-        .section-title { font-size: 16px; margin-bottom: 12px; }
+        .tabs { gap: 6px; }
+        .tab-btn { padding: 6px 12px; font-size: 12px; }
+        .sport-tabs { gap: 4px; }
+        .sport-tab { font-size: 10px; padding: 3px 8px; }
         .search-input { padding: 6px 10px; font-size: 12px; border-radius: 10px; }
-        .match-card { padding: 14px 12px; border-radius: 14px; margin-bottom: 14px; }
+        .match-card { padding: 14px 12px; padding-top: 28px; border-radius: 14px; margin-bottom: 14px; }
         .match-date { font-size: 11px; }
-        .team-vs img { width: 36px; height: 36px; }
-        .team-vs span { font-size: 11px; }
+        .sport-badge { font-size: 8px; padding: 2px 6px; }
+        .team-vs img { width: 40px; height: 40px; }
+        .team-vs span { font-size: 12px; }
         .vs-badge { font-size: 10px; }
         .match-location { font-size: 10px; }
+        .level-badge { font-size: 8px; }
         .subscribe-btn { padding: 5px 8px; font-size: 10px; }
         .vote-btn { padding: 6px; font-size: 11px; }
         .vote-stats { font-size: 10px; }
         .theme-toggle { padding: 5px 10px; font-size: 12px; }
-        .status-badge { padding: 6px 10px; font-size: 11px; }
       }
     </style>
   </head>
@@ -462,7 +522,7 @@
             <a class="nav-item" href="bobcat.html">Bobcat</a>
             <a class="nav-item" href="team.html">Team</a>
           </div>
-          <a href="index.html" class="nav-logo-link"><img class="logo" src="bismascot.png" alt="BIS mascot" /></a>
+          <a href="index.html" class="nav-logo-link"><img class="logo" src="assets/bismascot.png" alt="BIS mascot" /></a>
           <div class="nav-right">
             <a class="nav-item" href="upcoming.html">Upcoming</a>
             <a class="nav-item" href="kisaa-kaiac.html">KISAA/KAIAC</a>
@@ -471,12 +531,21 @@
       </nav>
 
       <header class="hero">
-        <h1>Upcoming Matches</h1>
-        <div class="season">📅  Upcoming Matches & Vote</div>
+        <h1>Matches</h1>
+        <div class="season">📅 Upcoming & Past Matches</div>
       </header>
 
       <section class="content section-card">
-        
+        <div class="tabs" role="tablist">
+          <button class="tab-btn active" data-tab="upcoming" type="button">Upcoming</button>
+          <button class="tab-btn" data-tab="past" type="button">Past</button>
+        </div>
+        <div class="sport-tabs" role="tablist">
+          <button class="sport-tab active" data-sport="all" type="button">All</button>
+          <button class="sport-tab" data-sport="basketball" type="button">🏀 Basketball</button>
+          <button class="sport-tab" data-sport="volleyball" type="button">🏐 Volleyball</button>
+          <button class="sport-tab" data-sport="soccer" type="button">⚽ Soccer</button>
+        </div>
         <div class="search-bar">
           <input id="searchInput" class="search-input" type="search" placeholder="Search team / match / location" aria-label="검색" />
         </div>
@@ -505,6 +574,9 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <script>
+      let currentTab = 'upcoming';
+      let currentSport = 'all';
+
       const getAssetBase = () => {
         const origin = window.location.origin;
         if (origin === 'null') return '';
@@ -519,50 +591,77 @@
       const assetUrl = (fileName) => `${ASSET_BASE}${fileName}`;
 
       const teams = [
-        { id: 'bis', name: 'BIS', logo: assetUrl('bismascot.png') },
-        { id: 'spps', name: 'SPPS', logo: assetUrl('sppsmascot.png') },
-        { id: 'mica', name: 'MICA', logo: assetUrl('micamascot.png') },
-        { id: 'ccas', name: 'CCAS', logo: assetUrl('ccasmascot.png') },
-        { id: 'icsu', name: 'ICSU', logo: assetUrl('icsumascot.png') },
-        { id: 'spas', name: 'SPAS', logo: assetUrl('spasmascot.png') },
-        { id: 'fps', name: 'FPS', logo: assetUrl('fpsmascot.jpeg') },
-        { id: 'sie', name: 'SIE', logo: assetUrl('siemascot.jpg') }
+        { id: 'bis', name: 'BIS', logo: assetUrl('assets/bismascot.png') },
+        { id: 'spps', name: 'SPPS', logo: assetUrl('assets/sppsmascot.png') },
+        { id: 'mica', name: 'MICA', logo: assetUrl('assets/micamascot.png') },
+        { id: 'ccas', name: 'CCAS', logo: assetUrl('assets/ccasmascot.png') },
+        { id: 'icsu', name: 'ICSU', logo: assetUrl('assets/icsumascot.png') },
+        { id: 'spas', name: 'SPAS', logo: assetUrl('assets/spasmascot.png') },
+        { id: 'fps', name: 'FPS', logo: assetUrl('assets/fpsmascot.jpeg') },
+        { id: 'sie', name: 'SIE', logo: assetUrl('assets/siemascot.jpg') },
+        { id: 'bcc', name: 'BCC', logo: assetUrl('assets/bccmascot.png') },
+        { id: 'cmis', name: 'CMIS', logo: assetUrl('assets/cmismascot.png') },
+        { id: 'sfs', name: 'SFS JV-B', logo: assetUrl('assets/sfsmascot.png') },
+        { id: 'wca', name: 'WCA', logo: assetUrl('assets/wcamascot.png') },
+        { id: 'icsp', name: 'ICSP', logo: assetUrl('assets/icspmascot.png') }
       ];
 
       const placeholderLogo = 'https://placehold.co/100x100/9CA3AF/ffffff?text=?';
-
+      
+      // Updated schedules from BIS Athletics website - Feb 2026 onwards
       const schedules = [
-        { id: 1, home: 'BIS', away: 'CCAS', date: 'Jan 28, Girls 4:30pm', location: 'Seocho SC' },
-        { id: 2, home: 'BIS', away: 'ICSU', date: 'Jan 29, Girls 5:00pm', location: 'BIS' },
-        { id: 3, home: 'BIS', away: 'SFS JV-B', date: 'Jan 30, Men 4:30pm', location: 'BIS' },
-        { id: 4, home: 'BIS', away: 'FPS', date: 'Feb 2, Men 4:15pm', location: 'BIS' },
-        { id: 5, home: 'BIS', away: 'SPAS', date: 'Feb 2, Girls 4:30pm', location: '제이비스포츠' },
-        { id: 6, home: 'BIS', away: 'SPAS', date: 'Feb 11, Men 6:00pm', location: 'BIS' },
-        { id: 7, home: 'BIS', away: 'CCAS', date: 'Feb 11, Women 5:00pm', location: 'BIS' },
-        { id: 8, home: 'BIS', away: 'ICSU', date: 'Feb 11, Boys 4:30pm', location: 'ICSU' },
-        { id: 9, home: 'BIS', away: 'FPS', date: 'Feb 24, Boys 4:30pm', location: 'BIS' },
-        { id: 10, home: 'BIS', away: 'BCC', date: 'Feb 25, Women 4:30pm', location: 'BIS' },
-        { id: 11, home: 'BIS', away: 'CMIS', date: 'Mar 12, Men 2:30pm', location: 'BIS Respia' },
-        { id: 12, home: 'BIS', away: 'CCAS', date: 'Mar 18, Men 4:30pm', location: 'CCAS' }
+        // Basketball Games
+        { id: 1, home: 'BIS', away: 'FPS', date: 'Feb 4, 4:30pm', location: 'BIS', sport: 'basketball', level: 'HS', gender: 'Men' },
+        { id: 2, home: 'BIS', away: 'MICA', date: 'Feb 7, 4:00pm', location: 'BIS', sport: 'basketball', level: 'HS', gender: 'Men' },
+        { id: 3, home: 'BIS', away: 'SPAS', date: 'Feb 11, 6:00pm', location: 'BIS', sport: 'basketball', level: 'HS', gender: 'Men' },
+        { id: 4, home: 'BIS', away: 'CCAS', date: 'Feb 11, 5:00pm', location: 'BIS', sport: 'basketball', level: 'HS', gender: 'Women' },
+        { id: 5, home: 'BIS', away: 'WCA', date: 'Feb 13, 4:30pm', location: 'BIS', sport: 'basketball', level: 'HS', gender: 'Men' },
+        { id: 6, home: 'BIS', away: 'Tournament', date: 'Feb 22', location: 'Fayston', sport: 'basketball', level: 'HS', gender: 'Men' },
+        { id: 7, home: 'BIS', away: 'BCC', date: 'Feb 25, 4:30pm', location: 'BIS', sport: 'basketball', level: 'HS', gender: 'Women/Men' },
+        { id: 16, home: 'BIS', away: 'SPPS', date: 'Mar 19, 4:00pm', location: 'SPPS', sport: 'basketball', level: 'MS', gender: 'Girls/Boys' },
+        { id: 23, home: 'BIS', away: 'CCAS', date: 'Apr 18, 5:10pm', location: 'CCAS', sport: 'basketball', level: 'MS', gender: 'Girls/Boys' },
+        { id: 25, home: 'BIS', away: 'CCAS', date: 'Apr 25, 4:00pm', location: 'BIS', sport: 'basketball', level: 'MS', gender: 'Boys/Girls' },
+        { id: 28, home: 'BIS', away: 'FPS', date: 'May 9, 4:00pm', location: 'FPS', sport: 'basketball', level: 'MS', gender: 'Girls/Boys' },
+        { id: 31, home: 'BIS', away: 'SPPS', date: 'May 16, 4:30pm', location: 'BIS', sport: 'basketball', level: 'MS', gender: 'Girls/Boys' },
+        { id: 33, home: 'BIS', away: 'FPS', date: 'May 21, 4:20pm', location: 'BIS', sport: 'basketball', level: 'MS', gender: 'Girls/Boys' },
+        
+        // Volleyball Games
+        { id: 8, home: 'BIS', away: 'ICSU', date: 'Feb 11, 4:30pm', location: 'ICSU', sport: 'volleyball', level: 'MS', gender: 'Boys/Girls' },
+        { id: 9, home: 'BIS', away: 'CCAS', date: 'Feb 11, 4:30pm', location: 'BIS', sport: 'volleyball', level: 'MS', gender: 'Boys/Girls' },
+        { id: 10, home: 'BIS', away: 'ICSU', date: 'Feb 19, 3:30pm', location: 'ICSU', sport: 'volleyball', level: 'MS', gender: 'Boys/Girls' },
+        { id: 11, home: 'BIS', away: 'MICA', date: 'Feb 21, 4:00pm', location: 'BIS', sport: 'volleyball', level: 'MS', gender: 'Girls' },
+        { id: 12, home: 'BIS', away: 'FPS', date: 'Feb 24, 4:30pm', location: 'BIS', sport: 'volleyball', level: 'MS', gender: 'Boys/Girls' },
+        { id: 13, home: 'BIS', away: 'SPPS', date: 'Feb 28, 4:30pm', location: 'BIS', sport: 'volleyball', level: 'MS', gender: 'Boys/Girls' },
+        
+        // Soccer Games (Spring)
+        { id: 14, home: 'BIS', away: 'CMIS', date: 'Mar 12, 2:30pm', location: 'BIS Respia', sport: 'soccer', level: 'HS', gender: 'Men' },
+        { id: 15, home: 'BIS', away: 'CCAS', date: 'Mar 18, 4:30pm', location: 'CCAS', sport: 'soccer', level: 'HS', gender: 'Men' },
+        { id: 17, home: 'BIS', away: 'SALT', date: 'Mar 25', location: 'TBD', sport: 'soccer', level: 'HS', gender: 'Men' },
+        { id: 18, home: 'BIS', away: 'ICSU', date: 'Apr 7, 4:30pm', location: 'ICSU', sport: 'soccer', level: 'HS', gender: 'Men' },
+        { id: 19, home: 'BIS', away: 'ICSP', date: 'Apr 8', location: 'TBD', sport: 'soccer', level: 'HS', gender: 'Men' },
+        { id: 20, home: 'BIS', away: 'ICSP', date: 'Apr 11, 3:45pm', location: 'ICSP', sport: 'soccer', level: 'HS', gender: 'Men' },
+        { id: 21, home: 'BIS', away: 'SPPS', date: 'Apr 15, 4:20pm', location: 'Gangnam', sport: 'soccer', level: 'HS', gender: 'Men' },
+        { id: 22, home: 'BIS', away: 'CCAS', date: 'Apr 17, 4:30pm', location: 'Songpa', sport: 'soccer', level: 'HS', gender: 'Men' },
+        { id: 24, home: 'BIS', away: 'FPS', date: 'Apr 23, 2:30pm', location: 'RESPIA', sport: 'soccer', level: 'HS', gender: 'Men' },
+        { id: 26, home: 'BIS', away: 'HEXA Cup', date: 'Apr 26', location: 'hexacup.com', sport: 'soccer', level: 'HS', gender: 'Men' },
+        { id: 27, home: 'BIS', away: 'SPAD', date: 'May 8, 4:15pm', location: 'RESPIA', sport: 'soccer', level: 'HS', gender: 'Men' },
+        { id: 29, home: 'BIS', away: 'Chadwick JV', date: 'May 13, 4:30pm', location: 'Chadwick', sport: 'soccer', level: 'HS', gender: 'Men' },
+        { id: 30, home: 'BIS', away: 'CCAS', date: 'May 15, 4:00pm', location: 'Songpa', sport: 'soccer', level: 'HS', gender: 'Men' },
+        { id: 32, home: 'BIS', away: 'SSI', date: 'May 20, 5:00pm', location: 'Daechi', sport: 'soccer', level: 'HS', gender: 'Men' },
+        { id: 34, home: 'BIS', away: 'CSIS', date: 'May 29, 4:15pm', location: 'RESPIA', sport: 'soccer', level: 'HS', gender: 'Men' }
       ];
 
       const MATCH_SUB_KEY = 'kisvl_match_subscriptions';
       const VOTES_KEY = 'kisvl_votes';
       const VOTE_COUNTS_KEY = 'kisvl_vote_counts';
+      const FINISHED_KEY = 'kisvl_finished_matches';
 
-      // Optional Firebase config for shared vote counts
-      const firebaseConfig = window.BIS_FIREBASE_CONFIG || {
-        // apiKey: "YOUR_API_KEY",
-        // authDomain: "PROJECT_ID.firebaseapp.com",
-        // projectId: "PROJECT_ID",
-        // storageBucket: "PROJECT_ID.appspot.com",
-        // messagingSenderId: "SENDER_ID",
-        // appId: "APP_ID"
-      };
+      const firebaseConfig = window.BIS_FIREBASE_CONFIG || {};
       const hasFirebaseConfig = !!firebaseConfig && !!firebaseConfig.apiKey;
       let useFirebase = false;
       let db = null;
       let voteCountsCache = {};
+      let finishedMatchesCache = {};
 
       let searchQuery = '';
 
@@ -579,10 +678,7 @@
       const setSubs = (data) => {
         try { localStorage.setItem(MATCH_SUB_KEY, JSON.stringify(data)); } catch (e) {}
       };
-      const isMatchSubscribed = (matchId) => {
-        const data = getSubs();
-        return !!data[matchId];
-      };
+      const isMatchSubscribed = (matchId) => !!getSubs()[matchId];
 
       const getVotes = () => {
         try { return JSON.parse(localStorage.getItem(VOTES_KEY) || '{}'); } catch (e) { return {}; }
@@ -613,14 +709,38 @@
         setVoteCounts(all);
       };
 
+      // Finished matches
+      const getFinishedLocal = () => {
+        try { return JSON.parse(localStorage.getItem(FINISHED_KEY) || '{}'); } catch (e) { return {}; }
+      };
+      const setFinishedLocal = (data) => {
+        try { localStorage.setItem(FINISHED_KEY, JSON.stringify(data)); } catch (e) {}
+      };
+      const isMatchFinished = (matchId) => {
+        if (useFirebase) return !!finishedMatchesCache[matchId];
+        return !!getFinishedLocal()[matchId];
+      };
+      const getMatchResult = (matchId) => {
+        if (useFirebase) return finishedMatchesCache[matchId] || null;
+        return getFinishedLocal()[matchId] || null;
+      };
+
       const listenVoteCountsFirebase = () => {
         if (!db) return;
         db.collection('votes').onSnapshot((snap) => {
           const all = {};
-          snap.forEach((doc) => {
-            all[doc.id] = doc.data() || {};
-          });
+          snap.forEach((doc) => { all[doc.id] = doc.data() || {}; });
           voteCountsCache = all;
+          renderSchedule();
+        });
+      };
+
+      const listenFinishedMatchesFirebase = () => {
+        if (!db) return;
+        db.collection('finishedMatches').onSnapshot((snap) => {
+          const all = {};
+          snap.forEach((doc) => { all[doc.id] = doc.data() || {}; });
+          finishedMatchesCache = all;
           renderSchedule();
         });
       };
@@ -632,6 +752,7 @@
           db = firebase.firestore();
           useFirebase = true;
           listenVoteCountsFirebase();
+          listenFinishedMatchesFirebase();
           return true;
         } catch (e) {
           console.warn('Firebase init failed, falling back to localStorage.', e);
@@ -651,35 +772,29 @@
         });
       };
 
-      // Notification helpers for subscribe feature
-      const showNotificationForMatch = (match) => {
-        try {
-          if (!('Notification' in window)) return false;
-          const title = 'BIS Athletics';
-          const body = `${match.home} vs ${match.away} 경기 알림에 가입되었습니다.`;
-          const opts = { body, icon: assetUrl('bismascot.png') };
-          new Notification(title, opts);
-          return true;
-        } catch (e) {
-          return false;
-        }
+      // Admin: finish match
+      const finishMatchRemote = async (matchId, homeScore, awayScore) => {
+        if (!db) return;
+        const ref = db.collection('finishedMatches').doc(String(matchId));
+        await ref.set({ finished: true, homeScore, awayScore, finishedAt: new Date().toISOString() });
       };
 
-      const requestNotificationPermission = async (match) => {
-        if (!('Notification' in window)) return false;
-        if (Notification.permission === 'granted') {
-          return showNotificationForMatch(match);
-        }
-        if (Notification.permission === 'denied') {
-          return false;
-        }
-        try {
-          const permission = await Notification.requestPermission();
-          if (permission === 'granted') return showNotificationForMatch(match);
-          return false;
-        } catch (e) {
-          return false;
-        }
+      const resetMatchRemote = async (matchId) => {
+        if (!db) return;
+        const ref = db.collection('finishedMatches').doc(String(matchId));
+        await ref.delete();
+      };
+
+      const finishMatchLocal = (matchId, homeScore, awayScore) => {
+        const data = getFinishedLocal();
+        data[matchId] = { finished: true, homeScore, awayScore, finishedAt: new Date().toISOString() };
+        setFinishedLocal(data);
+      };
+
+      const resetMatchLocal = (matchId) => {
+        const data = getFinishedLocal();
+        delete data[matchId];
+        setFinishedLocal(data);
       };
 
       const formatMatchDate = (raw) => {
@@ -697,10 +812,24 @@
         if (!container) return;
         container.innerHTML = '';
 
-        schedules.forEach(match => {
-          if (!matchesQuery(match.home, match.away, match.location, match.date)) return;
+        const filteredMatches = schedules.filter(match => {
+          const finished = isMatchFinished(match.id);
+          if (currentTab === 'upcoming' && finished) return false;
+          if (currentTab === 'past' && !finished) return false;
+          if (currentSport !== 'all' && match.sport !== currentSport) return false;
+          return matchesQuery(match.home, match.away, match.location, match.date, match.sport, match.level, match.gender);
+        });
+
+        if (filteredMatches.length === 0) {
+          container.innerHTML = `<div class="empty-msg">${currentTab === 'upcoming' ? '예정된 경기가 없습니다' : '종료된 경기가 없습니다'}</div>`;
+          return;
+        }
+
+        filteredMatches.forEach(match => {
           const homeTeam = teams.find(t => t.name === match.home) || { name: match.home, logo: placeholderLogo };
           const awayTeam = teams.find(t => t.name === match.away) || { name: match.away, logo: placeholderLogo };
+          const finished = isMatchFinished(match.id);
+          const result = getMatchResult(match.id);
 
           const counts = getCountsForMatch(match.id);
           const homeVotes = Number(counts.home || 0);
@@ -719,20 +848,56 @@
           card.id = `match-${match.id}`;
           card.dataset.matchId = match.id;
           card.dataset.detail = `details.html?id=${match.id}`;
+
           const subscribed = isMatchSubscribed(match.id);
           const subscribeIcon = subscribed ? '🔔' : '🔕';
-          const subscribeAria = subscribed ? `${homeTeam.name} vs ${awayTeam.name} 알림 구독 취소` : `${homeTeam.name} vs ${awayTeam.name} 알림 구독`;
-          // read live/meta for status display
-          const liveAll = (function(){ try { return JSON.parse(localStorage.getItem('kisvl_live_scores')||'{}'); } catch(e){ return {}; } })();
-          const metaAll = (function(){ try { return JSON.parse(localStorage.getItem('kisvl_match_meta')||'{}'); } catch(e){ return {}; } })();
-          const live = liveAll[match.id] || {};
-          const meta = metaAll[match.id] || {};
-          const statusHtml = live.status === 'live' ? `<div class="status-badge live"><span class="live-dot"></span>LIVE</div>` : (live.status === 'ft' ? `<div class="status-badge ft"><span class="live-dot"></span>FT</div>` : (meta.status ? `<div class="status-badge">${meta.status}</div>` : ''));
+
+          // Sport badge
+          const sportEmoji = match.sport === 'basketball' ? '🏀' : match.sport === 'volleyball' ? '🏐' : '⚽';
+          const sportLabel = match.sport === 'basketball' ? 'Basketball' : match.sport === 'volleyball' ? 'Volleyball' : 'Soccer';
+
+          let scoreHtml = '';
+          if (finished && result) {
+            scoreHtml = `
+              <div class="final-score">
+                <span class="score-home">${result.homeScore}</span>
+                <span class="score-sep">-</span>
+                <span class="score-away">${result.awayScore}</span>
+              </div>
+            `;
+          }
+
+          let voteHtml = '';
+          if (!finished) {
+            voteHtml = `
+              <div class="vote-section">
+                <div class="vote-btns">
+                  <button class="vote-btn ${votedChoice === 'home' ? 'active' : ''}" onclick="vote(${match.id}, 'home')" ${votedChoice ? 'disabled' : ''}>Vote ${homeTeam.name}</button>
+                  <button class="vote-btn ${votedChoice === 'draw' ? 'active' : ''}" onclick="vote(${match.id}, 'draw')" ${votedChoice ? 'disabled' : ''}>Vote Draw</button>
+                  <button class="vote-btn ${votedChoice === 'away' ? 'active' : ''}" onclick="vote(${match.id}, 'away')" ${votedChoice ? 'disabled' : ''}>Vote ${awayTeam.name}</button>
+                </div>
+                <div class="vote-bar-container">
+                  <div class="vote-bar-left" style="width: ${homePercent}%"></div>
+                  <div class="vote-bar-mid" style="width: ${drawPercent}%"></div>
+                  <div class="vote-bar-right" style="width: ${awayPercent}%"></div>
+                </div>
+                <div class="vote-stats">
+                  <span>${homePercent}%</span>
+                  <span>${drawPercent}%</span>
+                  <span>${awayPercent}%</span>
+                </div>
+              </div>
+            `;
+          }
+
+          // Level info
+          const levelInfo = match.level ? `${match.level}` : '';
+          const genderInfo = match.gender ? ` · ${match.gender}` : '';
 
           card.innerHTML = `
+            <span class="sport-badge ${match.sport}">${sportEmoji} ${sportLabel}</span>
             <div class="match-date">${displayDate}</div>
-            ${statusHtml}
-            <button class="subscribe-btn match-subscribe ${subscribed ? 'active' : ''}" data-match="${match.id}" aria-pressed="${subscribed}" aria-label="${subscribeAria}">${subscribeIcon}</button>
+            <button class="subscribe-btn match-subscribe ${subscribed ? 'active' : ''}" data-match="${match.id}" aria-pressed="${subscribed}">${subscribeIcon}</button>
             <div class="match-content">
               <div class="team-vs">
                 <img src="${homeTeam.logo}" alt="${homeTeam.name}" class="team-logo">
@@ -747,29 +912,12 @@
                 <span>${awayTeam.name}</span>
               </div>
             </div>
-            <div class="vote-section">
-              <div class="vote-btns">
-                <button class="vote-btn ${votedChoice === 'home' ? 'active' : ''}" onclick="vote(${match.id}, 'home')" ${votedChoice ? 'disabled' : ''}>Vote ${homeTeam.name}</button>
-                <button class="vote-btn ${votedChoice === 'draw' ? 'active' : ''}" onclick="vote(${match.id}, 'draw')" ${votedChoice ? 'disabled' : ''}>Vote Draw</button>
-                <button class="vote-btn ${votedChoice === 'away' ? 'active' : ''}" onclick="vote(${match.id}, 'away')" ${votedChoice ? 'disabled' : ''}>Vote ${awayTeam.name}</button>
-              </div>
-              <div class="vote-bar-container">
-                <div class="vote-bar-left" style="width: ${homePercent}%"></div>
-                <div class="vote-bar-mid" style="width: ${drawPercent}%"></div>
-                <div class="vote-bar-right" style="width: ${awayPercent}%"></div>
-              </div>
-              <div class="vote-stats">
-                <span>${homePercent}%</span>
-                <span>${drawPercent}%</span>
-                <span>${awayPercent}%</span>
-              </div>
-            </div>
+            ${scoreHtml}
+            ${voteHtml}
           `;
           container.appendChild(card);
         });
       };
-
-      
 
       const vote = async (matchId, side) => {
         const match = schedules.find(m => m.id === matchId);
@@ -800,27 +948,40 @@
         }
       };
 
+      // Tab switching
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          currentTab = btn.dataset.tab;
+          renderSchedule();
+        });
+      });
+
+      // Sport filter switching
+      document.querySelectorAll('.sport-tab').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.sport-tab').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          currentSport = btn.dataset.sport;
+          renderSchedule();
+        });
+      });
+
+      // Subscribe button
       document.addEventListener('click', async (event) => {
         const matchBtn = event.target.closest('.match-subscribe');
         if (!matchBtn) return;
+        event.stopPropagation();
         const id = Number(matchBtn.dataset.match);
         const subs = getSubs();
         const wasSubscribed = !!subs[id];
         subs[id] = !wasSubscribed;
         setSubs(subs);
         renderSchedule();
-
-        // If user just subscribed, try to request notification permission and show a confirmation
-        if (!wasSubscribed && subs[id]) {
-          const matchObj = schedules.find(m => m.id === id);
-          const notified = await requestNotificationPermission(matchObj);
-          if (!notified && ('Notification' in window) && Notification.permission === 'denied') {
-            // show fallback in-page notice when permission is denied
-            try { alert('브라우저 알림 권한이 차단되어 있습니다. 설정에서 알림을 허용해주세요.'); } catch (e) {}
-          }
-        }
       });
 
+      // Card click -> detail page
       document.addEventListener('click', (event) => {
         const card = event.target.closest('.match-card');
         if (!card) return;
@@ -830,19 +991,22 @@
         window.location.href = detailUrl;
       });
 
+      // Search
       const searchInput = document.getElementById('searchInput');
       if (searchInput) {
         searchInput.addEventListener('input', (event) => {
-          searchQuery = event.target.value || '';
+          searchQuery = normalizeText(event.target.value);
           renderSchedule();
         });
       }
 
+      // Init Firebase and render
       const firebaseReady = initFirebaseIfConfigured();
       if (!firebaseReady) {
         renderSchedule();
       }
 
+      // Theme toggle
       (function(){
         const toggleButton = document.querySelector('.theme-toggle');
         if(!toggleButton) return;
@@ -862,10 +1026,6 @@
         prefersDark.addEventListener('change', (e)=>{ if(!localStorage.getItem('bis-theme')) applyTheme(e.matches ? 'dark' : 'light'); });
         toggleButton.addEventListener('click', ()=>{ const isDark = document.body.classList.contains('dark'); const next = isDark ? 'light' : 'dark'; localStorage.setItem('bis-theme', next); applyTheme(next); });
       })();
-    </script>
-    <script>
-      // Set admin passphrase (saved by user request)
-      try { localStorage.setItem('kis_admin_pass', 'BISathletic120712!'); } catch(e) {}
     </script>
   </body>
 </html>

@@ -707,6 +707,20 @@
 				}
 			}
 		</style>
+		<!-- Firebase SDKs -->
+		<script>
+			window.BIS_FIREBASE_CONFIG = {
+				apiKey: "AIzaSyCzjMG7r_tweUGfznUnckpp_Xm4hF5119Q",
+				authDomain: "bis-athletics.firebaseapp.com",
+				projectId: "bis-athletics",
+				storageBucket: "bis-athletics.firebasestorage.app",
+				messagingSenderId: "759086332599",
+				appId: "1:759086332599:web:4261b5aa076f0c60a0eb32",
+				measurementId: "G-87M42WQKEQ"
+			};
+		</script>
+		<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+		<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 	</head>
 	<body>
 		<div class="wrap">
@@ -993,6 +1007,10 @@
 							<button id="adminClearBtn" class="theme-toggle">Clear Match Override</button>
 							<button id="adminCopyBtn" class="theme-toggle">Copy JSON</button>
 						</div>
+						<div style="display:flex;gap:8px;margin-top:12px;align-items:center;flex-wrap:wrap">
+							<button id="adminFinishBtn" class="theme-toggle" style="background:#10b981;color:white;border-color:#10b981">✅ 경기 종료</button>
+							<button id="adminResetBtn" class="theme-toggle" style="background:#ef4444;color:white;border-color:#ef4444">🔄 경기 재개</button>
+						</div>
 						<div style="margin-top:12px">
 							<label style="font-weight:700;display:block;margin-bottom:6px">Live Overrides (JSON)</label>
 							<textarea id="adminJson" style="width:100%;height:120px;padding:12px;border-radius:8px;border:1px solid rgba(0,0,0,0.06);font-family:monospace;font-size:13px"></textarea>
@@ -1125,18 +1143,43 @@
 				const LIVE_SCORE_KEY = 'kisvl_live_scores';
 				// Local copy of schedules to populate match selector (kept in sync manually)
 				const SCHEDULES = [
-					{ id: 1, home: 'BIS', away: 'CCAS', date: 'Jan 28, Girls 4:30pm' },
-					{ id: 2, home: 'BIS', away: 'ICSU', date: 'Jan 29, Girls 5:00pm' },
-					{ id: 3, home: 'BIS', away: 'SFS JV-B', date: 'Jan 30, Men 4:30pm' },
-					{ id: 4, home: 'BIS', away: 'FPS', date: 'Feb 2, Men 4:15pm' },
-					{ id: 5, home: 'BIS', away: 'SPAS', date: 'Feb 2, Girls 4:30pm' },
-					{ id: 6, home: 'BIS', away: 'SPAS', date: 'Feb 11, Men 6:00pm' },
-					{ id: 7, home: 'BIS', away: 'CCAS', date: 'Feb 11, Women 5:00pm' },
-					{ id: 8, home: 'BIS', away: 'ICSU', date: 'Feb 11, Boys 4:30pm' },
-					{ id: 9, home: 'BIS', away: 'FPS', date: 'Feb 24, Boys 4:30pm' },
-					{ id: 10, home: 'BIS', away: 'BCC', date: 'Feb 25, Women 4:30pm' },
-					{ id: 11, home: 'BIS', away: 'CMIS', date: 'Mar 12, Men 2:30pm' },
-					{ id: 12, home: 'BIS', away: 'CCAS', date: 'Mar 18, Men 4:30pm' }
+					// Basketball Games
+					{ id: 1, home: 'BIS', away: 'FPS', date: 'Feb 4, 4:30pm' },
+					{ id: 2, home: 'BIS', away: 'MICA', date: 'Feb 7, 4:00pm' },
+					{ id: 3, home: 'BIS', away: 'SPAS', date: 'Feb 11, 6:00pm' },
+					{ id: 4, home: 'BIS', away: 'CCAS', date: 'Feb 11, 5:00pm' },
+					{ id: 5, home: 'BIS', away: 'WCA', date: 'Feb 13, 4:30pm' },
+					{ id: 6, home: 'BIS', away: 'Tournament', date: 'Feb 22' },
+					{ id: 7, home: 'BIS', away: 'BCC', date: 'Feb 25, 4:30pm' },
+					{ id: 16, home: 'BIS', away: 'SPPS', date: 'Mar 19, 4:00pm' },
+					{ id: 23, home: 'BIS', away: 'CCAS', date: 'Apr 18, 5:10pm' },
+					{ id: 25, home: 'BIS', away: 'CCAS', date: 'Apr 25, 4:00pm' },
+					{ id: 28, home: 'BIS', away: 'FPS', date: 'May 9, 4:00pm' },
+					{ id: 31, home: 'BIS', away: 'SPPS', date: 'May 16, 4:30pm' },
+					{ id: 33, home: 'BIS', away: 'FPS', date: 'May 21, 4:20pm' },
+					// Volleyball Games
+					{ id: 8, home: 'BIS', away: 'ICSU', date: 'Feb 11, 4:30pm' },
+					{ id: 9, home: 'BIS', away: 'CCAS', date: 'Feb 11, 4:30pm' },
+					{ id: 10, home: 'BIS', away: 'ICSU', date: 'Feb 19, 3:30pm' },
+					{ id: 11, home: 'BIS', away: 'MICA', date: 'Feb 21, 4:00pm' },
+					{ id: 12, home: 'BIS', away: 'FPS', date: 'Feb 24, 4:30pm' },
+					{ id: 13, home: 'BIS', away: 'SPPS', date: 'Feb 28, 4:30pm' },
+					// Soccer Games
+					{ id: 14, home: 'BIS', away: 'CMIS', date: 'Mar 12, 2:30pm' },
+					{ id: 15, home: 'BIS', away: 'CCAS', date: 'Mar 18, 4:30pm' },
+					{ id: 17, home: 'BIS', away: 'SALT', date: 'Mar 25' },
+					{ id: 18, home: 'BIS', away: 'ICSU', date: 'Apr 7, 4:30pm' },
+					{ id: 19, home: 'BIS', away: 'ICSP', date: 'Apr 8' },
+					{ id: 20, home: 'BIS', away: 'ICSP', date: 'Apr 11, 3:45pm' },
+					{ id: 21, home: 'BIS', away: 'SPPS', date: 'Apr 15, 4:20pm' },
+					{ id: 22, home: 'BIS', away: 'CCAS', date: 'Apr 17, 4:30pm' },
+					{ id: 24, home: 'BIS', away: 'FPS', date: 'Apr 23, 2:30pm' },
+					{ id: 26, home: 'BIS', away: 'HEXA Cup', date: 'Apr 26' },
+					{ id: 27, home: 'BIS', away: 'SPAD', date: 'May 8, 4:15pm' },
+					{ id: 29, home: 'BIS', away: 'Chadwick JV', date: 'May 13, 4:30pm' },
+					{ id: 30, home: 'BIS', away: 'CCAS', date: 'May 15, 4:00pm' },
+					{ id: 32, home: 'BIS', away: 'SSI', date: 'May 20, 5:00pm' },
+					{ id: 34, home: 'BIS', away: 'CSIS', date: 'May 29, 4:15pm' }
 				];
 				const ADMIN_PASSPHRASE_KEY = 'kis_admin_pass';
 				const ADMIN_DEFAULT = 'admin';
@@ -1225,6 +1268,76 @@
 
 				copyBtn.addEventListener('click', ()=>{
 					jsonArea.select(); try{ document.execCommand('copy'); alert('Copied to clipboard'); }catch(e){ alert('Copy failed'); }
+				});
+
+				// Firebase 경기 종료 기능
+				let db = null;
+				const firebaseConfig = window.BIS_FIREBASE_CONFIG || {};
+				if (firebaseConfig.apiKey && window.firebase) {
+					try {
+						if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+						db = firebase.firestore();
+					} catch(e) { console.warn('Firebase init failed', e); }
+				}
+
+				const finishBtn = $('#adminFinishBtn');
+				const resetBtn = $('#adminResetBtn');
+
+				finishBtn.addEventListener('click', async ()=>{
+					const id = String(matchSelect.value || '');
+					if(!id){ alert('경기를 선택하세요'); return; }
+					const hs = Number(homeInput.value); 
+					const as = Number(awayInput.value);
+					const homeScore = Number.isFinite(hs) ? hs : 0;
+					const awayScore = Number.isFinite(as) ? as : 0;
+					
+					if (db) {
+						try {
+							await db.collection('finishedMatches').doc(id).set({
+								finished: true,
+								homeScore,
+								awayScore,
+								finishedAt: new Date().toISOString()
+							});
+							alert('경기가 종료 처리되었습니다 (Firebase 저장됨)');
+						} catch(e) {
+							console.error(e);
+							// fallback to localStorage
+							const finished = JSON.parse(localStorage.getItem('kisvl_finished_matches')||'{}');
+							finished[id] = { finished: true, homeScore, awayScore, finishedAt: new Date().toISOString() };
+							localStorage.setItem('kisvl_finished_matches', JSON.stringify(finished));
+							alert('경기가 종료 처리되었습니다 (로컬 저장)');
+						}
+					} else {
+						const finished = JSON.parse(localStorage.getItem('kisvl_finished_matches')||'{}');
+						finished[id] = { finished: true, homeScore, awayScore, finishedAt: new Date().toISOString() };
+						localStorage.setItem('kisvl_finished_matches', JSON.stringify(finished));
+						alert('경기가 종료 처리되었습니다 (로컬 저장)');
+					}
+				});
+
+				resetBtn.addEventListener('click', async ()=>{
+					const id = String(matchSelect.value || '');
+					if(!id){ alert('경기를 선택하세요'); return; }
+					if(!confirm('이 경기를 다시 Upcoming으로 되돌리시겠습니까?')) return;
+					
+					if (db) {
+						try {
+							await db.collection('finishedMatches').doc(id).delete();
+							alert('경기가 Upcoming으로 되돌려졌습니다 (Firebase)');
+						} catch(e) {
+							console.error(e);
+							const finished = JSON.parse(localStorage.getItem('kisvl_finished_matches')||'{}');
+							delete finished[id];
+							localStorage.setItem('kisvl_finished_matches', JSON.stringify(finished));
+							alert('경기가 Upcoming으로 되돌려졌습니다 (로컬)');
+						}
+					} else {
+						const finished = JSON.parse(localStorage.getItem('kisvl_finished_matches')||'{}');
+						delete finished[id];
+						localStorage.setItem('kisvl_finished_matches', JSON.stringify(finished));
+						alert('경기가 Upcoming으로 되돌려졌습니다 (로컬)');
+					}
 				});
 
 				// initialize
