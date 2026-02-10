@@ -36,7 +36,7 @@
       .panel{margin-top:26px;background:var(--panel);border-radius:20px;padding:28px}
       .tabs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;background:var(--border);border-radius:999px;padding:6px;margin-top:18px}
       .tab-btn{border:none;background:transparent;padding:10px 12px;border-radius:999px;font-weight:800;color:var(--muted);cursor:pointer;transition:all .2s ease}
-      .tab-btn.active{background:var(--panel);color:var(--text);box-shadow:none}
+      .tab-btn.active{background:var(--panel);color:var(--text);box-shadow:0 6px 14px rgba(15,23,42,.12)}
       .tab-panels{position:relative;min-height:200px}
       .tab-panel{position:relative;opacity:0;transform:translateX(calc(var(--tab-dir,1) * 20px));transition:transform .35s cubic-bezier(.2,.9,.2,1), opacity .2s ease;pointer-events:none;height:0;overflow:hidden}
       .tab-panel.active{opacity:1;transform:translateX(0);pointer-events:auto;height:auto;overflow:visible}
@@ -44,7 +44,7 @@
       .panel-subtitle{color:var(--muted);font-weight:600;margin-bottom:16px}
       .hs-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
       .hs-card{display:grid;gap:12px;background:var(--card-muted);border:1px solid var(--border);border-radius:16px;padding:18px;transition:transform .2s ease, box-shadow .2s ease}
-      .hs-card:hover{transform:translateY(-2px);box-shadow:none}
+      .hs-card:hover{transform:translateY(-2px);box-shadow:0 10px 20px rgba(15,23,42,.08)}
       .hs-title{font-weight:800;font-size:16px}
       .hs-meta{font-size:12px;color:var(--muted);font-weight:700}
       .hs-list{display:grid;gap:8px;font-size:12px;color:var(--muted);font-weight:600}
