@@ -2,7 +2,8 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="x-frame-options" content="allow" />
     <title>Match Details</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
@@ -40,6 +41,26 @@
             padding: 20px;
             display: flex;
             justify-content: center;
+            min-height: 100vh;
+            min-height: 100dvh;
+        }
+        /* iframe 임베드 지원 */
+        html.in-iframe, html.in-iframe body {
+            width: 100%;
+            height: 100%;
+            overflow-x: hidden;
+        }
+        html.in-iframe body {
+            padding: 16px;
+        }
+        html.in-iframe .top-actions {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+        }
+        html.in-iframe .container {
+            width: 100%;
+            max-width: 100%;
         }
         body,
         .card,
@@ -272,6 +293,438 @@
         .admin-row{display:flex;gap:8px;align-items:center;margin-bottom:8px}
         .admin-row input[type="text"], .admin-row input[type="number"], .admin-row select, .admin-row textarea{flex:1;padding:8px;border-radius:8px;border:1px solid var(--muted-border);background:var(--card-bg)}
         .admin-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:12px}
+
+        /* Formation Component Styles */
+        .formation-section {
+            margin-top: 16px;
+            padding: 16px;
+            border-radius: 16px;
+            background: var(--muted-surface);
+            border: 1px solid var(--muted-border);
+        }
+        .formation-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .formation-header h4 {
+            margin: 0;
+            font-size: 15px;
+            font-weight: 700;
+        }
+        .formation-tabs {
+            display: flex;
+            gap: 6px;
+        }
+        .formation-tab {
+            padding: 8px 14px;
+            border-radius: 20px;
+            border: none;
+            background: var(--card-bg);
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            transition: all 0.2s;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+        }
+        .formation-tab:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: translateY(-1px);
+        }
+        .formation-tab.active {
+            background: var(--primary-color);
+            color: white;
+            box-shadow: 0 4px 12px rgba(37,99,235,0.3);
+        }
+
+        /* Dark mode for formation tabs */
+        body.dark .formation-tab {
+            background: rgba(255,255,255,0.05);
+            color: var(--text-main);
+        }
+        body.dark .formation-tab:hover,
+        body.dark .formation-tab.active {
+            background: var(--primary-color);
+            color: white;
+        }
+        body.dark .team-switch-btn {
+            background: rgba(255,255,255,0.05);
+            color: var(--text-main);
+            border-color: rgba(255,255,255,0.1);
+        }
+        body.dark .team-switch-btn.active {
+            background: var(--primary-color);
+            color: white;
+        }
+        body.dark .team-switch-btn.away.active {
+            background: var(--lose-color);
+        }
+        body.dark .formation-court-wrapper {
+            box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+        }
+        }
+        .team-formation-switch {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            margin-bottom: 14px;
+        }
+        .team-switch-btn {
+            padding: 6px 14px;
+            border-radius: 20px;
+            border: 2px solid var(--muted-border);
+            background: var(--card-bg);
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: 700;
+            transition: all 0.2s;
+        }
+        .team-switch-btn:hover {
+            border-color: var(--primary-color);
+        }
+        .team-switch-btn.active {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+        .team-switch-btn.away.active {
+            background: var(--lose-color);
+            border-color: var(--lose-color);
+        }
+        .formation-court-wrapper {
+            position: relative;
+            width: 100%;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+        }
+
+        /* Base court styles */
+        .formation-court {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        /* Volleyball Court - Horizontal */
+        .court-volleyball {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 2 / 1;
+            background: linear-gradient(135deg, #F97316 0%, #EA580C 50%, #DC2626 100%);
+            border-radius: 12px;
+            border: 3px solid rgba(255,255,255,0.9);
+        }
+        .court-volleyball .court-inner {
+            position: absolute;
+            inset: 8px;
+            border: 2px solid rgba(255,255,255,0.5);
+            border-radius: 8px;
+        }
+        .court-volleyball .net-line {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            width: 4px;
+            background: white;
+            transform: translateX(-50%);
+            box-shadow: 0 0 8px rgba(0,0,0,0.2);
+        }
+        .court-volleyball .attack-line {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: rgba(255,255,255,0.6);
+        }
+        .court-volleyball .attack-line.left { left: 33%; }
+        .court-volleyball .attack-line.right { right: 33%; }
+
+        /* Basketball Court - Horizontal */
+        .court-basketball {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 1.88 / 1;
+            background: linear-gradient(180deg, #D4A574 0%, #C4956A 50%, #B8895E 100%);
+            border-radius: 12px;
+            border: 3px solid rgba(139,69,19,0.4);
+        }
+        .court-basketball .court-lines {
+            position: absolute;
+            inset: 0;
+        }
+        .court-basketball .center-line {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            width: 2px;
+            background: rgba(139,69,19,0.5);
+            transform: translateX(-50%);
+        }
+        .court-basketball .center-circle {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 18%;
+            aspect-ratio: 1;
+            border: 2px solid rgba(139,69,19,0.5);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+        }
+        .court-basketball .three-point {
+            position: absolute;
+            top: 50%;
+            width: 22%;
+            height: 90%;
+            border: 2px solid rgba(139,69,19,0.5);
+            border-radius: 0 50% 50% 0;
+            transform: translateY(-50%);
+        }
+        .court-basketball .three-point.left {
+            left: 0;
+            border-left: none;
+            border-radius: 0 50% 50% 0;
+        }
+        .court-basketball .three-point.right {
+            right: 0;
+            border-right: none;
+            border-radius: 50% 0 0 50%;
+        }
+        .court-basketball .key-area {
+            position: absolute;
+            top: 50%;
+            width: 14%;
+            height: 50%;
+            border: 2px solid rgba(139,69,19,0.5);
+            background: rgba(139,69,19,0.08);
+            transform: translateY(-50%);
+        }
+        .court-basketball .key-area.left {
+            left: 0;
+            border-left: none;
+        }
+        .court-basketball .key-area.right {
+            right: 0;
+            border-right: none;
+        }
+        .court-basketball .hoop {
+            position: absolute;
+            top: 50%;
+            width: 10px;
+            height: 10px;
+            background: #DC2626;
+            border-radius: 50%;
+            transform: translateY(-50%);
+            box-shadow: 0 0 6px rgba(220,38,38,0.5);
+        }
+        .court-basketball .hoop.left { left: 3%; }
+        .court-basketball .hoop.right { right: 3%; }
+
+        /* Soccer Field - Horizontal */
+        .court-soccer {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 1.5 / 1;
+            background: repeating-linear-gradient(
+                90deg,
+                #22C55E 0%,
+                #22C55E 10%,
+                #16A34A 10%,
+                #16A34A 20%
+            );
+            border-radius: 12px;
+            border: 3px solid rgba(255,255,255,0.9);
+        }
+        .court-soccer .field-border {
+            position: absolute;
+            inset: 8px;
+            border: 2px solid rgba(255,255,255,0.7);
+            border-radius: 4px;
+        }
+        .court-soccer .center-line {
+            position: absolute;
+            top: 8px;
+            bottom: 8px;
+            left: 50%;
+            width: 2px;
+            background: rgba(255,255,255,0.7);
+            transform: translateX(-50%);
+        }
+        .court-soccer .center-circle {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 20%;
+            aspect-ratio: 1;
+            border: 2px solid rgba(255,255,255,0.7);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+        }
+        .court-soccer .center-spot {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 8px;
+            height: 8px;
+            background: rgba(255,255,255,0.9);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+        }
+        .court-soccer .penalty-area {
+            position: absolute;
+            top: 50%;
+            width: 16%;
+            height: 65%;
+            border: 2px solid rgba(255,255,255,0.7);
+            transform: translateY(-50%);
+        }
+        .court-soccer .penalty-area.left {
+            left: 8px;
+            border-left: none;
+        }
+        .court-soccer .penalty-area.right {
+            right: 8px;
+            border-right: none;
+        }
+        .court-soccer .goal-area {
+            position: absolute;
+            top: 50%;
+            width: 6%;
+            height: 30%;
+            border: 2px solid rgba(255,255,255,0.7);
+            transform: translateY(-50%);
+        }
+        .court-soccer .goal-area.left {
+            left: 8px;
+            border-left: none;
+        }
+        .court-soccer .goal-area.right {
+            right: 8px;
+            border-right: none;
+        }
+        .court-soccer .goal {
+            position: absolute;
+            top: 50%;
+            width: 4px;
+            height: 18%;
+            background: white;
+            transform: translateY(-50%);
+            border-radius: 2px;
+        }
+        .court-soccer .goal.left { left: 4px; }
+        .court-soccer .goal.right { right: 4px; }
+
+        /* Players Container */
+        #playersContainer {
+            position: absolute;
+            inset: 0;
+            z-index: 10;
+        }
+
+        /* Player markers */
+        .player-marker {
+            position: absolute;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+            cursor: default;
+            transition: transform 0.2s ease, z-index 0s;
+        }
+        .player-marker:hover {
+            transform: translate(-50%, -50%) scale(1.15);
+            z-index: 30;
+        }
+        .player-number {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 13px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+            border: 3px solid rgba(255,255,255,0.95);
+            transition: all 0.2s;
+        }
+        .player-marker:hover .player-number {
+            box-shadow: 0 6px 20px rgba(0,0,0,0.35);
+        }
+        .player-marker.home .player-number {
+            background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%);
+            color: white;
+        }
+        .player-marker.away .player-number {
+            background: linear-gradient(135deg, #F87171 0%, #EF4444 100%);
+            color: white;
+        }
+        .player-name {
+            margin-top: 3px;
+            padding: 2px 6px;
+            font-size: 10px;
+            font-weight: 700;
+            color: white;
+            background: rgba(0,0,0,0.6);
+            border-radius: 4px;
+            white-space: nowrap;
+            max-width: 70px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            backdrop-filter: blur(4px);
+        }
+
+        /* No formation message */
+        .no-formation {
+            padding: 24px;
+            text-align: center;
+            color: var(--text-sub);
+            font-size: 12px;
+        }
+
+        /* Formation Mobile Responsive */
+        @media (max-width: 600px) {
+            .formation-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .formation-tabs {
+                width: 100%;
+                justify-content: flex-start;
+            }
+            .formation-tab {
+                padding: 6px 10px;
+                font-size: 11px;
+            }
+            .player-number {
+                width: 28px;
+                height: 28px;
+                font-size: 11px;
+                border-width: 2px;
+            }
+            .player-name {
+                font-size: 8px;
+                padding: 1px 4px;
+                max-width: 50px;
+            }
+        }
+        @media (max-width: 380px) {
+            .player-number {
+                width: 24px;
+                height: 24px;
+                font-size: 10px;
+            }
+            .player-name {
+                display: none;
+            }
+        }
     </style>
     <style>
         /* Mobile-friendly adjustments */
@@ -290,6 +743,7 @@
             .score-row { margin-top: 10px; gap: 14px; }
             .score-num { font-size: 18px; }
             .status-badge { padding: 6px 10px; font-size: 12px; }
+        }
 
         @media (max-width: 380px) {
             body { padding: 10px 8px; }
@@ -314,6 +768,7 @@
             .score-row { gap: 10px; }
             .score-num { font-size: 14px; }
             .status-badge { padding: 5px 8px; font-size: 10px; }
+        }
     </style>
     <!-- Firebase SDKs (replace with modular SDK if preferred) -->
     <script>
@@ -329,6 +784,19 @@
     </script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script>
+        // iframe 감지 및 클래스 추가
+        (function() {
+            try {
+                if (window.self !== window.top || window.frameElement) {
+                    document.documentElement.classList.add('in-iframe');
+                }
+            } catch (e) {
+                // Cross-origin iframe인 경우
+                document.documentElement.classList.add('in-iframe');
+            }
+        })();
+    </script>
 </head>
 <body>
     <div class="top-actions">
@@ -388,9 +856,102 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Formation Section -->
+            <div class="formation-section" id="formationSection">
+                <div class="formation-header">
+                    <h4>📍 포메이션</h4>
+                    <div class="formation-tabs">
+                        <button class="formation-tab active" data-sport="volleyball">🏐 배구</button>
+                        <button class="formation-tab" data-sport="basketball">🏀 농구</button>
+                        <button class="formation-tab" data-sport="soccer">⚽ 축구</button>
+                    </div>
+                </div>
+                <div class="team-formation-switch">
+                    <button class="team-switch-btn active" data-team="home" id="formationHomeBtn">Home</button>
+                    <button class="team-switch-btn away" data-team="away" id="formationAwayBtn">Away</button>
+                    <button class="team-switch-btn" data-team="both" id="formationBothBtn">Both</button>
+                </div>
+                <div class="formation-court" id="formationCourt">
+                    <!-- Court will be rendered by JS -->
+                </div>
+            </div>
         </div>
     </div>
 
+    <!-- Admin Modal -->
+    <div id="adminModal" class="admin-modal hidden" aria-hidden="true">
+        <div class="admin-panel">
+            <h3>⚙️ 경기 관리</h3>
+            <div class="admin-row">
+                <label style="min-width:80px">스트리밍 URL</label>
+                <input type="text" id="adminStream" placeholder="YouTube 링크">
+            </div>
+            <div class="admin-row">
+                <label style="min-width:80px">상태</label>
+                <select id="adminStatus">
+                    <option value="scheduled">Scheduled</option>
+                    <option value="live">Live</option>
+                    <option value="ft">Final</option>
+                </select>
+            </div>
+            <div class="admin-row">
+                <label style="min-width:80px">홈 점수</label>
+                <input type="number" id="adminHomeScore" min="0">
+                <label style="min-width:80px">원정 점수</label>
+                <input type="number" id="adminAwayScore" min="0">
+            </div>
+            <div class="admin-row">
+                <label style="min-width:80px">세트</label>
+                <input type="number" id="adminSet" min="1" max="5" placeholder="세트 번호">
+                <label style="min-width:80px">메모</label>
+                <input type="text" id="adminNote" placeholder="추가 정보">
+            </div>
+            <div class="admin-row">
+                <label style="min-width:80px">성별</label>
+                <select id="adminGender">
+                    <option value="">-</option>
+                    <option value="boys">Boys</option>
+                    <option value="girls">Girls</option>
+                </select>
+            </div>
+            <hr style="margin:12px 0;border:none;border-top:1px solid var(--muted-border)">
+            <h4 style="margin:8px 0">이벤트 추가</h4>
+            <div class="admin-row">
+                <input type="number" id="evtMinute" placeholder="분" style="max-width:60px">
+                <select id="evtTeam" style="max-width:80px">
+                    <option value="home">Home</option>
+                    <option value="away">Away</option>
+                </select>
+                <input type="text" id="evtType" placeholder="타입 (예: Goal, Point)">
+                <input type="text" id="evtNote" placeholder="메모">
+                <button class="theme-toggle" id="addEvtBtn">+</button>
+            </div>
+            <div id="adminEventsList" style="margin-top:8px"></div>
+            <hr style="margin:12px 0;border:none;border-top:1px solid var(--muted-border)">
+            <h4 style="margin:8px 0">📍 포메이션 관리</h4>
+            <div class="admin-row">
+                <label style="min-width:80px">종목</label>
+                <select id="adminFormationSport">
+                    <option value="volleyball">배구</option>
+                    <option value="basketball">농구</option>
+                    <option value="soccer">축구</option>
+                </select>
+            </div>
+            <div class="admin-row">
+                <label style="min-width:80px">팀</label>
+                <select id="adminFormationTeam">
+                    <option value="home">Home</option>
+                    <option value="away">Away</option>
+                </select>
+            </div>
+            <div id="adminFormationPlayers" style="margin-top:8px"></div>
+            <div class="admin-actions">
+                <button class="theme-toggle" id="adminCancel">취소</button>
+                <button class="theme-toggle" id="adminSave" style="background:var(--primary-color);color:white;border-color:var(--primary-color)">저장</button>
+            </div>
+        </div>
+    </div>
 
     <script>
         const LIVE_SCORE_KEY = 'kisvl_live_scores';
@@ -986,6 +1547,346 @@
         // close modal on backdrop click
         document.getElementById('adminModal').addEventListener('click', (e)=>{ if (e.target === e.currentTarget) hideAdminModal(); });
     </script>
+
+    <script>
+        // ============================================
+        // Formation Component Logic
+        // ============================================
+        const FORMATION_KEY = 'kisvl_formations';
+
+        // Default formations for each sport (horizontal layout: x=left-right, y=top-bottom)
+        const defaultFormations = {
+            volleyball: {
+                home: [
+                    { number: 1, name: '세터', x: 15, y: 30 },
+                    { number: 2, name: '리베로', x: 8, y: 50 },
+                    { number: 3, name: '레프트', x: 15, y: 70 },
+                    { number: 4, name: '라이트', x: 35, y: 30 },
+                    { number: 5, name: '센터', x: 35, y: 50 },
+                    { number: 6, name: '레프트2', x: 35, y: 70 }
+                ],
+                away: [
+                    { number: 1, name: 'Setter', x: 85, y: 70 },
+                    { number: 2, name: 'Libero', x: 92, y: 50 },
+                    { number: 3, name: 'Outside', x: 85, y: 30 },
+                    { number: 4, name: 'Opposite', x: 65, y: 70 },
+                    { number: 5, name: 'Middle', x: 65, y: 50 },
+                    { number: 6, name: 'Outside2', x: 65, y: 30 }
+                ]
+            },
+            basketball: {
+                home: [
+                    { number: 1, name: 'PG', x: 25, y: 50 },
+                    { number: 2, name: 'SG', x: 35, y: 25 },
+                    { number: 3, name: 'SF', x: 35, y: 75 },
+                    { number: 4, name: 'PF', x: 15, y: 30 },
+                    { number: 5, name: 'C', x: 15, y: 70 }
+                ],
+                away: [
+                    { number: 1, name: 'PG', x: 75, y: 50 },
+                    { number: 2, name: 'SG', x: 65, y: 75 },
+                    { number: 3, name: 'SF', x: 65, y: 25 },
+                    { number: 4, name: 'PF', x: 85, y: 70 },
+                    { number: 5, name: 'C', x: 85, y: 30 }
+                ]
+            },
+            soccer: {
+                home: [
+                    { number: 1, name: 'GK', x: 5, y: 50 },
+                    { number: 2, name: 'RB', x: 18, y: 15 },
+                    { number: 3, name: 'CB', x: 15, y: 35 },
+                    { number: 4, name: 'CB', x: 15, y: 65 },
+                    { number: 5, name: 'LB', x: 18, y: 85 },
+                    { number: 6, name: 'CDM', x: 30, y: 50 },
+                    { number: 7, name: 'RM', x: 38, y: 20 },
+                    { number: 8, name: 'CM', x: 38, y: 50 },
+                    { number: 9, name: 'LM', x: 38, y: 80 },
+                    { number: 10, name: 'ST', x: 48, y: 35 },
+                    { number: 11, name: 'ST', x: 48, y: 65 }
+                ],
+                away: [
+                    { number: 1, name: 'GK', x: 95, y: 50 },
+                    { number: 2, name: 'LB', x: 82, y: 85 },
+                    { number: 3, name: 'CB', x: 85, y: 65 },
+                    { number: 4, name: 'CB', x: 85, y: 35 },
+                    { number: 5, name: 'RB', x: 82, y: 15 },
+                    { number: 6, name: 'CDM', x: 70, y: 50 },
+                    { number: 7, name: 'LM', x: 62, y: 80 },
+                    { number: 8, name: 'CM', x: 62, y: 50 },
+                    { number: 9, name: 'RM', x: 62, y: 20 },
+                    { number: 10, name: 'ST', x: 52, y: 65 },
+                    { number: 11, name: 'ST', x: 52, y: 35 }
+                ]
+            }
+        };
+
+        function getAllFormations() {
+            try { return JSON.parse(localStorage.getItem(FORMATION_KEY) || '{}'); }
+            catch (e) { return {}; }
+        }
+
+        function getFormationForMatch(matchId, sport) {
+            const all = getAllFormations();
+            const matchData = all[matchId] || {};
+            return matchData[sport] || null;
+        }
+
+        function saveFormationForMatch(matchId, sport, formation) {
+            const all = getAllFormations();
+            if (!all[matchId]) all[matchId] = {};
+            all[matchId][sport] = formation;
+            try { localStorage.setItem(FORMATION_KEY, JSON.stringify(all)); } catch (e) {}
+        }
+
+        // Current state
+        let currentSport = 'volleyball';
+        let currentTeamView = 'home'; // 'home', 'away', 'both'
+
+        function renderCourt(sport) {
+            const courtContainer = document.getElementById('formationCourt');
+            if (!courtContainer) return;
+
+            let courtHTML = '';
+            switch (sport) {
+                case 'volleyball':
+                    courtHTML = `
+                        <div class="formation-court-wrapper">
+                            <div class="court-volleyball">
+                                <div class="court-inner"></div>
+                                <div class="net-line"></div>
+                                <div class="attack-line left"></div>
+                                <div class="attack-line right"></div>
+                                <div id="playersContainer"></div>
+                            </div>
+                        </div>
+                    `;
+                    break;
+                case 'basketball':
+                    courtHTML = `
+                        <div class="formation-court-wrapper">
+                            <div class="court-basketball">
+                                <div class="court-lines">
+                                    <div class="center-line"></div>
+                                    <div class="center-circle"></div>
+                                    <div class="three-point left"></div>
+                                    <div class="three-point right"></div>
+                                    <div class="key-area left"></div>
+                                    <div class="key-area right"></div>
+                                    <div class="hoop left"></div>
+                                    <div class="hoop right"></div>
+                                </div>
+                                <div id="playersContainer"></div>
+                            </div>
+                        </div>
+                    `;
+                    break;
+                case 'soccer':
+                    courtHTML = `
+                        <div class="formation-court-wrapper">
+                            <div class="court-soccer">
+                                <div class="field-border"></div>
+                                <div class="center-line"></div>
+                                <div class="center-circle"></div>
+                                <div class="center-spot"></div>
+                                <div class="penalty-area left"></div>
+                                <div class="penalty-area right"></div>
+                                <div class="goal-area left"></div>
+                                <div class="goal-area right"></div>
+                                <div class="goal left"></div>
+                                <div class="goal right"></div>
+                                <div id="playersContainer"></div>
+                            </div>
+                        </div>
+                    `;
+                    break;
+            }
+            courtContainer.innerHTML = courtHTML;
+            renderPlayers(sport);
+        }
+
+        function renderPlayers(sport) {
+            const playersContainer = document.getElementById('playersContainer');
+            if (!playersContainer) return;
+
+            const savedFormation = getFormationForMatch(matchId, sport);
+            const formation = savedFormation || defaultFormations[sport];
+
+            let playersHTML = '';
+
+            if (currentTeamView === 'home' || currentTeamView === 'both') {
+                const homePlayers = formation.home || [];
+                homePlayers.forEach(player => {
+                    playersHTML += `
+                        <div class="player-marker home" style="left: ${player.x}%; top: ${player.y}%;" title="${player.name}">
+                            <div class="player-number">${player.number}</div>
+                            <div class="player-name">${player.name}</div>
+                        </div>
+                    `;
+                });
+            }
+
+            if (currentTeamView === 'away' || currentTeamView === 'both') {
+                const awayPlayers = formation.away || [];
+                awayPlayers.forEach(player => {
+                    playersHTML += `
+                        <div class="player-marker away" style="left: ${player.x}%; top: ${player.y}%;" title="${player.name}">
+                            <div class="player-number">${player.number}</div>
+                            <div class="player-name">${player.name}</div>
+                        </div>
+                    `;
+                });
+            }
+
+            playersContainer.innerHTML = playersHTML;
+        }
+
+        // Initialize formation component
+        (function initFormation() {
+            const formationSection = document.getElementById('formationSection');
+            if (!formationSection) return;
+
+            // Set team names on buttons
+            const homeBtn = document.getElementById('formationHomeBtn');
+            const awayBtn = document.getElementById('formationAwayBtn');
+            if (homeBtn && homeTeam) homeBtn.textContent = homeTeam.name;
+            if (awayBtn && awayTeam) awayBtn.textContent = awayTeam.name;
+
+            // Sport tab click handlers
+            const sportTabs = formationSection.querySelectorAll('.formation-tab');
+            sportTabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    sportTabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    currentSport = tab.dataset.sport;
+                    renderCourt(currentSport);
+                });
+            });
+
+            // Team switch handlers
+            const teamBtns = formationSection.querySelectorAll('.team-switch-btn');
+            teamBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    teamBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    currentTeamView = btn.dataset.team;
+                    renderPlayers(currentSport);
+                });
+            });
+
+            // Initial render
+            renderCourt(currentSport);
+        })();
+
+        // ============================================
+        // Admin: Formation Management
+        // ============================================
+        function renderAdminFormationPlayers() {
+            const container = document.getElementById('adminFormationPlayers');
+            if (!container) return;
+
+            const sport = document.getElementById('adminFormationSport')?.value || 'volleyball';
+            const team = document.getElementById('adminFormationTeam')?.value || 'home';
+
+            const savedFormation = getFormationForMatch(matchId, sport);
+            const formation = savedFormation || defaultFormations[sport];
+            const players = formation[team] || [];
+
+            const maxPlayers = sport === 'volleyball' ? 6 : sport === 'basketball' ? 5 : 11;
+
+            let html = `<div style="font-size:11px;color:var(--text-sub);margin-bottom:8px">선수 ${players.length}/${maxPlayers}명 (X/Y: 0-100%)</div>`;
+
+            players.forEach((player, idx) => {
+                html += `
+                    <div class="admin-row" style="margin-bottom:4px">
+                        <input type="number" class="formation-player-num" data-idx="${idx}" value="${player.number}" placeholder="#" style="max-width:50px">
+                        <input type="text" class="formation-player-name" data-idx="${idx}" value="${player.name}" placeholder="이름">
+                        <input type="number" class="formation-player-x" data-idx="${idx}" value="${player.x}" placeholder="X%" min="0" max="100" style="max-width:60px">
+                        <input type="number" class="formation-player-y" data-idx="${idx}" value="${player.y}" placeholder="Y%" min="0" max="100" style="max-width:60px">
+                        <button class="theme-toggle formation-del-player" data-idx="${idx}">×</button>
+                    </div>
+                `;
+            });
+
+            if (players.length < maxPlayers) {
+                html += `<button class="theme-toggle" id="addFormationPlayer" style="margin-top:8px">+ 선수 추가</button>`;
+            }
+
+            container.innerHTML = html;
+
+            // Attach event listeners
+            container.querySelectorAll('.formation-del-player').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const idx = Number(btn.dataset.idx);
+                    players.splice(idx, 1);
+                    saveCurrentFormation(sport, team, players);
+                    renderAdminFormationPlayers();
+                });
+            });
+
+            const addBtn = document.getElementById('addFormationPlayer');
+            if (addBtn) {
+                addBtn.addEventListener('click', () => {
+                    const newNum = players.length + 1;
+                    players.push({ number: newNum, name: 'Player ' + newNum, x: 50, y: 50 });
+                    saveCurrentFormation(sport, team, players);
+                    renderAdminFormationPlayers();
+                });
+            }
+
+            // Save on input change
+            container.querySelectorAll('input').forEach(input => {
+                input.addEventListener('change', () => {
+                    const idx = Number(input.dataset.idx);
+                    if (input.classList.contains('formation-player-num')) {
+                        players[idx].number = Number(input.value) || 0;
+                    } else if (input.classList.contains('formation-player-name')) {
+                        players[idx].name = input.value || '';
+                    } else if (input.classList.contains('formation-player-x')) {
+                        players[idx].x = Math.min(100, Math.max(0, Number(input.value) || 0));
+                    } else if (input.classList.contains('formation-player-y')) {
+                        players[idx].y = Math.min(100, Math.max(0, Number(input.value) || 0));
+                    }
+                    saveCurrentFormation(sport, team, players);
+                });
+            });
+        }
+
+        function saveCurrentFormation(sport, team, players) {
+            const savedFormation = getFormationForMatch(matchId, sport) || JSON.parse(JSON.stringify(defaultFormations[sport]));
+            savedFormation[team] = players;
+            saveFormationForMatch(matchId, sport, savedFormation);
+        }
+
+        // Setup admin formation controls
+        (function initAdminFormation() {
+            const sportSelect = document.getElementById('adminFormationSport');
+            const teamSelect = document.getElementById('adminFormationTeam');
+
+            if (sportSelect) {
+                sportSelect.addEventListener('change', renderAdminFormationPlayers);
+            }
+            if (teamSelect) {
+                teamSelect.addEventListener('change', renderAdminFormationPlayers);
+            }
+
+            // Render on admin modal open (hook into existing showAdminModal)
+            const origShowAdmin = window.showAdminModal;
+            if (typeof origShowAdmin === 'function') {
+                window.showAdminModal = function() {
+                    origShowAdmin();
+                    setTimeout(renderAdminFormationPlayers, 50);
+                };
+            }
+        })();
+
+        // Sync formation across tabs
+        window.addEventListener('storage', (event) => {
+            if (event.key === FORMATION_KEY) {
+                renderPlayers(currentSport);
+            }
+        });
+    </script>
+
     <script>
         // Set admin passphrase (saved by user request)
         try { localStorage.setItem('kis_admin_pass', 'BISathletic120712!'); } catch(e) {}
