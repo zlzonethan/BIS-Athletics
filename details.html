@@ -1506,6 +1506,8 @@
     <script>
         // --- Admin modal behavior ---
         const ADMIN_PASSPHRASE_KEY = 'bis_admin_pass';
+        const LEGACY_ADMIN_PASSPHRASE_KEY = 'kis_admin_pass';
+        const DEFAULT_ADMIN_PASSPHRASE = 'BISathletic120712!';
 
         function getAllLiveScores() {
             try { return JSON.parse(localStorage.getItem(LIVE_SCORE_KEY) || '{}'); } catch(e){ return {}; }
@@ -1520,8 +1522,18 @@
         function promptForAdmin() {
             let saved = (window.BIS_ADMIN_PASSPHRASE || '').trim();
             if (!saved) {
-                try { saved = (localStorage.getItem(ADMIN_PASSPHRASE_KEY) || '').trim(); } catch(e) { saved = ''; }
+                try {
+                    saved = (localStorage.getItem(ADMIN_PASSPHRASE_KEY) || '').trim();
+                    if (!saved) {
+                        const legacy = (localStorage.getItem(LEGACY_ADMIN_PASSPHRASE_KEY) || '').trim();
+                        if (legacy) {
+                            localStorage.setItem(ADMIN_PASSPHRASE_KEY, legacy);
+                            saved = legacy;
+                        }
+                    }
+                } catch(e) { saved = ''; }
             }
+            if (!saved) saved = DEFAULT_ADMIN_PASSPHRASE;
             if (!saved) {
                 const create = confirm('No admin passphrase is configured. Create a local admin passphrase on this browser now?');
                 if (!create) return { ok: false, reason: 'not_configured' };

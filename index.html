@@ -1382,6 +1382,8 @@
 					{ id: 34, home: 'BIS', away: 'CSIS', date: 'May 29, 4:15pm' }
 				];
 					const ADMIN_PASSPHRASE_KEY = 'bis_admin_pass';
+					const LEGACY_ADMIN_PASSPHRASE_KEY = 'kis_admin_pass';
+					const DEFAULT_ADMIN_PASSPHRASE = 'BISathletic120712!';
 
 				const $ = (sel) => document.querySelector(sel);
 				const adminToggle = $('#adminToggleBtn');
@@ -1458,13 +1460,22 @@
 				}
 
 						function getLocalAdminPassphrase(){
-							try { return localStorage.getItem('bis_admin_pass') || ''; } catch(e){ return ''; }
+							try {
+								const current = localStorage.getItem(ADMIN_PASSPHRASE_KEY) || '';
+								if (current) return current;
+								const legacy = localStorage.getItem(LEGACY_ADMIN_PASSPHRASE_KEY) || '';
+								if (legacy) {
+									localStorage.setItem(ADMIN_PASSPHRASE_KEY, legacy);
+									return legacy;
+								}
+								return '';
+							} catch(e){ return ''; }
 						}
 						function setLocalAdminPassphrase(pass){
 							try { localStorage.setItem('bis_admin_pass', pass); } catch(e){}
 						}
 						function getEffectiveAdminPassphrase(){
-							return (window.BIS_ADMIN_PASSPHRASE || getLocalAdminPassphrase() || '').trim();
+							return (window.BIS_ADMIN_PASSPHRASE || getLocalAdminPassphrase() || DEFAULT_ADMIN_PASSPHRASE || '').trim();
 						}
 						function promptPass(){
 							let configured = getEffectiveAdminPassphrase();
