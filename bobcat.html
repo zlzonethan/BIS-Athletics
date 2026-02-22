@@ -1,10 +1,21 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="x-frame-options" content="allow" />
   <title>BIS Bobcat</title>
+  <meta name="description" content="Check the BIS Bobcat logo system, retro version, and official color guide." />
+  <link rel="canonical" href="https://bis-athletics.web.app/bobcat.html" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="BIS Bobcat" />
+  <meta property="og:description" content="Check the BIS Bobcat logo system, retro version, and official color guide." />
+  <meta property="og:url" content="https://bis-athletics.web.app/bobcat.html" />
+  <meta property="og:image" content="https://bis-athletics.web.app/assets/bismascot.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="BIS Bobcat" />
+  <meta name="twitter:description" content="Check the BIS Bobcat logo system, retro version, and official color guide." />
+  <meta name="twitter:image" content="https://bis-athletics.web.app/assets/bismascot.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet" />
@@ -162,6 +173,7 @@
       background: var(--border);
       padding: 4px 10px;
       border-radius: 6px;
+      border: none;
       cursor: pointer;
       transition: background 0.2s;
     }
@@ -251,7 +263,7 @@
       .bobcat-title { font-size: 22px; margin-top: 18px; }
     }
 
-    /* iframe 임베드 지원 */
+    /* iframe embed support */
     html.in-iframe, html.in-iframe body {
       width: 100%;
       height: 100%;
@@ -263,7 +275,7 @@
     }
   </style>
   <script>
-    // iframe 감지 및 클래스 추가
+    // Detect iframe and add class
     (function() {
       try {
         if (window.self !== window.top || window.frameElement) {
@@ -284,7 +296,7 @@
           <a class="nav-item" href="team.html">Team</a>
         </div>
         <a class="nav-logo-link" href="index.html">
-          <img class="logo" src="assets/bismascot.png" alt="BIS mascot" />
+          <img decoding="async" class="logo" src="assets/bismascot.png" alt="BIS mascot" />
         </a>
         <div class="nav-right">
           <a class="nav-item" href="upcoming.html">Upcoming</a>
@@ -297,20 +309,20 @@
       <h1>Bobcat</h1>
     </header>
 
-    <div class="tabs">
-      <button class="tab-btn active" data-tab="bobcat">Bobcat</button>
-      <button class="tab-btn" data-tab="retro">Retro Bobcat</button>
-      <button class="tab-btn" data-tab="color">Color</button>
+    <div class="tabs" role="tablist" aria-label="Bobcat sections">
+      <button class="tab-btn active" role="tab" id="tab-bobcat" aria-selected="true" aria-controls="bobcat" data-tab="bobcat">Bobcat</button>
+      <button class="tab-btn" role="tab" id="tab-retro" aria-selected="false" aria-controls="retro" tabindex="-1" data-tab="retro">Retro Bobcat</button>
+      <button class="tab-btn" role="tab" id="tab-color" aria-selected="false" aria-controls="color" tabindex="-1" data-tab="color">Color</button>
     </div>
 
-    <div id="bobcat" class="tab-content active">
+    <div id="bobcat" class="tab-content active" role="tabpanel" aria-labelledby="tab-bobcat">
       <section class="panel">
         <img class="bobcat-img-main" src="assets/bismascot.png" alt="Main Bobcat logo" />
         <h2 class="bobcat-title">Main Bobcat</h2>
       </section>
     </div>
 
-    <div id="retro" class="tab-content">
+    <div id="retro" class="tab-content" role="tabpanel" aria-labelledby="tab-retro" hidden>
       <section class="panel">
         <h2 class="bobcat-title" style="margin-top:0;margin-bottom:28px;">Retro Bobcat</h2>
         <div class="retro-grid">
@@ -330,34 +342,34 @@
       </section>
     </div>
 
-    <div id="color" class="tab-content">
+    <div id="color" class="tab-content" role="tabpanel" aria-labelledby="tab-color" hidden>
       <section class="panel">
         <h2 class="bobcat-title" style="margin-top:0;margin-bottom:28px;">Official BIS Athletics Colors</h2>
         <div class="color-grid">
           <div class="color-item">
             <div class="color-swatch" style="background: #000000;"></div>
             <span class="color-name">Black</span>
-            <span class="color-code" onclick="copyColor('#000000')">#000000</span>
+            <button class="color-code" type="button" data-color="#000000">#000000</button>
           </div>
           <div class="color-item">
             <div class="color-swatch" style="background: #00205B;"></div>
             <span class="color-name">Bobcat Blue</span>
-            <span class="color-code" onclick="copyColor('#00205B')">#00205B</span>
+            <button class="color-code" type="button" data-color="#00205B">#00205B</button>
           </div>
           <div class="color-item">
             <div class="color-swatch" style="background: #A7A7A7;"></div>
             <span class="color-name">Grey</span>
-            <span class="color-code" onclick="copyColor('#A7A7A7')">#A7A7A7</span>
+            <button class="color-code" type="button" data-color="#A7A7A7">#A7A7A7</button>
           </div>
           <div class="color-item">
             <div class="color-swatch" style="background: #13B5EA;"></div>
             <span class="color-name">Sky Blue</span>
-            <span class="color-code" onclick="copyColor('#13B5EA')">#13B5EA</span>
+            <button class="color-code" type="button" data-color="#13B5EA">#13B5EA</button>
           </div>
           <div class="color-item">
             <div class="color-swatch" style="background: #FFFFFF; border-color: #ddd;"></div>
             <span class="color-name">White</span>
-            <span class="color-code" onclick="copyColor('#FFFFFF')">#FFFFFF</span>
+            <button class="color-code" type="button" data-color="#FFFFFF">#FFFFFF</button>
           </div>
         </div>
       </section>
@@ -401,19 +413,46 @@
     });
 
     // Tab functionality
-    const tabBtns = document.querySelectorAll('.tab-btn');
+    const tabBtns = Array.from(document.querySelectorAll('.tab-btn'));
     const tabContents = document.querySelectorAll('.tab-content');
+    const tabsWrap = document.querySelector('.tabs[role="tablist"]');
+    const activateTab = (btn) => {
+      const targetTab = btn.dataset.tab;
+      tabBtns.forEach((b) => {
+        const selected = b === btn;
+        b.classList.toggle('active', selected);
+        b.setAttribute('aria-selected', String(selected));
+        b.tabIndex = selected ? 0 : -1;
+      });
+      tabContents.forEach((panel) => {
+        const selected = panel.id === targetTab;
+        panel.classList.toggle('active', selected);
+        panel.hidden = !selected;
+      });
+    };
 
     tabBtns.forEach(btn => {
-      btn.addEventListener('click', () => {
-        const targetTab = btn.dataset.tab;
-        
-        tabBtns.forEach(b => b.classList.remove('active'));
-        tabContents.forEach(c => c.classList.remove('active'));
-        
-        btn.classList.add('active');
-        document.getElementById(targetTab).classList.add('active');
-      });
+      btn.addEventListener('click', () => activateTab(btn));
+    });
+    tabsWrap?.addEventListener('keydown', (event) => {
+      const current = tabBtns.findIndex((tab) => tab.classList.contains('active'));
+      let next = current;
+      if (event.key === 'ArrowRight') next = (current + 1) % tabBtns.length;
+      if (event.key === 'ArrowLeft') next = (current - 1 + tabBtns.length) % tabBtns.length;
+      if (next !== current) {
+        event.preventDefault();
+        activateTab(tabBtns[next]);
+        tabBtns[next].focus();
+      }
+    });
+    if (tabBtns[0]) activateTab(tabBtns.find((tab) => tab.classList.contains('active')) || tabBtns[0]);
+
+    document.querySelectorAll('img').forEach((img, idx) => {
+      if (!img.hasAttribute('decoding')) img.setAttribute('decoding', 'async');
+      if (!img.hasAttribute('loading') && idx > 0) img.setAttribute('loading', 'lazy');
+    });
+    document.querySelectorAll('.color-code').forEach((btn) => {
+      btn.addEventListener('click', () => copyColor(btn.dataset.color || btn.textContent.trim()));
     });
 
     // Copy color code to clipboard

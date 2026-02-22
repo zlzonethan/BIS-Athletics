@@ -2,9 +2,20 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="x-frame-options" content="allow" />
     <title>Team - BIS Athletics</title>
+    <meta name="description" content="Check team rosters, records, uniforms, and staff info for BIS Athletics." />
+    <link rel="canonical" href="https://bis-athletics.web.app/team.html" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Team - BIS Athletics" />
+    <meta property="og:description" content="Check team rosters, records, uniforms, and staff info for BIS Athletics." />
+    <meta property="og:url" content="https://bis-athletics.web.app/team.html" />
+    <meta property="og:image" content="https://bis-athletics.web.app/assets/bismascot.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Team - BIS Athletics" />
+    <meta name="twitter:description" content="Check team rosters, records, uniforms, and staff info for BIS Athletics." />
+    <meta name="twitter:image" content="https://bis-athletics.web.app/assets/bismascot.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
@@ -42,7 +53,7 @@
       .tab-panel.active{opacity:1;transform:translateX(0);pointer-events:auto;height:auto;overflow:visible}
       .panel-title{display:flex;align-items:center;gap:10px;font-size:20px;font-weight:800;margin-bottom:14px}
       .panel-subtitle{color:var(--muted);font-weight:600;margin-bottom:16px}
-      .hs-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+      .hs-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px;align-items:start}
       .hs-card{display:grid;gap:12px;background:var(--card-muted);border:1px solid var(--border);border-radius:16px;padding:18px;transition:transform .2s ease, box-shadow .2s ease}
       .hs-card:hover{transform:translateY(-2px);box-shadow:0 10px 20px rgba(15,23,42,.08)}
       .hs-title{font-weight:800;font-size:16px}
@@ -54,9 +65,41 @@
       .hs-sep{height:1px;background:var(--border);margin:2px 0}
       .hs-block{display:grid;gap:6px}
       .hs-label{font-size:11px;font-weight:800;color:var(--text);text-transform:uppercase;letter-spacing:.4px}
-      .hs-value{font-size:12px;color:var(--muted);font-weight:600}
+      .hs-value{font-size:12px;color:var(--muted);font-weight:600;line-height:1.6}
       .hs-inline{display:flex;flex-wrap:wrap;gap:8px}
       .details-button{display:inline-flex;align-items:center;justify-content:center;padding:10px 14px;border-radius:12px;border:1px solid var(--border);background:var(--panel);font-weight:700;cursor:pointer;margin-top:12px}
+
+      /* Accordion Styles */
+      .accordion{border-radius:12px;overflow:hidden;margin-top:8px}
+      .accordion-item{border-bottom:1px solid var(--border)}
+      .accordion-item:last-child{border-bottom:none}
+      .accordion-header{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;background:var(--panel);cursor:pointer;transition:background .2s ease;gap:10px}
+      .accordion-header:hover{background:var(--border)}
+      .accordion-title{font-size:12px;font-weight:700;color:var(--text);display:flex;align-items:center;gap:8px}
+      .accordion-icon{font-size:10px;color:var(--muted);transition:transform .3s ease}
+      .accordion-item.open .accordion-icon{transform:rotate(180deg)}
+      .accordion-content{max-height:0;overflow:hidden;transition:max-height .3s ease, padding .3s ease;background:var(--card-muted)}
+      .accordion-item.open .accordion-content{max-height:800px}
+      .accordion-inner{padding:14px;display:grid;gap:8px}
+      .roster-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:6px}
+      .roster-item{padding:6px 10px;background:var(--panel);border-radius:8px;font-size:11px;font-weight:600;color:var(--text)}
+      .roster-item .grade{color:var(--muted);font-size:10px}
+      .game-item{display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--panel);border-radius:8px;font-size:11px}
+      .game-item .opponent{font-weight:700;color:var(--text)}
+      .game-item .score{font-weight:800;color:var(--text)}
+      .game-item .type{font-size:10px;color:var(--muted);margin-left:6px}
+      .game-item.win .score{color:#22c55e}
+      .game-item.loss .score{color:#ef4444}
+      .game-item.draw .score{color:#f59e0b}
+      .staff-item{padding:8px 12px;background:var(--panel);border-radius:8px;font-size:12px}
+      .staff-item .role{font-weight:800;color:var(--text);font-size:11px;text-transform:uppercase;letter-spacing:.3px;margin-bottom:2px}
+      .staff-item .name{color:var(--muted);font-weight:600}
+      
+      /* Uniform Gallery */
+      .uniform-gallery{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+      .uniform-img{width:100%;border-radius:10px;cursor:pointer;transition:transform .2s ease}
+      .uniform-img:hover{transform:scale(1.02)}
+      .uniform-label{font-size:11px;font-weight:700;color:var(--text);text-align:center;margin-top:4px}
       .match-card{display:block;margin-top:16px;padding:16px;border-radius:16px;background:var(--card-muted);border:1px solid var(--border);cursor:pointer}
       .match-card-title{font-weight:700;margin-bottom:6px}
       .match-card-meta{font-size:12px;color:var(--muted)}
@@ -113,7 +156,7 @@
         .theme-toggle-wrap{padding:12px 0 calc(20px + env(safe-area-inset-bottom))}
       }
 
-      /* iframe 임베드 지원 */
+      /* iframe embed support */
       html.in-iframe, html.in-iframe body {
         width: 100%;
         height: 100%;
@@ -125,7 +168,7 @@
       }
     </style>
     <script>
-      // iframe 감지 및 클래스 추가
+      // Detect iframe and add class
       (function() {
         try {
           if (window.self !== window.top || window.frameElement) {
@@ -145,7 +188,7 @@
             <a class="nav-item" href="bobcat.html">Bobcat</a>
             <a class="nav-item" href="team.html">Team</a>
           </div>
-          <a href="index.html" class="nav-logo-link"><img class="logo" src="assets/bismascot.png" alt="BIS mascot" /></a>
+          <a href="index.html" class="nav-logo-link"><img decoding="async" class="logo" src="assets/bismascot.png" alt="BIS mascot" /></a>
           <div class="nav-right">
             <a class="nav-item" href="upcoming.html">Upcoming</a>
             <a class="nav-item" href="kisaa-kaiac.html">KISAA/KAIAC</a>
@@ -158,18 +201,18 @@
         <div class="season">BIS Athletics</div>
       </header>
       <div class="tabs" role="tablist" aria-label="Team sections">
-        <button class="tab-btn active" type="button" data-target="tab-hs">HS</button>
-        <button class="tab-btn" type="button" data-target="tab-ms">MS</button>
+        <button class="tab-btn active" type="button" role="tab" id="tab-btn-hs" aria-selected="true" aria-controls="tab-hs" data-target="tab-hs">HS</button>
+        <button class="tab-btn" type="button" role="tab" id="tab-btn-ms" aria-selected="false" aria-controls="tab-ms" tabindex="-1" data-target="tab-ms">MS</button>
       </div>
 
       <div class="tab-panels" style="--tab-dir: 1;">
-        <div class="tab-panel active" id="tab-hs">
+        <div class="tab-panel active" id="tab-hs" role="tabpanel" aria-labelledby="tab-btn-hs">
           <section class="panel">
             <div class="panel-title">HS Teams 25-26</div>
-            <!-- <div class="panel-subtitle">시즌/기록/연습 시간/스태프를 한눈에 정리했습니다.</div> -->
+            <!-- <div class="panel-subtitle">Season/records/practice schedule/staff at a glance.</div> -->
             <div class="hs-grid">
-          <a class="hs-card" href="https://sites.google.com/bisce.net/bisathletics/hs/volleyball-25-26?authuser=0" target="_blank" rel="noreferrer">
-            <div class="hs-title">HS Volleyball</div>
+          <div class="hs-card">
+            <div class="hs-title">🏐 HS Volleyball</div>
             <div class="hs-meta">Fall Season 25-26</div>
             <div class="hs-block">
               <div class="hs-label">Record</div>
@@ -178,40 +221,301 @@
                 <span class="hs-badge">Women 7-2</span>
               </div>
             </div>
-            <div class="hs-sep"></div>
-            <div class="hs-block">
-              <div class="hs-label">Practice</div>
-              <div class="hs-value">Men Mon/Wed 4:00-5:30pm · Women Tue/Thu 4:00-5:30pm</div>
+            
+            <div class="accordion">
+              <div class="accordion-item">
+                <div class="accordion-header">
+                  <span class="accordion-title">📅 Practice & Staff</span>
+                  <span class="accordion-icon">▼</span>
+                </div>
+                <div class="accordion-content">
+                  <div class="accordion-inner">
+                    <div class="staff-item">
+                      <div class="role">Practice Times</div>
+                      <div class="name">Men: Mon/Wed 4:00-5:30pm</div>
+                      <div class="name">Women: Tue/Thu 4:00-5:30pm</div>
+                    </div>
+                    <div class="staff-item">
+                      <div class="role">Head Coach</div>
+                      <div class="name">Terrance Cassell (M/W)</div>
+                    </div>
+                    <div class="staff-item">
+                      <div class="role">Assistant Coaches</div>
+                      <div class="name">Sungsil Kim (M), Grace Kang (W)</div>
+                    </div>
+                    <div class="staff-item">
+                      <div class="role">Managers</div>
+                      <div class="name">Men: Kaylee Kim, Yejin Seo</div>
+                      <div class="name">Women: Harper Oh, Bumbie Chung</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="accordion-item">
+                <div class="accordion-header">
+                  <span class="accordion-title">👥 Men's Roster (13)</span>
+                  <span class="accordion-icon">▼</span>
+                </div>
+                <div class="accordion-content">
+                  <div class="accordion-inner">
+                    <div class="roster-grid">
+                      <div class="roster-item">Jade Kim <span class="grade">G12</span></div>
+                      <div class="roster-item">Minjun Kim <span class="grade">G12</span></div>
+                      <div class="roster-item">Harry Yu <span class="grade">G11</span></div>
+                      <div class="roster-item">Joey Park <span class="grade">G11</span></div>
+                      <div class="roster-item">Ian Chung <span class="grade">G10</span></div>
+                      <div class="roster-item">Kyle Kim <span class="grade">G10</span></div>
+                      <div class="roster-item">Sam Kim <span class="grade">G10</span></div>
+                      <div class="roster-item">Ian Yoo <span class="grade">G10</span></div>
+                      <div class="roster-item">Mark Chang <span class="grade">G10</span></div>
+                      <div class="roster-item">Daniel Cho <span class="grade">G10</span></div>
+                      <div class="roster-item">Sam Park <span class="grade">G10</span></div>
+                      <div class="roster-item">Aiden Lee <span class="grade">G9</span></div>
+                      <div class="roster-item">Ryan Cho <span class="grade">G9</span></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="accordion-item">
+                <div class="accordion-header">
+                  <span class="accordion-title">👥 Women's Roster (14)</span>
+                  <span class="accordion-icon">▼</span>
+                </div>
+                <div class="accordion-content">
+                  <div class="accordion-inner">
+                    <div class="roster-grid">
+                      <div class="roster-item">Jennie Sung <span class="grade">G12</span></div>
+                      <div class="roster-item">Rachel Yoon <span class="grade">G12</span></div>
+                      <div class="roster-item">Yvonne Kim <span class="grade">G12</span></div>
+                      <div class="roster-item">Sol Lee <span class="grade">G11</span></div>
+                      <div class="roster-item">Mikayla Kwon <span class="grade">G11</span></div>
+                      <div class="roster-item">Soyoon Lee <span class="grade">G10</span></div>
+                      <div class="roster-item">Serena Lee <span class="grade">G10</span></div>
+                      <div class="roster-item">Xanna Seo <span class="grade">G10</span></div>
+                      <div class="roster-item">Yuan Park <span class="grade">G9</span></div>
+                      <div class="roster-item">Johanna Lee <span class="grade">G9</span></div>
+                      <div class="roster-item">Jane Seo <span class="grade">G9</span></div>
+                      <div class="roster-item">Yuri Kim <span class="grade">G9</span></div>
+                      <div class="roster-item">Priscilla Lee <span class="grade">G9</span></div>
+                      <div class="roster-item">Emma Kim <span class="grade">G9</span></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="accordion-item">
+                <div class="accordion-header">
+                  <span class="accordion-title">🏆 Game Results</span>
+                  <span class="accordion-icon">▼</span>
+                </div>
+                <div class="accordion-content">
+                  <div class="accordion-inner">
+                    <div class="hs-label" style="margin-bottom:6px">Men's Games</div>
+                    <div class="game-item win"><span class="opponent">vs GSIS<span class="type">Friendly</span></span><span class="score">3-2 W</span></div>
+                    <div class="game-item win"><span class="opponent">vs CMIS<span class="type">Friendly</span></span><span class="score">3-2 W</span></div>
+                    <div class="game-item win"><span class="opponent">vs KIS<span class="type">Friendly</span></span><span class="score">3-2 W</span></div>
+                    <div class="game-item win"><span class="opponent">vs CCAS<span class="type">League</span></span><span class="score">3-0 W</span></div>
+                    <div class="game-item win"><span class="opponent">@ICSU<span class="type">League</span></span><span class="score">3-0 W</span></div>
+                    <div class="game-item win"><span class="opponent">vs SPPS<span class="type">League</span></span><span class="score">3-0 W</span></div>
+                    <div class="game-item loss"><span class="opponent">@ICSP<span class="type">Friendly</span></span><span class="score">2-3 L</span></div>
+                    <div class="game-item win"><span class="opponent">vs FPS<span class="type">League</span></span><span class="score">2-1 W</span></div>
+                    <div class="game-item win"><span class="opponent">vs KKFS<span class="type">Friendly</span></span><span class="score">3-0 W</span></div>
+                    <div class="game-item"><span class="opponent">Fayston Tournament</span><span class="score">🥉 3rd</span></div>
+                    <div class="hs-label" style="margin:12px 0 6px">Women's Games</div>
+                    <div class="game-item loss"><span class="opponent">vs GSIS<span class="type">Friendly</span></span><span class="score">1-3 L</span></div>
+                    <div class="game-item win"><span class="opponent">vs CMIS<span class="type">Friendly</span></span><span class="score">3-2 W</span></div>
+                    <div class="game-item win"><span class="opponent">vs CCAS<span class="type">League</span></span><span class="score">3-1 W</span></div>
+                    <div class="game-item loss"><span class="opponent">@ICSU<span class="type">League</span></span><span class="score">0-3 L</span></div>
+                    <div class="game-item win"><span class="opponent">vs SPPS<span class="type">League</span></span><span class="score">3-1 W</span></div>
+                    <div class="game-item win"><span class="opponent">@ICSP<span class="type">League</span></span><span class="score">3-0 W</span></div>
+                    <div class="game-item win"><span class="opponent">vs FPS<span class="type">League</span></span><span class="score">3-0 W</span></div>
+                    <div class="game-item win"><span class="opponent">vs KKFS<span class="type">Friendly</span></span><span class="score">3-1 W</span></div>
+                    <div class="game-item win"><span class="opponent">vs BCC<span class="type">Friendly</span></span><span class="score">3-0 W</span></div>
+                    <div class="game-item"><span class="opponent">Fayston Tournament</span><span class="score">🥈 2nd</span></div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="accordion-item">
+                <div class="accordion-header">
+                  <span class="accordion-title">👕 Uniforms</span>
+                  <span class="accordion-icon">▼</span>
+                </div>
+                <div class="accordion-content">
+                  <div class="accordion-inner">
+                    <div class="uniform-gallery">
+                      <div>
+                        <img loading="lazy" decoding="async" class="uniform-img" src="https://lh3.googleusercontent.com/sitesv/APaQ0SRIEfRvzKjyjfaY0qPGP68ywJrsjbytHYGK-NbeM3JB2-5DkmSIbUjyKhXgNQeUTnNaqwa3yKv1-GDDFt0ZkImoZoUFKUcU0TPHTZGVFWmmz4vasX-2o-KmgIfIMEkQs6uAlorCh8UEhWeIi6PwkEcAZOvfrXiesh438jaY4aKng2su_qaqIry4gfKuvGiFsW0o0HYsU-2ojQbLH9w4CuojZfh8s_gyi2YA=w1280" alt="Men's Uniform">
+                        <div class="uniform-label">Men's Uniform</div>
+                      </div>
+                      <div>
+                        <img loading="lazy" decoding="async" class="uniform-img" src="https://lh3.googleusercontent.com/sitesv/APaQ0SQl4k9JJxLpzZ1ET0LDZT6s3xVsuMdQssSUD5mlYyFmgyqByXVM7knH9mPjyuWVIGL4fnWbWdxogXeH51gpHN3dCPiMm6iT-yppt_3uFzo8-3OHk9sQPpWDgMpgl9ljpKMignD7IcBFyW_np-ndDaMjNhjYS1JHpwW5GsiQHCArJ8ga_XkWGEs9TUr7ekcVQpj-QcnJX2cEuXYg97Aut4yKfnIQ7HO9cpg192w=w1280" alt="Men's Uniform 2">
+                        <div class="uniform-label">Men's Away</div>
+                      </div>
+                      <div>
+                        <img loading="lazy" decoding="async" class="uniform-img" src="https://lh3.googleusercontent.com/sitesv/APaQ0STmb7x3_9DyoY1PB74GAw9OhjF5iremgaYoZEvpRKP4t2ZFARNdP-LqK5Cg27GB17MBGoc_pIAa59_WvPcfIltDf63D0oPrGIAjkB8boPTllIkpy4HxRvSHuHzdQ3hcOFrcYuCLr1FsmIHhJJRtWC0Pu2ILF93p16fnOQKWMBDohGHYgJxkoPLE1KPl4SJhi3pwBXHgPFYEuenANUZQ12AR_zGTetq9vx-OvP0=w1280" alt="Women's Uniform">
+                        <div class="uniform-label">Women's Uniform</div>
+                      </div>
+                      <div>
+                        <img loading="lazy" decoding="async" class="uniform-img" src="https://lh3.googleusercontent.com/sitesv/APaQ0SRn6OA_5BGJ8AuEZ6P7MunMlQkm-dIsZ_ErX405SazVMnMjWiBKMV42qlPCLbIDr1yZYaxYLKlX0Hmnlqig5KzQfv6yf4kjjGqEWx1TzEYFPbk99gTPMhiJkcYNDU-xxtpMSUXCDJrOrIeINfrwzofVN7HrgqL-dzQTgXaVeCcr5KGhab4_DV7f1KjqsPei_bo82ARtG3dxaC048nFHwDQhj72ULfd5yEKU=w1280" alt="Women's Uniform 2">
+                        <div class="uniform-label">Women's Away</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div class="hs-block">
-              <div class="hs-label">Staff</div>
-              <div class="hs-value">Terrance Cassell (M/W), Sungsil Kim (M), Grace Kang (W)</div>
-              <div class="hs-value">Managers: Kaylee Kim, Yejin Seo (M) · Harper Oh, Bumbie Chung (W)</div>
-            </div>
-          </a>
-          <a class="hs-card" href="https://sites.google.com/bisce.net/bisathletics/hs/basketball-25-26?authuser=0" target="_blank" rel="noreferrer">
-            <div class="hs-title">HS Basketball</div>
+          </div>
+          <div class="hs-card">
+            <div class="hs-title">🏀 HS Basketball</div>
             <div class="hs-meta">Winter Season 25-26</div>
             <div class="hs-block">
               <div class="hs-label">Record</div>
               <div class="hs-inline">
-                <span class="hs-badge">Men 3-0</span>
-                <span class="hs-badge">Women 0-2</span>
+                <span class="hs-badge">Men 3-1</span>
+                <span class="hs-badge">Women 0-3</span>
               </div>
             </div>
-            <div class="hs-sep"></div>
-            <div class="hs-block">
-              <div class="hs-label">Practice</div>
-              <div class="hs-value">Men Wed/Fri 4:00-6:00pm · Women Mon/Wed 4:00-6:00pm</div>
+            
+            <div class="accordion">
+              <div class="accordion-item">
+                <div class="accordion-header">
+                  <span class="accordion-title">📅 Practice & Staff</span>
+                  <span class="accordion-icon">▼</span>
+                </div>
+                <div class="accordion-content">
+                  <div class="accordion-inner">
+                    <div class="staff-item">
+                      <div class="role">Practice Times</div>
+                      <div class="name">Men: Wed/Fri 4:00-6:00pm</div>
+                      <div class="name">Women: Mon/Wed 4:00-6:00pm</div>
+                    </div>
+                    <div class="staff-item">
+                      <div class="role">Head Coach</div>
+                      <div class="name">Terrance Cassell (M/W)</div>
+                    </div>
+                    <div class="staff-item">
+                      <div class="role">Managers</div>
+                      <div class="name">Men: Yoon Kim (G12), Madeleine Oh (G11)</div>
+                      <div class="name">Women: Stella Chang (G12), Madeleine Oh (G11)</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="accordion-item">
+                <div class="accordion-header">
+                  <span class="accordion-title">👥 Men's Roster (14)</span>
+                  <span class="accordion-icon">▼</span>
+                </div>
+                <div class="accordion-content">
+                  <div class="accordion-inner">
+                    <div class="roster-grid">
+                      <div class="roster-item">Yehoon Choi #27 <span class="grade">Sr</span></div>
+                      <div class="roster-item">Lloyd Kim #41 <span class="grade">Sr</span></div>
+                      <div class="roster-item">Ethan Chung #22 <span class="grade">Sr</span></div>
+                      <div class="roster-item">Minjun Kim #50 <span class="grade">Sr</span></div>
+                      <div class="roster-item">Ian Lee #29 <span class="grade">Jr</span></div>
+                      <div class="roster-item">Ian Cho #36 <span class="grade">Jr</span></div>
+                      <div class="roster-item">Joey Park #40 <span class="grade">Jr</span></div>
+                      <div class="roster-item">Joey Jung #43 <span class="grade">Jr</span></div>
+                      <div class="roster-item">Dylan Park #45 <span class="grade">Jr</span></div>
+                      <div class="roster-item">Tae Kim #91 <span class="grade">Jr</span></div>
+                      <div class="roster-item">Kyle Kim #42 <span class="grade">So</span></div>
+                      <div class="roster-item">Ian Chung #20 <span class="grade">So</span></div>
+                      <div class="roster-item">Samuel Kim #23 <span class="grade">So</span></div>
+                      <div class="roster-item">Kaden Ahn #35 <span class="grade">Fr</span></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="accordion-item">
+                <div class="accordion-header">
+                  <span class="accordion-title">👥 Women's Roster (8)</span>
+                  <span class="accordion-icon">▼</span>
+                </div>
+                <div class="accordion-content">
+                  <div class="accordion-inner">
+                    <div class="roster-grid">
+                      <div class="roster-item">Jennie Sung #37 <span class="grade">Sr</span></div>
+                      <div class="roster-item">Minju Kim #00 <span class="grade">Sr</span></div>
+                      <div class="roster-item">Audrey Chong #23 <span class="grade">Sr</span></div>
+                      <div class="roster-item">Gina Kim #32 <span class="grade">Jr</span></div>
+                      <div class="roster-item">Hailey Ko #16 <span class="grade">Jr</span></div>
+                      <div class="roster-item">Yelyn Sim #21 <span class="grade">Fr</span></div>
+                      <div class="roster-item">Johanna Lee #11 <span class="grade">Fr</span></div>
+                      <div class="roster-item">Olivia Won #10 <span class="grade">G8</span></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="accordion-item">
+                <div class="accordion-header">
+                  <span class="accordion-title">🏆 Game Results</span>
+                  <span class="accordion-icon">▼</span>
+                </div>
+                <div class="accordion-content">
+                  <div class="accordion-inner">
+                    <div class="hs-label" style="margin-bottom:6px">Men's Games</div>
+                    <div class="game-item"><span class="opponent">@KKFS<span class="type">Exhibition</span></span><span class="score">21-X</span></div>
+                    <div class="game-item win"><span class="opponent">vs SPAD<span class="type">Jamboree</span></span><span class="score">11-6 W</span></div>
+                    <div class="game-item win"><span class="opponent">vs SIE<span class="type">Jamboree</span></span><span class="score">11-3 W</span></div>
+                    <div class="game-item loss"><span class="opponent">vs SPPS<span class="type">Jamboree</span></span><span class="score">10-14 L</span></div>
+                    <div class="game-item draw"><span class="opponent">vs SSI<span class="type">Jamboree</span></span><span class="score">11-11 D</span></div>
+                    <div class="game-item draw"><span class="opponent">vs CCAS<span class="type">Jamboree</span></span><span class="score">8-8 D</span></div>
+                    <div class="game-item win"><span class="opponent">@MCA<span class="type">League</span></span><span class="score">39-16 W</span></div>
+                    <div class="game-item win"><span class="opponent">@WCA<span class="type">League</span></span><span class="score">54-19 W</span></div>
+                    <div class="game-item win"><span class="opponent">vs ICSP<span class="type">Friendly</span></span><span class="score">53-47 W</span></div>
+                    <div class="game-item win"><span class="opponent">vs SFS-JV<span class="type">Friendly</span></span><span class="score">35-34 W</span></div>
+                    <div class="game-item loss"><span class="opponent">vs FPS<span class="type">League</span></span><span class="score">27-52 L</span></div>
+                    <div class="hs-label" style="margin:12px 0 6px">Women's Games</div>
+                    <div class="game-item loss"><span class="opponent">@KKFS<span class="type">Exhibition</span></span><span class="score">25-34 L</span></div>
+                    <div class="game-item draw"><span class="opponent">vs SPPS<span class="type">Jamboree</span></span><span class="score">4-4 D</span></div>
+                    <div class="game-item win"><span class="opponent">vs CCAS<span class="type">Jamboree</span></span><span class="score">5-4 W</span></div>
+                    <div class="game-item loss"><span class="opponent">vs FPS<span class="type">Jamboree</span></span><span class="score">1-16 L</span></div>
+                    <div class="game-item win"><span class="opponent">@SPPS<span class="type">League</span></span><span class="score">16-10 W</span></div>
+                    <div class="game-item loss"><span class="opponent">vs ICSP<span class="type">Friendly</span></span><span class="score">21-34 L</span></div>
+                    <div class="game-item loss"><span class="opponent">vs FPS<span class="type">League</span></span><span class="score">6-24 L</span></div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="accordion-item">
+                <div class="accordion-header">
+                  <span class="accordion-title">👕 Uniforms</span>
+                  <span class="accordion-icon">▼</span>
+                </div>
+                <div class="accordion-content">
+                  <div class="accordion-inner">
+                    <div class="uniform-gallery">
+                      <div>
+                        <img loading="lazy" decoding="async" class="uniform-img" src="https://lh3.googleusercontent.com/sitesv/APaQ0SRvHmhEaUwN4R2aZAwVptvZOZ7F8-mn7tl_7NyMToy_zv0SCN9-tAR86lCpjXmalMnaT3gGtl-gynP1BHAK0WQsDnyL4QI_XQa00T__xlgpx3CUcHjCtG6gvXOqvqM3eAVmp2B-rP22XfVVHbuiGrJ0uThajO-4H5pTy2W_X8sg-jnrvRawuCBMBohzmMSX1uKbUxQ37dUc9DBouG-DpxSmGnfiUYZli7vxIwM=w1280" alt="Men's Uniform">
+                        <div class="uniform-label">Men's Home</div>
+                      </div>
+                      <div>
+                        <img loading="lazy" decoding="async" class="uniform-img" src="https://lh3.googleusercontent.com/sitesv/APaQ0SQ2MHkNHR7yXp9r8qsw9sYJGxAoUJmfc6xGWoYCwc4VgaH211p-NVSI1z8NLFc0nZC1RL7Jma3ZRg4rsIRwGFV8XIK5OSsrxyK18gD1RKumKOkhYUo4HeIKWrFP1qPC6SvP4iE9Qlmk1p9tcsERsxSGhRv1kgEyaThqnBc8qNKIeuMbl8crTYZEfnG3Lb1Ht6HpMQO3LtI8MS4ZCtmu5M0mSXn0E7J7OjSHTDU=w1280" alt="Women's Uniform">
+                        <div class="uniform-label">Women's Home</div>
+                      </div>
+                      <div>
+                        <img loading="lazy" decoding="async" class="uniform-img" src="https://lh3.googleusercontent.com/sitesv/APaQ0SRb1pinslgdCxPPT8rNMZ3n6H-5is14A5_bB9Ys8R0a8K12LYdXHuAQrZ5bjXgbzrlqjxdmDhn67aRDn-3SroqzOmohXne_A1acVf_Rw-diSRNo9vzzo304YZ9edpZ4d6zfFra6S_RtpuGOeYoNNINUQdFUzas_b7S-vJUXbKn6kFzowLV5MlXVQIgwAkmXMckBOReyQpHyN1OdKngRIv-rW5pfy1LiQzesD0U=w1280" alt="Away Uniform">
+                        <div class="uniform-label">Away Black</div>
+                      </div>
+                    </div>
+                    <div class="staff-item" style="margin-top:10px">
+                      <div class="role">Uniform Provider</div>
+                      <div class="name">panenka.co.kr</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div class="hs-block">
-              <div class="hs-label">Staff</div>
-              <div class="hs-value">Coach: Terrance Cassell (M/W)</div>
-              <div class="hs-value">Managers: Yoon Kim, Madeleine Oh (M) · Stella Chang, Madeleine Oh (W)</div>
-            </div>
-          </a>
-          <a class="hs-card" href="https://sites.google.com/bisce.net/bisathletics/hs/soccer-25-26?authuser=0" target="_blank" rel="noreferrer">
-            <div class="hs-title">HS Soccer</div>
+          </div>
+          <div class="hs-card">
+            <div class="hs-title">⚽ HS Soccer</div>
             <div class="hs-meta">Spring Season 25-26</div>
             <div class="hs-block">
               <div class="hs-label">Record</div>
@@ -219,67 +523,388 @@
                 <span class="hs-badge">League 0-0</span>
               </div>
             </div>
-            <div class="hs-sep"></div>
-            <div class="hs-block">
-              <div class="hs-label">Practice</div>
-              <div class="hs-value">Men Tue/Thu 4:00-5:30pm</div>
+            
+            <div class="accordion">
+              <div class="accordion-item">
+                <div class="accordion-header">
+                  <span class="accordion-title">📅 Practice & Staff</span>
+                  <span class="accordion-icon">▼</span>
+                </div>
+                <div class="accordion-content">
+                  <div class="accordion-inner">
+                    <div class="staff-item">
+                      <div class="role">Practice Times</div>
+                      <div class="name">Men: Tue/Thu 4:00-5:30pm</div>
+                    </div>
+                    <div class="staff-item">
+                      <div class="role">Head Coach</div>
+                      <div class="name">TBD</div>
+                    </div>
+                    <div class="staff-item">
+                      <div class="role">Managers</div>
+                      <div class="name">TBD</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="accordion-item">
+                <div class="accordion-header">
+                  <span class="accordion-title">👥 Men's Roster (16)</span>
+                  <span class="accordion-icon">▼</span>
+                </div>
+                <div class="accordion-content">
+                  <div class="accordion-inner">
+                    <div class="roster-grid">
+                      <div class="roster-item">Oscar Chang #24 <span class="grade">G12</span></div>
+                      <div class="roster-item">Ian Lee #3 <span class="grade">G12</span></div>
+                      <div class="roster-item">David Kim #10 <span class="grade">G12</span></div>
+                      <div class="roster-item">Joshua Jeon #4 <span class="grade">G12</span></div>
+                      <div class="roster-item">Neil Lin #14 <span class="grade">G12</span></div>
+                      <div class="roster-item">Ryan Ko #15 <span class="grade">G12</span></div>
+                      <div class="roster-item">Ethan Chung #22 <span class="grade">G11</span></div>
+                      <div class="roster-item">Jade Kim #5 <span class="grade">G11</span></div>
+                      <div class="roster-item">Harry Yu #7 <span class="grade">G10</span></div>
+                      <div class="roster-item">Tae Kim #8 <span class="grade">G10</span></div>
+                      <div class="roster-item">Joey Jung #6 <span class="grade">G10</span></div>
+                      <div class="roster-item">Ian Yoo #17 <span class="grade">G9</span></div>
+                      <div class="roster-item">Sam Kim #9 <span class="grade">G9</span></div>
+                      <div class="roster-item">Kyle Kim #21 <span class="grade">G9</span></div>
+                      <div class="roster-item">Mark Chang #12 <span class="grade">G9</span></div>
+                      <div class="roster-item">Samuel Park #1 <span class="grade">G9</span></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="accordion-item">
+                <div class="accordion-header">
+                  <span class="accordion-title">🏆 Past Results (24-25)</span>
+                  <span class="accordion-icon">▼</span>
+                </div>
+                <div class="accordion-content">
+                  <div class="accordion-inner">
+                    <div class="game-item win"><span class="opponent">vs CSIS<span class="type">Friendly</span></span><span class="score">2-1 W</span></div>
+                    <div class="game-item loss"><span class="opponent">vs CMIS<span class="type">Friendly</span></span><span class="score">0-2 L</span></div>
+                    <div class="game-item draw"><span class="opponent">vs CSIS<span class="type">Friendly</span></span><span class="score">3-3 D</span></div>
+                    <div class="game-item loss"><span class="opponent">@ICSU<span class="type">League</span></span><span class="score">4-6 L</span></div>
+                    <div class="game-item win"><span class="opponent">@ICSP<span class="type">Friendly</span></span><span class="score">4-3 W</span></div>
+                    <div class="game-item win"><span class="opponent">@SPPS<span class="type">League</span></span><span class="score">4-3 W</span></div>
+                    <div class="game-item loss"><span class="opponent">vs FPS<span class="type">League</span></span><span class="score">1-6 L</span></div>
+                    <div class="game-item win"><span class="opponent">vs ICSU<span class="type">Hexa Cup</span></span><span class="score">1-0 W</span></div>
+                    <div class="game-item win"><span class="opponent">vs SALT<span class="type">Hexa Cup</span></span><span class="score">3-1 W</span></div>
+                    <div class="game-item win"><span class="opponent">vs SPAD<span class="type">League</span></span><span class="score">8-0 W</span></div>
+                    <div class="game-item loss"><span class="opponent">@SSI<span class="type">League</span></span><span class="score">2-3 L</span></div>
+                    <div class="game-item loss"><span class="opponent">@CSIS<span class="type">League</span></span><span class="score">1-8 L</span></div>
+                    <div class="hs-sep" style="margin:10px 0"></div>
+                    <div class="staff-item">
+                      <div class="role">⚽ Top Scorers</div>
+                      <div class="name">Harry Yu (14 goals), Sam Kim (11 goals), Oscar Chang (6 goals)</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="accordion-item">
+                <div class="accordion-header">
+                  <span class="accordion-title">👕 Uniforms</span>
+                  <span class="accordion-icon">▼</span>
+                </div>
+                <div class="accordion-content">
+                  <div class="accordion-inner">
+                    <div class="uniform-gallery">
+                      <div>
+                        <img loading="lazy" decoding="async" class="uniform-img" src="https://lh3.googleusercontent.com/sitesv/APaQ0SSJXJ5olJl-t8O-SK8JtvFguQHV0FfjiZNLPVVpIXtn5UIUUpwLUT6ZWdevh4Bp8C_xA3p-TWOiNg1X8wTfXmlVUkAdDiVgEfOYh69h8ZoakwIjFg74SLvyTi73J-RpEawRnK2nPe5h9JYtQzyuQQPGFxN6uZ_NNd--zesWRUPt-7B6LFK9g2jwcFnaH7dVhO51gnF60hWBF_IgV6Or3THhN_vJYB_FAvxNqE0=w1280" alt="Soccer Team Photo">
+                        <div class="uniform-label">Team Photo</div>
+                      </div>
+                      <div>
+                        <img loading="lazy" decoding="async" class="uniform-img" src="https://lh3.googleusercontent.com/sitesv/APaQ0STiNO_qdBhR7SkzAkpjtW94PiR-S-r-TxNjtTqRGetmz99iBGi0fjFNMKz2ZBLqjRYig7T-qj5zCBf6mzeTid8hGZzsMlkWZbPGhusm2AgGMcREMftJIz2cUa4dWBeOvab_ao9EcYkH5rnbsHITFVtLIHG5EInccGtat9mMoGWkb8vNDLipCZC2qU4d4FgJzvIpXHQRxRj097Vp6itLzbA=w1280" alt="Soccer Uniform">
+                        <div class="uniform-label">Home Kit</div>
+                      </div>
+                      <div>
+                        <img loading="lazy" decoding="async" class="uniform-img" src="https://lh3.googleusercontent.com/sitesv/APaQ0SRnYufcVbuLtGveqi_vTjOUma_srdz3-_r6INlPPJdETcbvHL4jTSyjPLG9LJ7Tc4Nbye9TpJnMTMVYH9soQQ61KRvD7qiKG49t5-npph2P4ksjPBoxFHaHHWM9GIuQK8jkk3ZH1eONxN_6usOxce9iuFMws8ziwmVnXn-DGtc7bAp0F4z1EJts9DUrxxpsrgqVnyIDI7gBt3xGYyqIa07rVB-NBbUquPrE=w1280" alt="Soccer Away">
+                        <div class="uniform-label">Away Kit</div>
+                      </div>
+                      <div>
+                        <img loading="lazy" decoding="async" class="uniform-img" src="https://lh3.googleusercontent.com/sitesv/APaQ0STLtKp02WS0MgI4jRMwjPywXQ4MCU3V8kZsgdcJFnGRfasoi9GsADb224p7sZ4XZOOP9lNRsD__Oj-AvzDdRSCNUet7pRJvCYbHExvkzQxZLzO9xIpGZTLzpHMb8FMR4tERL3WsmGS2BLEqRp3mfu5Nr_jFWIxfAQ4UeIu38pVJ8Y3Kcawi2HrJ26eaaXJjVoKYuH2ItRmMO0xWrZiyLbT6pwlan7c1a1PBf1E=w1280" alt="Soccer Action">
+                        <div class="uniform-label">Match Action</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div class="hs-block">
-              <div class="hs-label">Staff</div>
-              <div class="hs-value">Coach/Managers: TBD (page shows placeholders)</div>
-            </div>
-          </a>
+          </div>
             </div>
           </section>
         </div>
 
-        <div class="tab-panel" id="tab-ms">
+        <div class="tab-panel" id="tab-ms" role="tabpanel" aria-labelledby="tab-btn-ms" hidden>
           <section class="panel">
             <div class="panel-title">MS Teams 25-26</div>
-            <!-- <div class="panel-subtitle">시즌/기록/연습 시간/스태프를 한눈에 정리했습니다.</div> -->
+            <!-- <div class="panel-subtitle">Season/records/practice schedule/staff at a glance.</div> -->
             <div class="hs-grid">
-          <a class="hs-card" href="https://sites.google.com/bisce.net/bisathletics/ms/soccer-25-26?authuser=0" target="_blank" rel="noreferrer">
-            <div class="hs-title">MS Soccer</div>
+          <div class="hs-card">
+            <div class="hs-title">⚽ MS Soccer</div>
             <div class="hs-meta">Fall Season 2025</div>
             <div class="hs-block">
               <div class="hs-label">Record</div>
               <div class="hs-inline">
-                <span class="hs-badge">3-3-0</span>
+                <span class="hs-badge">5-2-0</span>
               </div>
             </div>
-            <div class="hs-sep"></div>
-            <div class="hs-block">
-              <div class="hs-label">Practice</div>
-              <div class="hs-value">Fri 4:00-5:15pm</div>
+            
+            <div class="accordion">
+              <div class="accordion-item">
+                <div class="accordion-header">
+                  <span class="accordion-title">📅 Practice & Staff</span>
+                  <span class="accordion-icon">▼</span>
+                </div>
+                <div class="accordion-content">
+                  <div class="accordion-inner">
+                    <div class="staff-item">
+                      <div class="role">Practice Times</div>
+                      <div class="name">Fri 4:00-5:15pm</div>
+                    </div>
+                    <div class="staff-item">
+                      <div class="role">Head Coach</div>
+                      <div class="name">Andrew Hazen</div>
+                    </div>
+                    <div class="staff-item">
+                      <div class="role">Managers</div>
+                      <div class="name">Harry Yu, Tae Kim</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="accordion-item">
+                <div class="accordion-header">
+                  <span class="accordion-title">👥 Roster (12)</span>
+                  <span class="accordion-icon">▼</span>
+                </div>
+                <div class="accordion-content">
+                  <div class="accordion-inner">
+                    <div class="roster-grid">
+                      <div class="roster-item">Jigu <span class="grade">G8</span></div>
+                      <div class="roster-item">David <span class="grade">G8</span></div>
+                      <div class="roster-item">Alvin <span class="grade">G8</span></div>
+                      <div class="roster-item">Jinha <span class="grade">G8</span></div>
+                      <div class="roster-item">Max <span class="grade">G8</span></div>
+                      <div class="roster-item">Olivia <span class="grade">G8</span></div>
+                      <div class="roster-item">Eliam <span class="grade">G7</span></div>
+                      <div class="roster-item">Jason <span class="grade">G6</span></div>
+                      <div class="roster-item">Leo <span class="grade">G6</span></div>
+                      <div class="roster-item">Lucas <span class="grade">G6</span></div>
+                      <div class="roster-item">Jay <span class="grade">G6</span></div>
+                      <div class="roster-item">Daniel <span class="grade">G6</span></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="accordion-item">
+                <div class="accordion-header">
+                  <span class="accordion-title">🏆 Game Results</span>
+                  <span class="accordion-icon">▼</span>
+                </div>
+                <div class="accordion-content">
+                  <div class="accordion-inner">
+                    <div class="game-item win"><span class="opponent">vs ICSU<span class="type">League</span></span><span class="score">6-4 W</span></div>
+                    <div class="game-item loss"><span class="opponent">vs CCAS<span class="type">League</span></span><span class="score">0-5 L</span></div>
+                    <div class="game-item win"><span class="opponent">vs MCA<span class="type">League</span></span><span class="score">4-0 W</span></div>
+                    <div class="game-item win"><span class="opponent">vs SPPS<span class="type">League</span></span><span class="score">5-1 W</span></div>
+                    <div class="game-item win"><span class="opponent">vs SPAS<span class="type">League</span></span><span class="score">4-2 W</span></div>
+                    <div class="game-item win"><span class="opponent">vs SIE<span class="type">League</span></span><span class="score">3-2 W</span></div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="accordion-item">
+                <div class="accordion-header">
+                  <span class="accordion-title">👕 Uniforms</span>
+                  <span class="accordion-icon">▼</span>
+                </div>
+                <div class="accordion-content">
+                  <div class="accordion-inner">
+                    <div class="uniform-gallery">
+                      <div>
+                        <img loading="lazy" decoding="async" class="uniform-img" src="https://lh3.googleusercontent.com/sitesv/APaQ0SQ30BYbl6iQLvlQMk6SP8gY37J53W-65DbJxjI-p_CVdZpqqgi8dA09x9sSP6yZdLXweh3AM1jZvTxXjFAnbOwuUO1gqzAiUGNMhNi6YBJ1aDbONabIOo7kIDMUgdngWdZcNft5qIuJpdhyNX7UfhAK4ke4Ul6H7qs57U1hIrYwoYTcbQCHDvQ_UmU=w1280" alt="MS Soccer Team">
+                        <div class="uniform-label">Team Photo</div>
+                      </div>
+                      <div>
+                        <img loading="lazy" decoding="async" class="uniform-img" src="https://lh3.googleusercontent.com/sitesv/APaQ0SQTbhEZCzUj1hODWu1fckNQKW1tUBn2uybkxfcGiCwarLU2LyZ_I3c37ZPxNAt1EnsGABfox1oGqSQXPAYU02vx7DIFE_YYyLPhDxLM39bsBwlciIh23T8HtpKSjDJC8i7Z0dSU2_NORc-lY0hndbcsPf5smFCBA_NU9tR9xb7BW62S-qC6sWOOwzw=w1280" alt="MS Soccer Uniform">
+                        <div class="uniform-label">Home Kit</div>
+                      </div>
+                      <div>
+                        <img loading="lazy" decoding="async" class="uniform-img" src="https://lh3.googleusercontent.com/sitesv/APaQ0SSDACCM2lfkLxZrjZ7Gz_HQPTdQEWBYuXFZCxCrR_whWINOu5pzPQbeM7lDAffvGxfoErk4uxCLmP0cL1GZGDfo6O4eHmFvwpLwasoxFrQGXWSCriyfdNhS9XNTBsn_kNxRcj7TALD-HPFxEGS7CnuRzMX1dWFC79XVo4M9VcgxsfmXlwNhEadeJqc=w1280" alt="MS Soccer Action">
+                        <div class="uniform-label">Match Action</div>
+                      </div>
+                      <div>
+                        <img loading="lazy" decoding="async" class="uniform-img" src="https://lh3.googleusercontent.com/sitesv/APaQ0SSprqT4HyX2TXrc0mIc_Ipf-G8uQfKARZyuUTkC5qFFc8Zq98jIdVpyY253mlJaEYAe5AqbZXNYclK6Cr3Gv9rQu4pJh7kf4tFjKAY5jwglxPoUcbhp6UFO3z005z2NCHKnbecjRMCbXJPx91ABuBuaJamfKuu4ZtUgGHxKLRXCnLCTXliJD73ZKmq0gFFBFydW8vVYfQsHwSl0oMA7LDHsg7Tc8Jg1sbN2BBg=w1280" alt="MS Soccer Group">
+                        <div class="uniform-label">Team Group</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div class="hs-block">
-              <div class="hs-label">Staff</div>
-              <div class="hs-value">Coach: Andrew Hazen · Managers: Harry Yu, Tae Kim</div>
-            </div>
-          </a>
-          <a class="hs-card" href="https://sites.google.com/bisce.net/bisathletics/ms/volleyball-25-26?authuser=0" target="_blank" rel="noreferrer">
-            <div class="hs-title">MS Volleyball</div>
+          </div>
+          <div class="hs-card">
+            <div class="hs-title">🏐 MS Volleyball</div>
             <div class="hs-meta">Winter Season 25-26</div>
             <div class="hs-block">
               <div class="hs-label">Record</div>
               <div class="hs-inline">
-                <span class="hs-badge">Boys 0-2</span>
-                <span class="hs-badge">Girls 2-0</span>
+                <span class="hs-badge">Boys 1-2</span>
+                <span class="hs-badge">Girls 3-0</span>
               </div>
             </div>
-            <div class="hs-sep"></div>
-            <div class="hs-block">
-              <div class="hs-label">Practice</div>
-              <div class="hs-value">Boys Thu 3:50-5:15pm · Girls Tue 3:50-5:15pm</div>
+            
+            <div class="accordion">
+              <div class="accordion-item">
+                <div class="accordion-header">
+                  <span class="accordion-title">📅 Practice & Staff</span>
+                  <span class="accordion-icon">▼</span>
+                </div>
+                <div class="accordion-content">
+                  <div class="accordion-inner">
+                    <div class="staff-item">
+                      <div class="role">Practice Times</div>
+                      <div class="name">Boys: Thu 3:50-5:15pm</div>
+                      <div class="name">Girls: Tue 3:50-5:15pm</div>
+                    </div>
+                    <div class="staff-item">
+                      <div class="role">Boys Coaches</div>
+                      <div class="name">Andrew Hazen, Sara Kim</div>
+                    </div>
+                    <div class="staff-item">
+                      <div class="role">Girls Coaches</div>
+                      <div class="name">Michelle Mun, Herin Park</div>
+                    </div>
+                    <div class="staff-item">
+                      <div class="role">Managers</div>
+                      <div class="name">Boys: Julien Park, Sam Kim, Jade Kim</div>
+                      <div class="name">Girls: Ian Yoo, Sol Lee</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="accordion-item">
+                <div class="accordion-header">
+                  <span class="accordion-title">👥 Boys Roster (12)</span>
+                  <span class="accordion-icon">▼</span>
+                </div>
+                <div class="accordion-content">
+                  <div class="accordion-inner">
+                    <div class="roster-grid">
+                      <div class="roster-item">Ethan Park <span class="grade">G8</span></div>
+                      <div class="roster-item">Leo Jeon <span class="grade">G8</span></div>
+                      <div class="roster-item">Jinha Lee <span class="grade">G8</span></div>
+                      <div class="roster-item">Junwoo Choi <span class="grade">G8</span></div>
+                      <div class="roster-item">Eric Choi <span class="grade">G8</span></div>
+                      <div class="roster-item">Jinseo Park <span class="grade">G7</span></div>
+                      <div class="roster-item">Eliam Shim <span class="grade">G7</span></div>
+                      <div class="roster-item">Taein Kim <span class="grade">G7</span></div>
+                      <div class="roster-item">Chan Hee <span class="grade">G7</span></div>
+                      <div class="roster-item">Lucas Ryoo <span class="grade">G6</span></div>
+                      <div class="roster-item">Leo Lim <span class="grade">G6</span></div>
+                      <div class="roster-item">Taeyun Chung <span class="grade">G6</span></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="accordion-item">
+                <div class="accordion-header">
+                  <span class="accordion-title">👥 Girls Roster (21)</span>
+                  <span class="accordion-icon">▼</span>
+                </div>
+                <div class="accordion-content">
+                  <div class="accordion-inner">
+                    <div class="roster-grid">
+                      <div class="roster-item">Olivia Won ⭐ <span class="grade">G8</span></div>
+                      <div class="roster-item">Ellen Kim <span class="grade">G8</span></div>
+                      <div class="roster-item">Judy Kim <span class="grade">G8</span></div>
+                      <div class="roster-item">Olive Kim <span class="grade">G8</span></div>
+                      <div class="roster-item">Sara Jang <span class="grade">G8</span></div>
+                      <div class="roster-item">Seyeon Jeong <span class="grade">G8</span></div>
+                      <div class="roster-item">Ailey Seok <span class="grade">G8</span></div>
+                      <div class="roster-item">Jenny Kim <span class="grade">G8</span></div>
+                      <div class="roster-item">Lizzie Kang <span class="grade">G7</span></div>
+                      <div class="roster-item">Lilly Oh <span class="grade">G7</span></div>
+                      <div class="roster-item">Jean Lee <span class="grade">G7</span></div>
+                      <div class="roster-item">Ashley Kim <span class="grade">G6</span></div>
+                      <div class="roster-item">Aria Lee <span class="grade">G6</span></div>
+                      <div class="roster-item">Crystal Kim <span class="grade">G6</span></div>
+                      <div class="roster-item">Ella Cho <span class="grade">G6</span></div>
+                      <div class="roster-item">Ellie Cho <span class="grade">G6</span></div>
+                      <div class="roster-item">Irene Park <span class="grade">G6</span></div>
+                      <div class="roster-item">Jane Hong <span class="grade">G6</span></div>
+                      <div class="roster-item">Sienna Oh <span class="grade">G6</span></div>
+                      <div class="roster-item">Yeehyun Won <span class="grade">G6</span></div>
+                      <div class="roster-item">Reina Kwon <span class="grade">G6</span></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="accordion-item">
+                <div class="accordion-header">
+                  <span class="accordion-title">🏆 Game Results</span>
+                  <span class="accordion-icon">▼</span>
+                </div>
+                <div class="accordion-content">
+                  <div class="accordion-inner">
+                    <div class="hs-label" style="margin-bottom:6px">Boys Games</div>
+                    <div class="game-item loss"><span class="opponent">vs SPPS<span class="type">League</span></span><span class="score">1-2 L</span></div>
+                    <div class="game-item loss"><span class="opponent">vs CCAS<span class="type">League</span></span><span class="score">1-2 L</span></div>
+                    <div class="game-item win"><span class="opponent">vs CCAS<span class="type">League</span></span><span class="score">2-1 W</span></div>
+                    <div class="hs-label" style="margin:12px 0 6px">Girls Games</div>
+                    <div class="game-item win"><span class="opponent">vs SPPS<span class="type">League</span></span><span class="score">2-0 W</span></div>
+                    <div class="game-item win"><span class="opponent">vs CCAS<span class="type">League</span></span><span class="score">2-0 W</span></div>
+                    <div class="game-item win"><span class="opponent">vs CCAS<span class="type">League</span></span><span class="score">2-0 W</span></div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="accordion-item">
+                <div class="accordion-header">
+                  <span class="accordion-title">👕 Uniforms</span>
+                  <span class="accordion-icon">▼</span>
+                </div>
+                <div class="accordion-content">
+                  <div class="accordion-inner">
+                    <div class="uniform-gallery">
+                      <div>
+                        <img loading="lazy" decoding="async" class="uniform-img" src="https://lh3.googleusercontent.com/sitesv/APaQ0SRjnZysp-gN3FHiOXvGc5Qx7TOALikxk4OeQ4x6fCid4lUpzuKZhafHg6OWyYhCWRZiFQMXlcRGet24dFnTvvFsGflU8vPECRyeWJy5J6KKQ85ADt4d4VSQw8m00-4Ep4hp1XeEa1bjYm04Umh_I7AL_2OsPIrXtYoCKXaLIxwbFU5rIMISg2jgguk8XEcm4OGEXs4VoPn5xqcS6HfOpIg1if2vopflhZPz=w1280" alt="MS Volleyball Team">
+                        <div class="uniform-label">Boys Team</div>
+                      </div>
+                      <div>
+                        <img loading="lazy" decoding="async" class="uniform-img" src="https://lh3.googleusercontent.com/sitesv/APaQ0SRgWF40VNYGiR0hrr52kxr0xEB8Hh29DzMPDp_6Pp7De2Ek7-alEco0ZIeD1pUbuHqLJbO2B1Dzm4Zb90tRSfSGRUp3e4kTE7gcawc8pbaths7M81xCOpmtiGWqlzADNqaRKRI8iq-VDAXKG6Rz64S_YPwNoL_rP4pI3WNbSuS1jj2YvtJfhZDdG5gbMjzPe-WoREE4dUW6OG2G7_FAkC3lKQpvLrLZ1cPw0UY=w1280" alt="Boys Uniform">
+                        <div class="uniform-label">Boys Uniform</div>
+                      </div>
+                      <div>
+                        <img loading="lazy" decoding="async" class="uniform-img" src="https://lh3.googleusercontent.com/sitesv/APaQ0STFPGKRa_zZTVimKRMl5zsaUqTCp8c9o7pO2qF1V1U_dFYLNx63qXGd2q-5VHKtTnUwx5Ff7Tqz9reeFOqrTkN2WoWhjWRovHkgT_A16G2PNziLOU1X3jSYC6HdFTzJy9MTt4re6wDw8M2qfFOG8lL3HBfuzY-1LLMdrUvm85wJ8Q-LMLoAJdxcCvi-79Xhmhwh_tE2WJCCUQx__WxgSFWmPNZ_icJsGoy3gbY=w1280" alt="Girls Team">
+                        <div class="uniform-label">Girls Team</div>
+                      </div>
+                      <div>
+                        <img loading="lazy" decoding="async" class="uniform-img" src="https://lh3.googleusercontent.com/sitesv/APaQ0SSox90XEr985spYV2S3SuAsu50EW9jC70VMBzdwKrHH1oFV0i8WkiUArY799m0c_fT_1mgSdXjHftig5d-1hZvNKhLzS678oqtEMzfxQJbl6J7sHCLjFtZU1XYC8i1VKZnqeZ-hGX3xFAzeytpx2v3SMzooFbIByZ9l1fG16lR8Un-Gk7z_6Nu47qB4Rvifuml2hCXZ8c3PtG98LNXrHVxj-BjpibP4u6miyNE=w1280" alt="Girls Uniform">
+                        <div class="uniform-label">Girls Uniform</div>
+                      </div>
+                    </div>
+                    <div class="staff-item" style="margin-top:10px">
+                      <div class="role">Uniform Provider</div>
+                      <div class="name">idsports.kr</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div class="hs-block">
-              <div class="hs-label">Staff</div>
-              <div class="hs-value">Coaches: Andrew Hazen (B), Sara Kim (B), Michelle Mun (G), Herin Park (G)</div>
-              <div class="hs-value">Managers: Julien Park, Sam Kim (B) · Ian Yoo, Sol Lee (G)</div>
-            </div>
-          </a>
-          <a class="hs-card" href="https://sites.google.com/bisce.net/bisathletics/ms/basketball-25-26?authuser=0" target="_blank" rel="noreferrer">
-            <div class="hs-title">MS Basketball</div>
+          </div>
+          <div class="hs-card">
+            <div class="hs-title">🏀 MS Basketball</div>
             <div class="hs-meta">Spring Season 25-26</div>
             <div class="hs-block">
               <div class="hs-label">Record</div>
@@ -288,17 +913,111 @@
                 <span class="hs-badge">Girls 0-0</span>
               </div>
             </div>
-            <div class="hs-sep"></div>
-            <div class="hs-block">
-              <div class="hs-label">Practice</div>
-              <div class="hs-value">Boys Thu 3:50-5:15pm · Girls Wed 3:50-5:15pm</div>
+            
+            <div class="accordion">
+              <div class="accordion-item">
+                <div class="accordion-header">
+                  <span class="accordion-title">📅 Practice & Staff</span>
+                  <span class="accordion-icon">▼</span>
+                </div>
+                <div class="accordion-content">
+                  <div class="accordion-inner">
+                    <div class="staff-item">
+                      <div class="role">Practice Times</div>
+                      <div class="name">Boys: Thu 3:50-5:15pm</div>
+                      <div class="name">Girls: Wed 3:50-5:15pm</div>
+                    </div>
+                    <div class="staff-item">
+                      <div class="role">Boys Coach</div>
+                      <div class="name">TBD</div>
+                    </div>
+                    <div class="staff-item">
+                      <div class="role">Girls Coaches</div>
+                      <div class="name">Paul Yoon, Kat Lee</div>
+                    </div>
+                    <div class="staff-item">
+                      <div class="role">Managers</div>
+                      <div class="name">Harper Oh (G9), Xanna Seo (G9)</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="accordion-item">
+                <div class="accordion-header">
+                  <span class="accordion-title">👥 Boys Roster (15)</span>
+                  <span class="accordion-icon">▼</span>
+                </div>
+                <div class="accordion-content">
+                  <div class="accordion-inner">
+                    <div class="roster-grid">
+                      <div class="roster-item">Jaden Rhee #35 <span class="grade">G8</span></div>
+                      <div class="roster-item">Kaden Ahn #4 <span class="grade">G8</span></div>
+                      <div class="roster-item">Joshua Lee #21 <span class="grade">G8</span></div>
+                      <div class="roster-item">Junwoo Choi #32 <span class="grade">G7</span></div>
+                      <div class="roster-item">Daniel Shin #33 <span class="grade">G7</span></div>
+                      <div class="roster-item">Leo Jeon #23 <span class="grade">G7</span></div>
+                      <div class="roster-item">Jinha Lee #11 <span class="grade">G7</span></div>
+                      <div class="roster-item">Alvin Lee #9 <span class="grade">G7</span></div>
+                      <div class="roster-item">Ethan Park #23 <span class="grade">G7</span></div>
+                      <div class="roster-item">Max Maeng #14 <span class="grade">G7</span></div>
+                      <div class="roster-item">Eliam Shim #34 <span class="grade">G6</span></div>
+                      <div class="roster-item">Jinseo Park #3 <span class="grade">G6</span></div>
+                      <div class="roster-item">Kwon Lee #1 <span class="grade">G6</span></div>
+                      <div class="roster-item">Seo Shin #65 <span class="grade">G6</span></div>
+                      <div class="roster-item">Leo Kim #10 <span class="grade">G6</span></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="accordion-item">
+                <div class="accordion-header">
+                  <span class="accordion-title">👥 Girls Roster (8)</span>
+                  <span class="accordion-icon">▼</span>
+                </div>
+                <div class="accordion-content">
+                  <div class="accordion-inner">
+                    <div class="roster-grid">
+                      <div class="roster-item">Yelyn Sim #16 <span class="grade">G8</span></div>
+                      <div class="roster-item">Ellen Kim #20 <span class="grade">G7</span></div>
+                      <div class="roster-item">Lily Oh #79 <span class="grade">G6</span></div>
+                      <div class="roster-item">Elizabeth Cheon #32 <span class="grade">G6</span></div>
+                      <div class="roster-item">Olivia Hong #00 <span class="grade">G6</span></div>
+                      <div class="roster-item">Lizzie Kang #30 <span class="grade">G6</span></div>
+                      <div class="roster-item">Christine Kim #72 <span class="grade">G6</span></div>
+                      <div class="roster-item">Arin Lee #7 <span class="grade">G6</span></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="accordion-item">
+                <div class="accordion-header">
+                  <span class="accordion-title">👕 Uniforms</span>
+                  <span class="accordion-icon">▼</span>
+                </div>
+                <div class="accordion-content">
+                  <div class="accordion-inner">
+                    <div class="uniform-gallery">
+                      <div>
+                        <img loading="lazy" decoding="async" class="uniform-img" src="https://lh3.googleusercontent.com/sitesv/APaQ0SSDBsWk8c3J7OzIFgrRNknP1sTW06qNfQfrrJQpk0hXpK0dypQBFnMqZ5YvDLRWPVXmvHSHAJ_HjeXtPgqpP5ZlfKa30uQH7NT58YvEBmUvGf0Uy9gMVSTB7uCGhEu0y_WjmMMsQ3Jh_tSR62frkJVqY5rvIMc-fryt-1QEVSS6q3XHuFoyaA7Ho46ncVsw1TWEm5YvLiwcE5YSO7hq731jSOr1fI9OsAEXAMQ=w1280" alt="MS Basketball Girls">
+                        <div class="uniform-label">Girls Team</div>
+                      </div>
+                      <div>
+                        <img loading="lazy" decoding="async" class="uniform-img" src="https://lh3.googleusercontent.com/sitesv/APaQ0SRwmin7PFatrIset3hwKhz7dv3sFwsKtF69b2NxfETFGRL33u53UOrXFStz6MGHBKGjO1B3-C8IR74dUqCOwIBWK4_fDh96s5kVFS8MngDC8bndN7MDVzkCzQ_tr4CM5f1vo6whscgJ0_ShMyJzCQq71LLy4mouyzWOAJGEARbYE3B8AolJnskxQtnWTN7O-SPwWSBUgXcyUV8PYoT3OZ54yc7PGE97BLJa=w1280" alt="MS Basketball Practice">
+                        <div class="uniform-label">Practice</div>
+                      </div>
+                      <div>
+                        <img loading="lazy" decoding="async" class="uniform-img" src="https://lh3.googleusercontent.com/sitesv/APaQ0STbg-fvuNf80sPeXgCYAdy11UvBm6Sx3hhT78JaOEhONoK_ElnlibqPEpeD9Cmk3d3a31I8R4-Yg5-ei_-k37QOZpVm9KvRka_VdD6-jluh6sSNOddmLp7FGZbdNKTUL0BAjnncpmsrILJGllO-ichQDFMFqZ9QMgUGcF4NC6v_60GdYAeDZnod0DM3FeTB70SuxpCVdovtGhJzUrvJbGLP6Fs0c1i4SVJQ=w1280" alt="MS Basketball Group">
+                        <div class="uniform-label">Team Photo</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div class="hs-block">
-              <div class="hs-label">Staff</div>
-              <div class="hs-value">Coaches: Paul Yoon (G), Kat Lee (G) · Boys coach TBD</div>
-              <div class="hs-value">Managers: Harper Oh, Xanna Seo</div>
-            </div>
-          </a>
+          </div>
             </div>
           </section>
         </div>
@@ -328,22 +1047,51 @@
       (function(){
         const tabs = document.querySelectorAll('.tab-btn');
         const panels = document.querySelectorAll('.tab-panel');
+        const tabsWrap = document.querySelector('.tabs[role="tablist"]');
         const getActiveIndex = () => {
           const active = document.querySelector('.tab-btn.active');
           return active ? Array.from(tabs).indexOf(active) : 0;
         };
-        tabs.forEach((btn, idx) => {
-          btn.addEventListener('click', () => {
-            const target = btn.dataset.target;
-            const prevIdx = getActiveIndex();
-            tabs.forEach((b) => b.classList.remove('active'));
-            btn.classList.add('active');
-            panels.forEach((p) => p.classList.toggle('active', p.id === target));
-            const panelsWrap = document.querySelector('.tab-panels');
-            if (panelsWrap) {
-              panelsWrap.style.setProperty('--tab-dir', idx >= prevIdx ? '1' : '-1');
-            }
+        const activateTab = (btn, idx) => {
+          const target = btn.dataset.target;
+          const prevIdx = getActiveIndex();
+          tabs.forEach((b) => {
+            const selected = b === btn;
+            b.classList.toggle('active', selected);
+            b.setAttribute('aria-selected', String(selected));
+            b.tabIndex = selected ? 0 : -1;
           });
+          panels.forEach((p) => {
+            const selected = p.id === target;
+            p.classList.toggle('active', selected);
+            p.hidden = !selected;
+          });
+          const panelsWrap = document.querySelector('.tab-panels');
+          if (panelsWrap) {
+            panelsWrap.style.setProperty('--tab-dir', idx >= prevIdx ? '1' : '-1');
+          }
+        };
+        tabs.forEach((btn, idx) => {
+          btn.addEventListener('click', () => activateTab(btn, idx));
+        });
+        tabsWrap?.addEventListener('keydown', (event) => {
+          const current = getActiveIndex();
+          let next = current;
+          if (event.key === 'ArrowRight') next = (current + 1) % tabs.length;
+          if (event.key === 'ArrowLeft') next = (current - 1 + tabs.length) % tabs.length;
+          if (next !== current) {
+            event.preventDefault();
+            activateTab(tabs[next], next);
+            tabs[next].focus();
+          }
+        });
+        activateTab(tabs[getActiveIndex()] || tabs[0], getActiveIndex());
+
+        document.querySelectorAll('img').forEach((img) => {
+          if (!img.hasAttribute('decoding')) img.setAttribute('decoding', 'async');
+        });
+        document.querySelectorAll('img.uniform-img').forEach((img) => {
+          if (!img.hasAttribute('loading')) img.setAttribute('loading', 'lazy');
         });
         const toggleButton = document.querySelector('.theme-toggle');
         if(!toggleButton) return;
@@ -362,6 +1110,21 @@
         if(savedTheme){ applyTheme(savedTheme); } else { applyTheme(prefersDark.matches ? 'dark' : 'light'); }
         prefersDark.addEventListener('change', (e)=>{ if(!localStorage.getItem('bis-theme')) applyTheme(e.matches ? 'dark' : 'light'); });
         toggleButton.addEventListener('click', ()=>{ const isDark = document.body.classList.contains('dark'); const next = isDark ? 'light' : 'dark'; localStorage.setItem('bis-theme', next); applyTheme(next); });
+        
+        // Accordion functionality
+        document.querySelectorAll('.accordion-header').forEach(header => {
+          header.addEventListener('click', () => {
+            const item = header.parentElement;
+            const wasOpen = item.classList.contains('open');
+            // Close all other accordions in the same card
+            const card = item.closest('.hs-card');
+            card.querySelectorAll('.accordion-item.open').forEach(openItem => {
+              if (openItem !== item) openItem.classList.remove('open');
+            });
+            // Toggle current
+            item.classList.toggle('open', !wasOpen);
+          });
+        });
       })();
     </script>
   </body>
