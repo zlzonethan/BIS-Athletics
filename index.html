@@ -752,6 +752,54 @@
 				max-width: 100%;
 				padding: 12px 16px 24px;
 			}
+			html.in-iframe body {
+				-webkit-text-size-adjust: 100%;
+			}
+			@media (max-width: 720px) {
+				html.in-iframe .wrap {
+					padding: 10px 10px calc(16px + env(safe-area-inset-bottom));
+				}
+				html.in-iframe .nav-center {
+					display: flex;
+					flex-direction: column;
+					gap: 8px;
+					align-items: center;
+				}
+				html.in-iframe .nav-left,
+				html.in-iframe .nav-right {
+					width: 100%;
+					justify-content: center;
+					gap: 8px;
+					flex-wrap: wrap;
+				}
+				html.in-iframe .top-nav .nav-item {
+					min-height: 40px;
+					padding: 6px 8px;
+					font-size: 13px;
+				}
+				html.in-iframe .hero {
+					margin-top: 12px;
+				}
+				html.in-iframe .hero h1 {
+					font-size: clamp(28px, 10vw, 44px);
+				}
+				html.in-iframe .panel {
+					padding: 16px 12px 18px;
+					border-radius: 16px;
+				}
+				html.in-iframe .season-tabs,
+				html.in-iframe .gender-tabs {
+					overflow-x: auto;
+					white-space: nowrap;
+					scrollbar-width: thin;
+					-webkit-overflow-scrolling: touch;
+				}
+				html.in-iframe .season-tab,
+				html.in-iframe .gender-tab,
+				html.in-iframe .theme-toggle {
+					min-height: 40px;
+				}
+			}
 		</style>
 		<script>
 			// Detect iframe and add class
@@ -1055,6 +1103,33 @@
 							<button id="adminFinishBtn" class="theme-toggle" style="background:#10b981;color:white;border-color:#10b981">✅ Finish Match</button>
 							<button id="adminResetBtn" class="theme-toggle" style="background:#ef4444;color:white;border-color:#ef4444">🔄 Reopen Match</button>
 						</div>
+						<hr style="margin:14px 0;border:none;border-top:1px solid rgba(0,0,0,0.08)" />
+						<div style="font-weight:800;font-size:15px">📅 Add Upcoming Match</div>
+						<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px">
+							<input id="adminNewHome" type="text" placeholder="Home team (e.g. BIS)" style="width:100%;padding:10px;border-radius:10px;border:1px solid rgba(0,0,0,0.08)" />
+							<input id="adminNewAway" type="text" placeholder="Away team (e.g. CCAS)" style="width:100%;padding:10px;border-radius:10px;border:1px solid rgba(0,0,0,0.08)" />
+						</div>
+						<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px">
+							<input id="adminNewDate" type="text" placeholder="Date/time (e.g. Mar 12, 4:30pm)" style="width:100%;padding:10px;border-radius:10px;border:1px solid rgba(0,0,0,0.08)" />
+							<input id="adminNewLocation" type="text" placeholder="Location (e.g. BIS)" style="width:100%;padding:10px;border-radius:10px;border:1px solid rgba(0,0,0,0.08)" />
+						</div>
+						<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:8px">
+							<select id="adminNewSport" style="width:100%;padding:10px;border-radius:10px;border:1px solid rgba(0,0,0,0.08)">
+								<option value="basketball">Basketball</option>
+								<option value="volleyball">Volleyball</option>
+								<option value="soccer">Soccer</option>
+							</select>
+							<select id="adminNewLevel" style="width:100%;padding:10px;border-radius:10px;border:1px solid rgba(0,0,0,0.08)">
+								<option value="HS">HS</option>
+								<option value="MS">MS</option>
+								<option value="ES">ES</option>
+							</select>
+							<input id="adminNewGender" type="text" placeholder="Gender (e.g. Boys/Girls)" style="width:100%;padding:10px;border-radius:10px;border:1px solid rgba(0,0,0,0.08)" />
+						</div>
+						<div style="display:flex;gap:8px;margin-top:10px;align-items:center;flex-wrap:wrap">
+							<button id="adminAddMatchBtn" class="theme-toggle">Add Match</button>
+							<button id="adminDeleteMatchBtn" class="theme-toggle">Delete Selected Custom Match</button>
+						</div>
 						<div style="margin-top:12px">
 							<label style="font-weight:700;display:block;margin-bottom:6px">Live Overrides (JSON)</label>
 							<textarea id="adminJson" style="width:100%;height:120px;padding:12px;border-radius:8px;border:1px solid rgba(0,0,0,0.06);font-family:monospace;font-size:13px"></textarea>
@@ -1265,6 +1340,7 @@
 			// Admin dock script
 			(function(){
 				const LIVE_SCORE_KEY = 'bis_live_scores';
+				const CUSTOM_MATCHES_KEY = 'bis_custom_matches';
 				// Local copy of schedules to populate match selector (kept in sync manually)
 				const SCHEDULES = [
 					// Basketball Games
@@ -1321,6 +1397,38 @@
 				const clearBtn = $('#adminClearBtn');
 				const copyBtn = $('#adminCopyBtn');
 				const jsonArea = $('#adminJson');
+				const newHomeInput = $('#adminNewHome');
+				const newAwayInput = $('#adminNewAway');
+				const newDateInput = $('#adminNewDate');
+				const newLocationInput = $('#adminNewLocation');
+				const newSportInput = $('#adminNewSport');
+				const newLevelInput = $('#adminNewLevel');
+				const newGenderInput = $('#adminNewGender');
+				const addMatchBtn = $('#adminAddMatchBtn');
+				const deleteMatchBtn = $('#adminDeleteMatchBtn');
+
+				function getCustomMatches(){
+					try {
+						const raw = JSON.parse(localStorage.getItem(CUSTOM_MATCHES_KEY) || '[]');
+						if (!Array.isArray(raw)) return [];
+						return raw.filter((m) => Number.isFinite(Number(m?.id)));
+					} catch(e){ return []; }
+				}
+
+				function setCustomMatches(list){
+					try { localStorage.setItem(CUSTOM_MATCHES_KEY, JSON.stringify(list || [])); } catch(e){}
+				}
+
+				function getAllMatches(){
+					const all = [...SCHEDULES, ...getCustomMatches()];
+					const seen = new Set();
+					return all.filter((m) => {
+						const id = Number(m?.id);
+						if (!Number.isFinite(id) || seen.has(id)) return false;
+						seen.add(id);
+						return true;
+					});
+				}
 
 				function formatShortDate(raw){
 					if(!raw || typeof raw !== 'string') return '';
@@ -1330,14 +1438,18 @@
 
 				function populateMatchSelect(){
 					if(!matchSelect) return;
+					const current = String(matchSelect.value || '');
 					matchSelect.innerHTML = '';
-					SCHEDULES.forEach(s=>{
+					const customIdSet = new Set(getCustomMatches().map((m) => String(m.id)));
+					getAllMatches().forEach((s)=>{
 						const opt = document.createElement('option');
 						opt.value = String(s.id);
 						const shortDate = formatShortDate(s.date);
-						opt.textContent = `${s.home} vs ${s.away} (#${s.id}) — ${shortDate}`;
+						const tag = customIdSet.has(String(s.id)) ? ' [custom]' : '';
+						opt.textContent = `${s.home} vs ${s.away} (#${s.id}) — ${shortDate}${tag}`;
 						matchSelect.appendChild(opt);
 					});
+					if (current && matchSelect.querySelector(`option[value="${current}"]`)) matchSelect.value = current;
 				}
 				populateMatchSelect();
 
@@ -1346,7 +1458,7 @@
 				}
 
 						function promptPass(){
-							const configured = window.BIS_ADMIN_PASSPHRASE || localStorage.getItem(ADMIN_PASSPHRASE_KEY);
+							const configured = window.BIS_ADMIN_PASSPHRASE;
 							if (!configured) return { ok: false, reason: 'not_configured' };
 							const p = prompt('Admin passphrase');
 							if (p===null) return { ok: false, reason: 'cancelled' };
@@ -1402,6 +1514,47 @@
 
 				copyBtn.addEventListener('click', ()=>{
 					jsonArea.select(); try{ document.execCommand('copy'); alert('Copied to clipboard'); }catch(e){ alert('Copy failed'); }
+				});
+
+				addMatchBtn?.addEventListener('click', ()=>{
+					const home = (newHomeInput?.value || '').trim();
+					const away = (newAwayInput?.value || '').trim();
+					const date = (newDateInput?.value || '').trim();
+					const location = (newLocationInput?.value || '').trim();
+					const sport = (newSportInput?.value || 'basketball').trim();
+					const level = (newLevelInput?.value || 'HS').trim();
+					const gender = (newGenderInput?.value || '').trim();
+					if (!home || !away || !date) {
+						alert('Home, Away, and Date are required.');
+						return;
+					}
+					const allIds = getAllMatches().map((m) => Number(m.id)).filter((n) => Number.isFinite(n));
+					const nextId = Math.max(100, ...(allIds.length ? allIds : [99])) + 1;
+					const custom = getCustomMatches();
+					custom.push({ id: nextId, home, away, date, location, sport, level, gender });
+					setCustomMatches(custom);
+					populateMatchSelect();
+					matchSelect.value = String(nextId);
+					newHomeInput.value = '';
+					newAwayInput.value = '';
+					newDateInput.value = '';
+					newLocationInput.value = '';
+					newGenderInput.value = '';
+					alert(`Custom match added (#${nextId})`);
+				});
+
+				deleteMatchBtn?.addEventListener('click', ()=>{
+					const id = String(matchSelect.value || '');
+					if (!id) { alert('Select a match'); return; }
+					const custom = getCustomMatches();
+					const next = custom.filter((m) => String(m.id) !== id);
+					if (next.length === custom.length) {
+						alert('Selected match is not a custom match.');
+						return;
+					}
+					setCustomMatches(next);
+					populateMatchSelect();
+					alert(`Deleted custom match #${id}`);
 				});
 
 				// Firebase match finish feature

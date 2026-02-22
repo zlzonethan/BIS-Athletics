@@ -16,10 +16,39 @@ service cloud.firestore {
         (!request.resource.data.keys().hasAny(['away']) || request.resource.data.away >= 0);
     }
 
+    function voteHome(data) {
+      return data.keys().hasAny(['home']) ? data.home : 0;
+    }
+    function voteDraw(data) {
+      return data.keys().hasAny(['draw']) ? data.draw : 0;
+    }
+    function voteAway(data) {
+      return data.keys().hasAny(['away']) ? data.away : 0;
+    }
+
+    function isValidVoteCreate() {
+      return isValidVoteDoc() &&
+        (voteHome(request.resource.data) + voteDraw(request.resource.data) + voteAway(request.resource.data)) == 1;
+    }
+
+    function isValidVoteUpdate() {
+      return isValidVoteDoc() &&
+        resource.data.keys().hasOnly(['home', 'draw', 'away']) &&
+        (voteHome(request.resource.data) >= voteHome(resource.data)) &&
+        (voteDraw(request.resource.data) >= voteDraw(resource.data)) &&
+        (voteAway(request.resource.data) >= voteAway(resource.data)) &&
+        (
+          (voteHome(request.resource.data) - voteHome(resource.data)) +
+          (voteDraw(request.resource.data) - voteDraw(resource.data)) +
+          (voteAway(request.resource.data) - voteAway(resource.data))
+        ) == 1;
+    }
+
     match /votes/{matchId} {
       allow read: if true;
-      // Public voting is allowed, but only for vote counters.
-      allow create, update: if isValidVoteDoc();
+      // Public voting is allowed, but only +1 increments.
+      allow create: if isValidVoteCreate();
+      allow update: if isValidVoteUpdate();
       allow delete: if false;
     }
 

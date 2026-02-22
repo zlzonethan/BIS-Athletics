@@ -73,6 +73,44 @@
             width: 100%;
             max-width: 100%;
         }
+        html.in-iframe body {
+            -webkit-text-size-adjust: 100%;
+        }
+        @media (max-width: 720px) {
+            html.in-iframe body {
+                padding: 10px;
+            }
+            html.in-iframe .top-actions {
+                top: 8px;
+                right: 8px;
+                gap: 6px;
+            }
+            html.in-iframe .theme-toggle {
+                min-width: 40px;
+                min-height: 40px;
+            }
+            html.in-iframe .card {
+                padding: 16px 12px;
+                border-radius: 16px;
+            }
+            html.in-iframe .team-vs img {
+                width: 48px;
+                height: 48px;
+                margin-bottom: 6px;
+            }
+            html.in-iframe .formation-tabs,
+            html.in-iframe .team-formation-switch {
+                overflow-x: auto;
+                white-space: nowrap;
+                scrollbar-width: thin;
+                -webkit-overflow-scrolling: touch;
+            }
+            html.in-iframe .formation-tab,
+            html.in-iframe .team-switch-btn,
+            html.in-iframe .vote-btn {
+                min-height: 40px;
+            }
+        }
         body,
         .card,
         .status-badge,
@@ -967,6 +1005,7 @@
         const LIVE_SCORE_KEY = 'bis_live_scores';
         const LIVE_EVENTS_KEY = 'bis_live_events';
         const MATCH_META_KEY = 'bis_match_meta';
+        const CUSTOM_MATCHES_KEY = 'bis_custom_matches';
 
         let currentUser = null;
 
@@ -997,7 +1036,7 @@
             { id: 'sie', name: 'SIE', logo: assetUrl('siemascot.jpg') }
         ];
 
-        const schedules = [
+        const baseSchedules = [
             { id: 1, home: 'BIS', away: 'ICSU', date: 'Jan 29, Girls 5:00pm', location: 'BIS' },
             { id: 2, home: 'BIS', away: 'SPAS', date: 'Feb 2, Time TBD', location: 'JV Sports' },
             { id: 3, home: 'BIS', away: 'CCAS', date: 'Feb 4, Arrival 4:55pm', location: 'CCAS' },
@@ -1009,6 +1048,25 @@
             { id: 9, home: 'BIS', away: 'SPPS', date: 'Feb 28, Boys 4:30pm', location: 'BIS' },
             { id: 10, home: 'BIS', away: 'SIE', date: 'TBD (No date picked)', location: 'BIS' }
         ];
+
+        function getCustomMatches() {
+            try {
+                const raw = JSON.parse(localStorage.getItem(CUSTOM_MATCHES_KEY) || '[]');
+                if (!Array.isArray(raw)) return [];
+                return raw.filter((m) => Number.isFinite(Number(m?.id)));
+            } catch (e) { return []; }
+        }
+
+        const schedules = (() => {
+            const all = [...baseSchedules, ...getCustomMatches()];
+            const seen = new Set();
+            return all.filter((m) => {
+                const id = Number(m?.id);
+                if (!Number.isFinite(id) || seen.has(id)) return false;
+                seen.add(id);
+                return true;
+            });
+        })();
 
         function qs(name) {
             const params = new URLSearchParams(location.search);
@@ -1023,6 +1081,14 @@
             if (monthDayMatch) return monthDayMatch[1].trim();
             if (timeMatch) return timeMatch[1].toLowerCase();
             return 'TBD';
+        }
+        function escapeHTML(value) {
+            return (value || '').toString()
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
         }
 
         function getLiveScores() {
@@ -1078,9 +1144,10 @@
             const setLabel = live.setNumber ? `Set ${live.setNumber}` : '';
             const noteLabel = live.note ? live.note : '';
             const extra = [setLabel, noteLabel].filter(Boolean).join(' • ');
+            const extraEsc = escapeHTML(extra);
             const badge = document.getElementById('statusBadge');
-            if (live.status === 'live') badge.innerHTML = `<div class="status-badge live"><span class="live-dot"></span>LIVE${extra ? ' • ' + extra : ''}</div>`;
-            else if (live.status === 'ft') badge.innerHTML = `<div class="status-badge ft">FINAL${extra ? ' • ' + extra : ''}</div>`;
+            if (live.status === 'live') badge.innerHTML = `<div class="status-badge live"><span class="live-dot"></span>LIVE${extraEsc ? ' • ' + extraEsc : ''}</div>`;
+            else if (live.status === 'ft') badge.innerHTML = `<div class="status-badge ft">FINAL${extraEsc ? ' • ' + extraEsc : ''}</div>`;
             else badge.innerHTML = '';
 
 
@@ -1451,7 +1518,7 @@
         }
 
         function promptForAdmin() {
-            const saved = window.BIS_ADMIN_PASSPHRASE || localStorage.getItem(ADMIN_PASSPHRASE_KEY);
+            const saved = window.BIS_ADMIN_PASSPHRASE;
             if (!saved) return { ok: false, reason: 'not_configured' };
             const pass = prompt('Enter admin passphrase');
             if (pass === null) return { ok: false, reason: 'cancelled' };
@@ -1497,7 +1564,7 @@
             if(!events || events.length===0){ list.innerHTML = '<div style="color:var(--text-sub);font-size:12px">No events</div>'; return; }
             list.innerHTML = events.map((ev, idx)=>`
                 <div style="display:flex;gap:8px;align-items:center;justify-content:space-between;padding:8px;border-radius:8px;border:1px solid var(--muted-border);background:var(--muted-surface)">
-                    <div style="display:flex;gap:12px;align-items:center;"> <strong style="min-width:36px">${ev.minute}'</strong> <div style="font-weight:700">${ev.team==='home'?homeTeam.name:awayTeam.name}</div> <div style="color:var(--text-sub)">${ev.type}${ev.note? ' • '+ev.note:''}</div> </div>
+                    <div style="display:flex;gap:12px;align-items:center;"> <strong style="min-width:36px">${Number(ev.minute) || 0}'</strong> <div style="font-weight:700">${escapeHTML(ev.team==='home'?homeTeam.name:awayTeam.name)}</div> <div style="color:var(--text-sub)">${escapeHTML(ev.type)}${ev.note? ' • ' + escapeHTML(ev.note):''}</div> </div>
                     <div><button data-evt-index="${idx}" class="theme-toggle evt-del">Delete</button></div>
                 </div>
             `).join('');

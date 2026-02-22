@@ -57,12 +57,13 @@
         background: var(--bg-color);
         color: var(--text-main);
         min-height: 100vh;
+        -webkit-text-size-adjust: 100%;
       }
 
       .wrap {
         max-width: 1200px;
         margin: 0 auto;
-        padding: 18px 24px 80px;
+        padding: 18px 24px calc(80px + env(safe-area-inset-bottom));
         position: relative;
       }
 
@@ -100,6 +101,9 @@
         display: flex;
         align-items: center;
         gap: 10px;
+        min-height: 40px;
+        padding: 6px 10px;
+        border-radius: 10px;
         text-decoration: none;
         color: var(--nav-muted);
       }
@@ -174,6 +178,7 @@
       }
       .tab-btn {
         padding: 10px 24px;
+        min-height: 44px;
         border-radius: 999px;
         border: 1px solid var(--muted-border);
         background: transparent;
@@ -200,6 +205,7 @@
       }
       .sport-tab {
         padding: 6px 16px;
+        min-height: 40px;
         border-radius: 999px;
         border: 1px solid var(--muted-border);
         background: transparent;
@@ -252,11 +258,40 @@
         display: flex;
         justify-content: center;
       }
+      .filters-row {
+        display: flex;
+        gap: 8px;
+        justify-content: center;
+        align-items: center;
+        margin: 0 0 14px;
+        flex-wrap: wrap;
+      }
+      .filter-select {
+        min-height: 40px;
+        padding: 8px 12px;
+        border-radius: 12px;
+        border: 1px solid var(--muted-border);
+        background: var(--muted-surface);
+        color: var(--text-main);
+        font-size: 13px;
+        font-weight: 700;
+      }
+      .clear-filter-btn {
+        min-height: 40px;
+        padding: 8px 14px;
+        border-radius: 12px;
+        border: 1px solid var(--muted-border);
+        background: transparent;
+        color: var(--text-main);
+        font-weight: 700;
+        cursor: pointer;
+      }
 
       .search-input {
         width: 100%;
         max-width: 520px;
         padding: 10px 14px;
+        min-height: 44px;
         border-radius: 14px;
         border: 1px solid var(--muted-border);
         background: var(--muted-surface);
@@ -338,6 +373,13 @@
         text-align: center;
         margin-top: 6px;
       }
+      .match-meta {
+        font-size: 11px;
+        color: var(--text-sub);
+        text-align: center;
+        margin-top: 4px;
+        font-weight: 700;
+      }
 
       .subscribe-btn {
         border: 1px solid var(--muted-border);
@@ -345,6 +387,7 @@
         color: var(--text-main);
         border-radius: 999px;
         padding: 6px 10px;
+        min-height: 34px;
         font-size: 12px;
         font-weight: 800;
         cursor: pointer;
@@ -371,6 +414,7 @@
 
       .vote-btn {
         padding: 12px 10px;
+        min-height: 44px;
         border: 1px solid var(--muted-border);
         background: #fff;
         color: var(--text-sub);
@@ -458,39 +502,176 @@
         color: var(--text-sub);
         font-weight: 600;
       }
+      .empty-actions {
+        margin-top: 12px;
+        display: flex;
+        justify-content: center;
+      }
+      .empty-reset-btn {
+        min-height: 40px;
+        padding: 8px 14px;
+        border-radius: 12px;
+        border: 1px solid var(--muted-border);
+        background: var(--card-bg);
+        color: var(--text-main);
+        font-weight: 800;
+        cursor: pointer;
+      }
+      .vote-toast {
+        position: fixed;
+        left: 50%;
+        bottom: 18px;
+        transform: translateX(-50%) translateY(20px);
+        opacity: 0;
+        pointer-events: none;
+        background: rgba(15, 23, 42, 0.9);
+        color: #fff;
+        font-weight: 800;
+        font-size: 13px;
+        padding: 10px 14px;
+        border-radius: 999px;
+        z-index: 99999;
+        transition: transform 0.25s ease, opacity 0.25s ease;
+      }
+      .vote-toast.show {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+      }
+      @keyframes votedPulse {
+        0% { transform: scale(1); box-shadow: 0 12px 26px rgba(15, 23, 42, 0.08); }
+        50% { transform: scale(1.01); box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2), 0 14px 30px rgba(15, 23, 42, 0.14); }
+        100% { transform: scale(1); box-shadow: 0 12px 26px rgba(15, 23, 42, 0.08); }
+      }
+      .match-card.voted-flash {
+        animation: votedPulse 500ms ease;
+      }
+
+      @media (max-width: 900px) {
+        .nav-center { column-gap: 24px; }
+        .nav-left, .nav-right { gap: 20px; }
+      }
 
       @media (max-width: 720px) {
-        .top-nav { gap: 40px; }
-        .nav-center { display: flex; gap: 32px; flex-wrap: wrap; justify-content: center; }
-        .nav-left, .nav-right { gap: 24px; justify-content: center; }
-        .theme-toggle { position: static; margin: 16px auto 0; }
-        .match-content { flex-direction: column; gap: 12px; }
-        .team-vs { width: 100%; }
-        .vote-btns { grid-template-columns: 1fr; }
-        .sport-tabs { flex-wrap: wrap; }
-        .sport-tab { font-size: 12px; padding: 5px 12px; }
+        .wrap { padding: 14px 14px calc(64px + env(safe-area-inset-bottom)); }
+        .top-nav { gap: 12px; }
+        .nav-center {
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+          align-items: center;
+        }
+        .nav-left, .nav-right {
+          width: 100%;
+          justify-content: center;
+          gap: 8px;
+          flex-wrap: wrap;
+        }
+        .top-nav .nav-item {
+          font-size: 14px;
+          padding: 7px 10px;
+        }
+        .theme-toggle {
+          position: static;
+          margin: 16px auto 0;
+          min-height: 44px;
+          padding: 8px 14px;
+        }
+        .hero { margin-top: 18px; }
+        .hero h1 { font-size: clamp(32px, 10vw, 44px); }
+        .content { margin-top: 18px; }
+        .section-card { padding: 14px 12px 8px; border-radius: 18px; }
+
+        .tabs, .sport-tabs {
+          justify-content: flex-start;
+          flex-wrap: nowrap;
+          overflow-x: auto;
+          padding: 2px 2px 8px;
+          scrollbar-width: thin;
+          -webkit-overflow-scrolling: touch;
+        }
+        .tab-btn, .sport-tab {
+          flex: 0 0 auto;
+          white-space: nowrap;
+        }
+
+        .search-bar { margin-bottom: 14px; }
+        .search-input {
+          max-width: 100%;
+          font-size: 16px;
+        }
+
+        .match-card {
+          padding: 16px 12px;
+          padding-top: 30px;
+          margin-bottom: 14px;
+          border-radius: 16px;
+        }
+        .match-date {
+          top: -12px;
+          font-size: 11px;
+          padding: 5px 12px;
+        }
+        .sport-badge {
+          top: 10px;
+          left: 10px;
+          font-size: 10px;
+        }
+        .subscribe-btn {
+          top: 8px;
+          right: 8px;
+          font-size: 11px;
+          padding: 5px 9px;
+        }
+        .match-content {
+          margin-top: 8px;
+          gap: 8px;
+        }
+        .team-vs {
+          width: 40%;
+        }
+        .team-vs img {
+          width: 52px;
+          height: 52px;
+          padding: 6px;
+          margin-bottom: 6px;
+        }
+        .team-vs span { font-size: 13px; }
+        .vs-badge { font-size: 12px; }
+        .match-location { font-size: 11px; margin-top: 4px; }
+
+        .vote-section { margin-top: 12px; }
+        .vote-btns { gap: 8px; margin-bottom: 8px; }
+        .vote-btn {
+          font-size: 12px;
+          padding: 9px 8px;
+        }
+        .final-score {
+          margin-top: 8px;
+          font-size: 22px;
+          gap: 10px;
+        }
       }
 
       @media (max-width: 480px) {
-        .wrap { padding: 12px 16px 60px; }
-        .top-nav { gap: 20px; }
-        .nav-center { gap: 16px; }
-        .nav-left, .nav-right { gap: 16px; font-size: 14px; }
+        .wrap { padding: 12px 10px calc(56px + env(safe-area-inset-bottom)); }
+        .top-nav { gap: 8px; }
+        .nav-center { gap: 6px; }
+        .nav-left, .nav-right { gap: 6px; font-size: 13px; }
         .top-nav .logo { width: 40px; height: 40px; }
-        .hero h1 { font-size: 36px; }
+        .hero h1 { font-size: 32px; }
         .hero .season { font-size: 14px; }
         .content { margin-top: 20px; }
-        .section-card { padding: 20px 16px 10px; border-radius: 20px; }
+        .section-card { padding: 12px 10px 8px; border-radius: 16px; }
         .tabs { gap: 8px; }
-        .tab-btn { padding: 8px 16px; font-size: 14px; }
+        .tab-btn { padding: 8px 14px; font-size: 13px; }
         .sport-tabs { gap: 6px; }
-        .sport-tab { font-size: 11px; padding: 4px 10px; }
-        .search-input { padding: 8px 12px; font-size: 13px; }
-        .match-card { padding: 18px 16px; padding-top: 32px; border-radius: 18px; margin-bottom: 16px; }
+        .sport-tab { font-size: 11px; padding: 4px 10px; min-height: 36px; }
+        .search-input { padding: 8px 12px; font-size: 16px; }
+        .match-card { padding: 14px 10px; padding-top: 30px; border-radius: 14px; margin-bottom: 12px; }
         .match-date { font-size: 12px; }
         .sport-badge { font-size: 9px; padding: 3px 8px; }
-        .team-vs img { width: 56px; height: 56px; }
-        .team-vs span { font-size: 14px; }
+        .team-vs img { width: 48px; height: 48px; }
+        .team-vs span { font-size: 12px; }
         .vs-badge { font-size: 12px; }
         .match-location { font-size: 11px; }
         .level-badge { font-size: 9px; }
@@ -502,7 +683,7 @@
 
       @media (max-width: 360px) {
         .wrap { padding: 10px 12px 50px; }
-        .nav-left, .nav-right { gap: 12px; font-size: 12px; }
+        .nav-left, .nav-right { gap: 4px; font-size: 12px; }
         .top-nav .logo { width: 36px; height: 36px; }
         .hero h1 { font-size: 28px; }
         .hero .season { font-size: 12px; }
@@ -535,6 +716,49 @@
       html.in-iframe .wrap {
         max-width: 100%;
         padding: 12px 16px 24px;
+      }
+      html.in-iframe body {
+        -webkit-text-size-adjust: 100%;
+      }
+      @media (max-width: 720px) {
+        html.in-iframe .wrap {
+          padding: 10px 10px calc(16px + env(safe-area-inset-bottom));
+        }
+        html.in-iframe .nav-center {
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+          align-items: center;
+        }
+        html.in-iframe .nav-left,
+        html.in-iframe .nav-right {
+          width: 100%;
+          justify-content: center;
+          gap: 8px;
+          flex-wrap: wrap;
+        }
+        html.in-iframe .top-nav .nav-item {
+          min-height: 40px;
+          padding: 6px 8px;
+          font-size: 13px;
+        }
+        html.in-iframe .tabs,
+        html.in-iframe .sport-tabs {
+          overflow-x: auto;
+          white-space: nowrap;
+          scrollbar-width: thin;
+          -webkit-overflow-scrolling: touch;
+        }
+        html.in-iframe .tab-btn,
+        html.in-iframe .sport-tab,
+        html.in-iframe .vote-btn,
+        html.in-iframe .theme-toggle {
+          min-height: 40px;
+        }
+        html.in-iframe .search-input {
+          min-height: 42px;
+          font-size: 16px;
+        }
       }
     </style>
     <script>
@@ -582,8 +806,22 @@
           <button class="sport-tab" aria-pressed="false" data-sport="volleyball" type="button">🏐 Volleyball</button>
           <button class="sport-tab" aria-pressed="false" data-sport="soccer" type="button">⚽ Soccer</button>
         </div>
+        <div class="filters-row">
+          <select id="levelFilter" class="filter-select" aria-label="Level filter">
+            <option value="all">All Levels</option>
+            <option value="HS">HS</option>
+            <option value="MS">MS</option>
+          </select>
+          <select id="genderFilter" class="filter-select" aria-label="Gender filter">
+            <option value="all">All Genders</option>
+            <option value="girls">Girls</option>
+            <option value="boys">Boys</option>
+          </select>
+          <button id="clearFiltersBtnTop" class="clear-filter-btn" type="button">Reset Filters</button>
+        </div>
         <div class="search-bar">
-          <input id="searchInput" class="search-input" type="search" placeholder="Search team / match / location" aria-label="Search" />
+          <input id="searchInput" class="search-input" type="search" list="searchSuggestions" placeholder="Search team / match / location" aria-label="Search" />
+          <datalist id="searchSuggestions"></datalist>
         </div>
         <div id="scheduleList"></div>
       </section>
@@ -612,6 +850,10 @@
     <script>
       let currentTab = 'upcoming';
       let currentSport = 'all';
+      let currentLevel = 'all';
+      let currentGender = 'all';
+      const RECENT_SEARCH_KEY = 'bis_recent_searches';
+      let toastTimer = null;
 
       const getAssetBase = () => {
         const origin = window.location.origin;
@@ -643,9 +885,45 @@
       ];
 
       const placeholderLogo = 'https://placehold.co/100x100/9CA3AF/ffffff?text=?';
+      const CUSTOM_MATCHES_KEY = 'bis_custom_matches';
       
-      // Updated schedules from BIS Athletics website - Feb 2026 onwards
-      const schedules = [
+      // Updated schedules from BIS Athletics Important Events/Dates page
+      const baseSchedules = [
+        // Added from Important Events/Dates -> Past Events
+        { id: 1001, home: 'BIS', away: 'ICSP', date: 'Sep 4, 3:30pm', location: 'ICSP', sport: 'volleyball', level: 'HS', gender: 'Women/Men', presetPast: true },
+        { id: 1002, home: 'BIS', away: 'SPPS', date: 'Sep 5, 4:30pm', location: 'BIS', sport: 'volleyball', level: 'HS', gender: 'Women/Men', presetPast: true },
+        { id: 1003, home: 'BIS', away: 'FPS', date: 'Sep 10, 4:30pm', location: 'BIS', sport: 'volleyball', level: 'HS', gender: 'Boys/Girls', presetPast: true },
+        { id: 1004, home: 'BIS', away: 'GSIS', date: 'Sep 13, 3:30pm', location: 'GSIS', sport: 'volleyball', level: 'HS', gender: 'Women/Men', presetPast: true },
+        { id: 1005, home: 'BIS', away: 'CCAS', date: 'Sep 30, 5:00pm', location: 'BIS', sport: 'volleyball', level: 'HS', gender: 'Women/Men', presetPast: true },
+        { id: 1006, home: 'BIS', away: 'KKFS', date: 'Oct 7, 4:30pm', location: 'BIS', sport: 'volleyball', level: 'HS', gender: 'Girls', presetPast: true },
+        { id: 1007, home: 'BIS', away: 'ICSU', date: 'Oct 11, 3:00pm', location: 'ICSU', sport: 'volleyball', level: 'HS', gender: 'Women/Men', presetPast: true },
+        { id: 1008, home: 'BIS', away: 'LFS', date: 'Oct 15, 6:30pm', location: 'BIS', sport: 'volleyball', level: 'HS', gender: 'Girls', presetPast: true },
+        { id: 1009, home: 'BIS', away: 'SSI-Daechi', date: 'Oct 21, 5:00pm', location: 'BIS', sport: 'volleyball', level: 'HS', gender: 'Boys', presetPast: true },
+        { id: 1010, home: 'BIS', away: 'CMIS', date: 'Oct 22, 4:30pm', location: 'BIS', sport: 'volleyball', level: 'HS', gender: 'Women/Men', presetPast: true },
+        { id: 1011, home: 'BIS', away: 'CCAS', date: 'Oct 24, 5:10pm', location: 'Seocho Sports Center', sport: 'soccer', level: 'MS', gender: 'Boys', presetPast: true },
+        { id: 1012, home: 'BIS', away: 'MICA', date: 'Oct 25, 4:30pm', location: 'BIS', sport: 'volleyball', level: 'HS', gender: 'Girls', presetPast: true },
+        { id: 1013, home: 'BIS', away: 'SPPS', date: 'Oct 31, 2:30pm', location: 'Respia', sport: 'soccer', level: 'MS', gender: 'Boys', presetPast: true },
+        { id: 1014, home: 'BIS', away: 'CSIS', date: 'Nov 4, 4:15pm', location: 'Respia', sport: 'soccer', level: 'MS', gender: 'Boys', presetPast: true },
+        { id: 1015, home: 'BIS', away: 'SIE', date: 'Nov 8, 1:30pm', location: 'Respia', sport: 'soccer', level: 'MS', gender: 'Boys', presetPast: true },
+        { id: 1016, home: 'BIS', away: 'MICA', date: 'Nov 15, 4:30pm', location: 'MICA', sport: 'volleyball', level: 'MS', gender: 'Girls', presetPast: true },
+        { id: 1017, home: 'BIS', away: 'SCI', date: 'Nov 22, 4:00pm', location: 'Hwarang Park', sport: 'soccer', level: 'MS', gender: 'Boys', presetPast: true },
+        { id: 1018, home: 'BIS', away: 'SPPS', date: 'Nov 27, 3:30pm', location: 'SFS', sport: 'basketball', level: 'HS', gender: 'Boys', presetPast: true },
+        { id: 1019, home: 'BIS', away: 'CMIS', date: 'Dec 6, 4:30pm', location: 'BIS', sport: 'basketball', level: 'HS', gender: 'Boys', presetPast: true },
+        { id: 1020, home: 'BIS', away: 'SPAS', date: 'Dec 10, 4:30pm', location: 'BIS', sport: 'volleyball', level: 'MS', gender: 'Girls', presetPast: true },
+        { id: 1021, home: 'BIS', away: 'GSIS', date: 'Jan 8, 3:30pm', location: 'GSIS', sport: 'basketball', level: 'HS', gender: 'Boys', presetPast: true },
+        { id: 1022, home: 'BIS', away: 'CSIS', date: 'Jan 14, 4:30pm', location: 'BIS', sport: 'basketball', level: 'HS', gender: 'Boys', presetPast: true },
+        { id: 1023, home: 'BIS', away: 'ICSU', date: 'Jan 15, 4:00pm', location: 'BIS', sport: 'volleyball', level: 'MS', gender: 'Girls/Boys', presetPast: true },
+        { id: 1024, home: 'BIS', away: 'CMIS', date: 'Jan 16, 4:30pm', location: 'CMIS', sport: 'basketball', level: 'HS', gender: 'Boys', presetPast: true },
+        { id: 1025, home: 'BIS', away: 'SPPS', date: 'Jan 17, 5:15pm', location: 'SPPS', sport: 'volleyball', level: 'MS', gender: 'Girls/Boys', presetPast: true },
+        { id: 1026, home: 'BIS', away: 'FPS', date: 'Jan 22, 4:30pm', location: 'BIS', sport: 'volleyball', level: 'MS', gender: 'Girls', presetPast: true },
+        { id: 1027, home: 'BIS', away: 'MICA', date: 'Jan 24, 4:30pm', location: 'MICA', sport: 'basketball', level: 'HS', gender: 'Boys', presetPast: true },
+        { id: 1028, home: 'BIS', away: 'CCAS', date: 'Feb 4, 5:10pm', location: 'CCAS', sport: 'volleyball', level: 'MS', gender: 'Girls/Boys', presetPast: true },
+
+        // Added from Important Events/Dates page
+        { id: 35, home: 'BIS', away: 'SFS JV-B', date: 'Jan 30, 4:30pm', location: 'BIS', sport: 'basketball', level: 'HS', gender: 'Men' },
+        { id: 36, home: 'BIS', away: 'FPS', date: 'Feb 2, 4:15pm', location: 'BIS', sport: 'basketball', level: 'HS', gender: 'Men/Women' },
+        { id: 37, home: 'BIS', away: 'SPAS', date: 'Feb 2, 4:30pm', location: 'JV Sports', sport: 'volleyball', level: 'MS', gender: 'Girls/Boys' },
+
         // Basketball Games
         { id: 1, home: 'BIS', away: 'FPS', date: 'Feb 4, 4:30pm', location: 'BIS', sport: 'basketball', level: 'HS', gender: 'Men' },
         { id: 2, home: 'BIS', away: 'MICA', date: 'Feb 7, 4:00pm', location: 'BIS', sport: 'basketball', level: 'HS', gender: 'Men' },
@@ -687,6 +965,26 @@
         { id: 34, home: 'BIS', away: 'CSIS', date: 'May 29, 4:15pm', location: 'RESPIA', sport: 'soccer', level: 'HS', gender: 'Men' }
       ];
 
+      const getCustomMatches = () => {
+        try {
+          const raw = JSON.parse(localStorage.getItem(CUSTOM_MATCHES_KEY) || '[]');
+          if (!Array.isArray(raw)) return [];
+          return raw.filter((m) => Number.isFinite(Number(m?.id)));
+        } catch (e) { return []; }
+      };
+
+      const schedules = (() => {
+        const all = [...baseSchedules, ...getCustomMatches()];
+        const seen = new Set();
+        return all.filter((m) => {
+          const id = Number(m?.id);
+          if (!Number.isFinite(id) || seen.has(id)) return false;
+          seen.add(id);
+          return true;
+        });
+      })();
+      const PRESET_PAST_MATCH_IDS = new Set(baseSchedules.filter((m) => m?.presetPast).map((m) => Number(m.id)));
+
       const MATCH_SUB_KEY = 'bis_match_subscriptions';
       const VOTES_KEY = 'bis_votes';
       const VOTE_COUNTS_KEY = 'bis_vote_counts';
@@ -702,10 +1000,94 @@
       let searchQuery = '';
 
       const normalizeText = (value) => (value || '').toString().trim().toLowerCase();
+      const escapeHTML = (value) => (value || '').toString()
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+      const normalizeSport = (sport) => {
+        const s = normalizeText(sport);
+        if (s === 'basketball' || s === 'volleyball' || s === 'soccer') return s;
+        return 'soccer';
+      };
       const matchesQuery = (...fields) => {
         if (!searchQuery) return true;
         const haystack = fields.map(normalizeText).join(' ');
         return haystack.includes(searchQuery);
+      };
+      const matchesGender = (matchGender, selected) => {
+        if (selected === 'all') return true;
+        const g = normalizeText(matchGender);
+        if (selected === 'girls') return g.includes('girl') || g.includes('women');
+        if (selected === 'boys') return g.includes('boy') || g.includes('men');
+        return false;
+      };
+      const getRecentSearches = () => {
+        try {
+          const list = JSON.parse(localStorage.getItem(RECENT_SEARCH_KEY) || '[]');
+          return Array.isArray(list) ? list.filter(Boolean) : [];
+        } catch (e) { return []; }
+      };
+      const setRecentSearches = (list) => {
+        try { localStorage.setItem(RECENT_SEARCH_KEY, JSON.stringify(list.slice(0, 8))); } catch (e) {}
+      };
+      const pushRecentSearch = (term) => {
+        const q = normalizeText(term);
+        if (!q) return;
+        const next = [q, ...getRecentSearches().filter((v) => v !== q)];
+        setRecentSearches(next);
+      };
+      const updateSearchSuggestions = () => {
+        const dl = document.getElementById('searchSuggestions');
+        if (!dl) return;
+        const recent = getRecentSearches();
+        dl.innerHTML = '';
+        recent.forEach((q) => {
+          const opt = document.createElement('option');
+          opt.value = q;
+          dl.appendChild(opt);
+        });
+      };
+      const clearAllFilters = () => {
+        currentSport = 'all';
+        currentLevel = 'all';
+        currentGender = 'all';
+        searchQuery = '';
+        const searchInput = document.getElementById('searchInput');
+        if (searchInput) searchInput.value = '';
+        document.querySelectorAll('.sport-tab').forEach((b) => {
+          const active = b.dataset.sport === 'all';
+          b.classList.toggle('active', active);
+          b.setAttribute('aria-pressed', active ? 'true' : 'false');
+        });
+        const levelFilter = document.getElementById('levelFilter');
+        const genderFilter = document.getElementById('genderFilter');
+        if (levelFilter) levelFilter.value = 'all';
+        if (genderFilter) genderFilter.value = 'all';
+        renderSchedule();
+      };
+      const showToast = (message) => {
+        let toast = document.getElementById('voteToast');
+        if (!toast) {
+          toast = document.createElement('div');
+          toast.id = 'voteToast';
+          toast.className = 'vote-toast';
+          document.body.appendChild(toast);
+        }
+        toast.textContent = message;
+        toast.classList.add('show');
+        if (toastTimer) window.clearTimeout(toastTimer);
+        toastTimer = window.setTimeout(() => {
+          toast.classList.remove('show');
+        }, 1300);
+      };
+      const pulseCard = (matchId) => {
+        const card = document.getElementById(`match-${matchId}`);
+        if (!card) return;
+        card.classList.remove('voted-flash');
+        void card.offsetWidth;
+        card.classList.add('voted-flash');
       };
 
       const getSubs = () => {
@@ -753,6 +1135,7 @@
         try { localStorage.setItem(FINISHED_KEY, JSON.stringify(data)); } catch (e) {}
       };
       const isMatchFinished = (matchId) => {
+        if (PRESET_PAST_MATCH_IDS.has(Number(matchId))) return true;
         if (useFirebase) return !!finishedMatchesCache[matchId];
         return !!getFinishedLocal()[matchId];
       };
@@ -849,21 +1232,32 @@
         container.innerHTML = '';
 
         const filteredMatches = schedules.filter(match => {
+          const safeSport = normalizeSport(match.sport);
           const finished = isMatchFinished(match.id);
           if (currentTab === 'upcoming' && finished) return false;
           if (currentTab === 'past' && !finished) return false;
-          if (currentSport !== 'all' && match.sport !== currentSport) return false;
-          return matchesQuery(match.home, match.away, match.location, match.date, match.sport, match.level, match.gender);
+          if (currentSport !== 'all' && safeSport !== currentSport) return false;
+          if (currentLevel !== 'all' && normalizeText(match.level) !== normalizeText(currentLevel)) return false;
+          if (!matchesGender(match.gender, currentGender)) return false;
+          return matchesQuery(match.home, match.away, match.location, match.date, safeSport, match.level, match.gender);
         });
 
         if (filteredMatches.length === 0) {
-          container.innerHTML = `<div class="empty-msg">${currentTab === 'upcoming' ? 'No upcoming matches' : 'No completed matches'}</div>`;
+          container.innerHTML = `
+            <div class="empty-msg">
+              ${currentTab === 'upcoming' ? 'No upcoming matches' : 'No completed matches'}
+              <div class="empty-actions">
+                <button id="clearFiltersBtnEmpty" class="empty-reset-btn" type="button">Clear filters</button>
+              </div>
+            </div>
+          `;
           return;
         }
 
         filteredMatches.forEach(match => {
           const homeTeam = teams.find(t => t.name === match.home) || { name: match.home, logo: placeholderLogo };
           const awayTeam = teams.find(t => t.name === match.away) || { name: match.away, logo: placeholderLogo };
+          const safeSport = normalizeSport(match.sport);
           const finished = isMatchFinished(match.id);
           const result = getMatchResult(match.id);
 
@@ -889,8 +1283,15 @@
           const subscribeIcon = subscribed ? '🔔' : '🔕';
 
           // Sport badge
-          const sportEmoji = match.sport === 'basketball' ? '🏀' : match.sport === 'volleyball' ? '🏐' : '⚽';
-          const sportLabel = match.sport === 'basketball' ? 'Basketball' : match.sport === 'volleyball' ? 'Volleyball' : 'Soccer';
+          const sportEmoji = safeSport === 'basketball' ? '🏀' : safeSport === 'volleyball' ? '🏐' : '⚽';
+          const sportLabel = safeSport === 'basketball' ? 'Basketball' : safeSport === 'volleyball' ? 'Volleyball' : 'Soccer';
+          const safeHomeName = escapeHTML(homeTeam.name);
+          const safeAwayName = escapeHTML(awayTeam.name);
+          const safeLocation = escapeHTML(match.location || '');
+          const safeLevelInfo = escapeHTML(match.level ? `${match.level}` : 'N/A');
+          const safeGenderInfo = escapeHTML(match.gender ? ` · ${match.gender}` : '');
+          const safeDisplayDate = escapeHTML(displayDate);
+          const safeSportLabel = escapeHTML(sportLabel);
 
           let scoreHtml = '';
           if (finished && result) {
@@ -908,9 +1309,9 @@
             voteHtml = `
               <div class="vote-section">
                 <div class="vote-btns">
-                  <button class="vote-btn ${votedChoice === 'home' ? 'active' : ''}" onclick="vote(${match.id}, 'home')" ${votedChoice ? 'disabled' : ''}>Vote ${homeTeam.name}</button>
-                  <button class="vote-btn ${votedChoice === 'draw' ? 'active' : ''}" onclick="vote(${match.id}, 'draw')" ${votedChoice ? 'disabled' : ''}>Vote Draw</button>
-                  <button class="vote-btn ${votedChoice === 'away' ? 'active' : ''}" onclick="vote(${match.id}, 'away')" ${votedChoice ? 'disabled' : ''}>Vote ${awayTeam.name}</button>
+                  <button class="vote-btn match-vote ${votedChoice === 'home' ? 'active' : ''}" data-match="${match.id}" data-side="home" ${votedChoice ? 'disabled' : ''}>Vote ${safeHomeName}</button>
+                  <button class="vote-btn match-vote ${votedChoice === 'draw' ? 'active' : ''}" data-match="${match.id}" data-side="draw" ${votedChoice ? 'disabled' : ''}>Vote Draw</button>
+                  <button class="vote-btn match-vote ${votedChoice === 'away' ? 'active' : ''}" data-match="${match.id}" data-side="away" ${votedChoice ? 'disabled' : ''}>Vote ${safeAwayName}</button>
                 </div>
                 <div class="vote-bar-container">
                   <div class="vote-bar-left" style="width: ${homePercent}%"></div>
@@ -927,25 +1328,23 @@
           }
 
           // Level info
-          const levelInfo = match.level ? `${match.level}` : '';
-          const genderInfo = match.gender ? ` · ${match.gender}` : '';
-
           card.innerHTML = `
-            <span class="sport-badge ${match.sport}">${sportEmoji} ${sportLabel}</span>
-            <div class="match-date">${displayDate}</div>
-            <button class="subscribe-btn match-subscribe ${subscribed ? 'active' : ''}" data-match="${match.id}" aria-pressed="${subscribed}">${subscribeIcon}</button>
+            <span class="sport-badge ${safeSport}">${sportEmoji} ${safeSportLabel}</span>
+            <div class="match-date">${safeDisplayDate}</div>
+            <button class="subscribe-btn match-subscribe ${subscribed ? 'active' : ''}" data-match="${match.id}" aria-pressed="${subscribed}" aria-label="${subscribed ? 'Subscribed' : 'Subscribe'}">${subscribeIcon}</button>
             <div class="match-content">
               <div class="team-vs">
-                <img src="${homeTeam.logo}" alt="${homeTeam.name}" class="team-logo" loading="lazy" decoding="async">
-                <span>${homeTeam.name}</span>
+                <img src="${homeTeam.logo}" alt="${safeHomeName}" class="team-logo" loading="lazy" decoding="async">
+                <span>${safeHomeName}</span>
               </div>
               <div style="display:flex;flex-direction:column;align-items:center;gap:4px;">
                 <span class="vs-badge">VS</span>
-                <div class="match-location">${match.location || ''}</div>
+                <div class="match-location">${safeLocation}</div>
+                <div class="match-meta">${safeLevelInfo}${safeGenderInfo}</div>
               </div>
               <div class="team-vs">
-                <img src="${awayTeam.logo}" alt="${awayTeam.name}" class="team-logo" loading="lazy" decoding="async">
-                <span>${awayTeam.name}</span>
+                <img src="${awayTeam.logo}" alt="${safeAwayName}" class="team-logo" loading="lazy" decoding="async">
+                <span>${safeAwayName}</span>
               </div>
             </div>
             ${scoreHtml}
@@ -963,6 +1362,9 @@
           try {
             await voteRemote(matchId, side);
             storeVote(matchId, side);
+            renderSchedule();
+            pulseCard(matchId);
+            showToast('Vote submitted');
           } catch (e) {
             console.warn('Remote vote failed, falling back to localStorage.', e);
             const counts = getCountsForMatch(matchId);
@@ -972,6 +1374,8 @@
             setCountsForMatch(matchId, counts);
             storeVote(matchId, side);
             renderSchedule();
+            pulseCard(matchId);
+            showToast('Vote submitted');
           }
         } else {
           const counts = getCountsForMatch(matchId);
@@ -981,6 +1385,8 @@
           setCountsForMatch(matchId, counts);
           storeVote(matchId, side);
           renderSchedule();
+          pulseCard(matchId);
+          showToast('Vote submitted');
         }
       };
 
@@ -1024,10 +1430,40 @@
           renderSchedule();
         });
       });
+      const levelFilter = document.getElementById('levelFilter');
+      if (levelFilter) {
+        levelFilter.addEventListener('change', () => {
+          currentLevel = levelFilter.value || 'all';
+          renderSchedule();
+        });
+      }
+      const genderFilter = document.getElementById('genderFilter');
+      if (genderFilter) {
+        genderFilter.addEventListener('change', () => {
+          currentGender = normalizeText(genderFilter.value || 'all');
+          renderSchedule();
+        });
+      }
+      document.getElementById('clearFiltersBtnTop')?.addEventListener('click', clearAllFilters);
 
       // Subscribe button
       document.addEventListener('click', async (event) => {
         const matchBtn = event.target.closest('.match-subscribe');
+        const voteBtn = event.target.closest('.match-vote');
+        const clearBtn = event.target.closest('#clearFiltersBtnEmpty');
+        if (clearBtn) {
+          clearAllFilters();
+          return;
+        }
+        if (voteBtn) {
+          event.stopPropagation();
+          const id = Number(voteBtn.dataset.match);
+          const side = (voteBtn.dataset.side || '').trim();
+          if (Number.isFinite(id) && (side === 'home' || side === 'draw' || side === 'away')) {
+            await vote(id, side);
+          }
+          return;
+        }
         if (!matchBtn) return;
         event.stopPropagation();
         const id = Number(matchBtn.dataset.match);
@@ -1036,6 +1472,7 @@
         subs[id] = !wasSubscribed;
         setSubs(subs);
         renderSchedule();
+        showToast(wasSubscribed ? 'Subscription removed' : 'Subscription saved');
       });
 
       // Card click -> detail page
@@ -1054,8 +1491,17 @@
         searchInput.addEventListener('input', (event) => {
           searchQuery = normalizeText(event.target.value);
           renderSchedule();
+          updateSearchSuggestions();
+        });
+        searchInput.addEventListener('keydown', (event) => {
+          if (event.key === 'Enter') pushRecentSearch(searchInput.value);
+        });
+        searchInput.addEventListener('blur', () => {
+          pushRecentSearch(searchInput.value);
+          updateSearchSuggestions();
         });
       }
+      updateSearchSuggestions();
 
       // Init Firebase and render
       const firebaseReady = initFirebaseIfConfigured();
