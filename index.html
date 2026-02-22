@@ -1264,7 +1264,7 @@
 		<script>
 			// Admin dock script
 			(function(){
-				const LIVE_SCORE_KEY = 'kisvl_live_scores';
+				const LIVE_SCORE_KEY = 'bis_live_scores';
 				// Local copy of schedules to populate match selector (kept in sync manually)
 				const SCHEDULES = [
 					// Basketball Games
@@ -1305,7 +1305,7 @@
 					{ id: 32, home: 'BIS', away: 'SSI', date: 'May 20, 5:00pm' },
 					{ id: 34, home: 'BIS', away: 'CSIS', date: 'May 29, 4:15pm' }
 				];
-					const ADMIN_PASSPHRASE_KEY = 'kis_admin_pass';
+					const ADMIN_PASSPHRASE_KEY = 'bis_admin_pass';
 
 				const $ = (sel) => document.querySelector(sel);
 				const adminToggle = $('#adminToggleBtn');
@@ -1437,15 +1437,15 @@
 						} catch(e) {
 							console.error(e);
 							// fallback to localStorage
-							const finished = JSON.parse(localStorage.getItem('kisvl_finished_matches')||'{}');
+							const finished = JSON.parse(localStorage.getItem('bis_finished_matches')||'{}');
 							finished[id] = { finished: true, homeScore, awayScore, finishedAt: new Date().toISOString() };
-							localStorage.setItem('kisvl_finished_matches', JSON.stringify(finished));
+							localStorage.setItem('bis_finished_matches', JSON.stringify(finished));
 							alert('Match marked as finished (saved locally)');
 						}
 					} else {
-						const finished = JSON.parse(localStorage.getItem('kisvl_finished_matches')||'{}');
+						const finished = JSON.parse(localStorage.getItem('bis_finished_matches')||'{}');
 						finished[id] = { finished: true, homeScore, awayScore, finishedAt: new Date().toISOString() };
-						localStorage.setItem('kisvl_finished_matches', JSON.stringify(finished));
+						localStorage.setItem('bis_finished_matches', JSON.stringify(finished));
 						alert('Match marked as finished (saved locally)');
 					}
 				});
@@ -1461,15 +1461,15 @@
 							alert('Match reverted to Upcoming (Firebase)');
 						} catch(e) {
 							console.error(e);
-							const finished = JSON.parse(localStorage.getItem('kisvl_finished_matches')||'{}');
+							const finished = JSON.parse(localStorage.getItem('bis_finished_matches')||'{}');
 							delete finished[id];
-							localStorage.setItem('kisvl_finished_matches', JSON.stringify(finished));
+							localStorage.setItem('bis_finished_matches', JSON.stringify(finished));
 							alert('Match reverted to Upcoming (local)');
 						}
 					} else {
-						const finished = JSON.parse(localStorage.getItem('kisvl_finished_matches')||'{}');
+						const finished = JSON.parse(localStorage.getItem('bis_finished_matches')||'{}');
 						delete finished[id];
-						localStorage.setItem('kisvl_finished_matches', JSON.stringify(finished));
+						localStorage.setItem('bis_finished_matches', JSON.stringify(finished));
 						alert('Match reverted to Upcoming (local)');
 					}
 				});

@@ -964,9 +964,9 @@
     </div>
 
     <script>
-        const LIVE_SCORE_KEY = 'kisvl_live_scores';
-        const LIVE_EVENTS_KEY = 'kisvl_live_events';
-        const MATCH_META_KEY = 'kisvl_match_meta';
+        const LIVE_SCORE_KEY = 'bis_live_scores';
+        const LIVE_EVENTS_KEY = 'bis_live_events';
+        const MATCH_META_KEY = 'bis_match_meta';
 
         let currentUser = null;
 
@@ -1208,17 +1208,17 @@
 
         // Local vote storage (mimic index.html behaviour)
         function getVotes() {
-            try { return JSON.parse(localStorage.getItem('kisvl_votes') || '{}'); } catch (e) { return {}; }
+            try { return JSON.parse(localStorage.getItem('bis_votes') || '{}'); } catch (e) { return {}; }
         }
         function hasVoted(id) { const v = getVotes(); return !!v[id]; }
         function getVote(id) { const v = getVotes(); return v[id] || null; }
-        function storeVote(id, choice) { try { const v = getVotes(); v[id] = choice; localStorage.setItem('kisvl_votes', JSON.stringify(v)); } catch(e){}
+        function storeVote(id, choice) { try { const v = getVotes(); v[id] = choice; localStorage.setItem('bis_votes', JSON.stringify(v)); } catch(e){}
         }
 
         function getVoteCounts() {
-            try { return JSON.parse(localStorage.getItem('kisvl_vote_counts') || '{}'); } catch (e) { return {}; }
+            try { return JSON.parse(localStorage.getItem('bis_vote_counts') || '{}'); } catch (e) { return {}; }
         }
-        function setVoteCounts(all) { try { localStorage.setItem('kisvl_vote_counts', JSON.stringify(all)); } catch(e){} }
+        function setVoteCounts(all) { try { localStorage.setItem('bis_vote_counts', JSON.stringify(all)); } catch(e){} }
         function getCountsForMatch(id) { const all = getVoteCounts(); return all[id] || { home: 0, draw: 0, away: 0 }; }
         function setCountsForMatch(id, counts) { const all = getVoteCounts(); all[id] = counts; setVoteCounts(all); }
 
@@ -1334,7 +1334,7 @@
 
         // sync vote UI across tabs/pages
         window.addEventListener('storage', (event) => {
-            if (event.key === 'kisvl_vote_counts' || event.key === 'kisvl_votes') {
+            if (event.key === 'bis_vote_counts' || event.key === 'bis_votes') {
                 const counts = getCountsForMatch(matchId);
                 updateVoteUIFromCounts(counts);
                 applyVoteState();
@@ -1438,7 +1438,7 @@
     </script>
     <script>
         // --- Admin modal behavior ---
-        const ADMIN_PASSPHRASE_KEY = 'kis_admin_pass';
+        const ADMIN_PASSPHRASE_KEY = 'bis_admin_pass';
 
         function getAllLiveScores() {
             try { return JSON.parse(localStorage.getItem(LIVE_SCORE_KEY) || '{}'); } catch(e){ return {}; }
@@ -1596,7 +1596,7 @@
 
             hideAdminModal();
             // notify other tabs
-            try{ localStorage.setItem('kisvl_admin_update', String(Date.now())); }catch(e){}
+            try{ localStorage.setItem('bis_admin_update', String(Date.now())); }catch(e){}
             location.reload();
         });
 
@@ -1608,7 +1608,7 @@
         // ============================================
         // Formation Component Logic
         // ============================================
-        const FORMATION_KEY = 'kisvl_formations';
+        const FORMATION_KEY = 'bis_formations';
 
         // Default formations for each sport (horizontal layout: x=left-right, y=top-bottom)
         const defaultFormations = {
