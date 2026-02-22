@@ -1518,8 +1518,20 @@
         }
 
         function promptForAdmin() {
-            const saved = window.BIS_ADMIN_PASSPHRASE;
-            if (!saved) return { ok: false, reason: 'not_configured' };
+            let saved = (window.BIS_ADMIN_PASSPHRASE || '').trim();
+            if (!saved) {
+                try { saved = (localStorage.getItem(ADMIN_PASSPHRASE_KEY) || '').trim(); } catch(e) { saved = ''; }
+            }
+            if (!saved) {
+                const create = confirm('No admin passphrase is configured. Create a local admin passphrase on this browser now?');
+                if (!create) return { ok: false, reason: 'not_configured' };
+                const newPass = prompt('Create admin passphrase (min 4 chars)');
+                if (newPass === null) return { ok: false, reason: 'cancelled' };
+                const trimmed = (newPass || '').trim();
+                if (trimmed.length < 4) return { ok: false, reason: 'weak' };
+                saved = trimmed;
+                try { localStorage.setItem(ADMIN_PASSPHRASE_KEY, saved); } catch(e) {}
+            }
             const pass = prompt('Enter admin passphrase');
             if (pass === null) return { ok: false, reason: 'cancelled' };
             return pass === saved ? { ok: true } : { ok: false, reason: 'wrong' };
@@ -1586,6 +1598,7 @@
                 const auth = promptForAdmin();
                 if(!auth.ok){
                     if (auth.reason === 'not_configured') alert('Admin passphrase is not configured.');
+                    else if (auth.reason === 'weak') alert('Passphrase must be at least 4 characters.');
                     else if (auth.reason === 'wrong') alert('Incorrect passphrase.');
                     return;
                 }
@@ -1602,6 +1615,7 @@
                 return;
             }
             if (auth.reason === 'not_configured') alert('Admin passphrase is not configured.');
+            else if (auth.reason === 'weak') alert('Passphrase must be at least 4 characters.');
             else if (auth.reason !== 'cancelled') alert('Passphrase required');
             const url = new URL(location.href);
             url.searchParams.delete('admin');

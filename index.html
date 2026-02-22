@@ -1457,9 +1457,27 @@
 				function setAll(obj){ try{ localStorage.setItem(LIVE_SCORE_KEY, JSON.stringify(obj)); }catch(e){}
 				}
 
+						function getLocalAdminPassphrase(){
+							try { return localStorage.getItem('bis_admin_pass') || ''; } catch(e){ return ''; }
+						}
+						function setLocalAdminPassphrase(pass){
+							try { localStorage.setItem('bis_admin_pass', pass); } catch(e){}
+						}
+						function getEffectiveAdminPassphrase(){
+							return (window.BIS_ADMIN_PASSPHRASE || getLocalAdminPassphrase() || '').trim();
+						}
 						function promptPass(){
-							const configured = window.BIS_ADMIN_PASSPHRASE;
-							if (!configured) return { ok: false, reason: 'not_configured' };
+							let configured = getEffectiveAdminPassphrase();
+							if (!configured) {
+								const create = confirm('No admin passphrase is configured. Create a local admin passphrase on this browser now?');
+								if (!create) return { ok: false, reason: 'not_configured' };
+								const newPass = prompt('Create admin passphrase (min 4 chars)');
+								if (newPass === null) return { ok: false, reason: 'cancelled' };
+								const trimmed = (newPass || '').trim();
+								if (trimmed.length < 4) return { ok: false, reason: 'weak' };
+								setLocalAdminPassphrase(trimmed);
+								configured = trimmed;
+							}
 							const p = prompt('Admin passphrase');
 							if (p===null) return { ok: false, reason: 'cancelled' };
 							return p===configured ? { ok: true } : { ok: false, reason: 'wrong' };
@@ -1470,6 +1488,7 @@
 							const auth = promptPass();
 							if(!auth.ok){
 								if (auth.reason === 'not_configured') alert('Admin passphrase is not configured.');
+								else if (auth.reason === 'weak') alert('Passphrase must be at least 4 characters.');
 								else if (auth.reason === 'wrong') alert('Incorrect passphrase');
 								return;
 							}
