@@ -724,10 +724,18 @@
             background: rgba(0,0,0,0.6);
             border-radius: 4px;
             white-space: nowrap;
-            max-width: 70px;
+            max-width: 90px;
             overflow: hidden;
             text-overflow: ellipsis;
             backdrop-filter: blur(4px);
+            text-align: center;
+            line-height: 1.3;
+        }
+        .player-realname {
+            display: block;
+            font-size: 9px;
+            font-weight: 600;
+            opacity: 0.85;
         }
 
         /* No formation message */
@@ -761,7 +769,10 @@
             .player-name {
                 font-size: 8px;
                 padding: 1px 4px;
-                max-width: 50px;
+                max-width: 60px;
+            }
+            .player-realname {
+                font-size: 7px;
             }
         }
         @media (max-width: 380px) {
@@ -833,6 +844,7 @@
     </script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="data/schedules.js"></script>
     <script>
         // Detect iframe and add class
         (function() {
@@ -959,8 +971,9 @@
                 <label style="min-width:80px">Gender</label>
                 <select id="adminGender">
                     <option value="">-</option>
-                    <option value="boys">Boys</option>
-                    <option value="girls">Girls</option>
+                    <option value="Boys">Boys</option>
+                    <option value="Girls">Girls</option>
+                    <option value="Boys/Girls">Boys and Girls</option>
                 </select>
             </div>
             <hr style="margin:12px 0;border:none;border-top:1px solid var(--muted-border)">
@@ -1026,34 +1039,37 @@
         const assetUrl = (fileName) => `${ASSET_BASE}${fileName}`;
 
         const teams = [
-            { id: 'bis', name: 'BIS', logo: assetUrl('bismascot.png') },
-            { id: 'spps', name: 'SPPS', logo: assetUrl('sppsmascot.png') },
-            { id: 'mica', name: 'MICA', logo: assetUrl('micamascot.png') },
-            { id: 'ccas', name: 'CCAS', logo: assetUrl('ccasmascot.png') },
-            { id: 'icsu', name: 'ICSU', logo: assetUrl('icsumascot.png') },
-            { id: 'spas', name: 'SPAS', logo: assetUrl('spasmascot.png') },
-            { id: 'fps', name: 'FPS', logo: assetUrl('fpsmascot.jpeg') },
-            { id: 'sie', name: 'SIE', logo: assetUrl('siemascot.jpg') }
+            { id: 'bis', name: 'BIS', logo: assetUrl('assets/bismascot.png') },
+            { id: 'spps', name: 'SPPS', logo: assetUrl('assets/sppsmascot.png') },
+            { id: 'mica', name: 'MICA', logo: assetUrl('assets/micamascot.png') },
+            { id: 'ccas', name: 'CCAS', logo: assetUrl('assets/ccasmascot.png') },
+            { id: 'icsu', name: 'ICSU', logo: assetUrl('assets/icsumascot.png') },
+            { id: 'spas', name: 'SPAS', logo: assetUrl('assets/spasmascot.png') },
+            { id: 'fps', name: 'FPS', logo: assetUrl('assets/fpsmascot.jpeg') },
+            { id: 'sie', name: 'SIE', logo: assetUrl('assets/siemascot.jpg') },
+            { id: 'csis', name: 'CSIS', logo: assetUrl('assets/csismascot.png') },
+            { id: 'gsis', name: 'GSIS', logo: assetUrl('assets/gsismascot.png') },
+            { id: 'chadwick', name: 'Chadwick JV', logo: assetUrl('assets/chadwickmascot.png') }
         ];
 
-        const baseSchedules = [
-            { id: 1, home: 'BIS', away: 'ICSU', date: 'Jan 29, Girls 5:00pm', location: 'BIS' },
-            { id: 2, home: 'BIS', away: 'SPAS', date: 'Feb 2, Time TBD', location: 'JV Sports' },
-            { id: 3, home: 'BIS', away: 'CCAS', date: 'Feb 4, Arrival 4:55pm', location: 'CCAS' },
-            { id: 4, home: 'BIS', away: 'CCAS', date: 'Feb 11, Girls 4:30pm', location: 'BIS' },
-            { id: 5, home: 'BIS', away: 'SPAS', date: 'Feb 12, Girls 4:30pm (unconfirmed)', location: 'BIS?' },
-            { id: 6, home: 'BIS', away: 'ICSU', date: 'Feb 19, Girls 3:30pm', location: 'ICSU' },
-            { id: 7, home: 'BIS', away: 'MICA', date: 'Feb 21, Girls 4:00pm', location: 'BIS' },
-            { id: 8, home: 'BIS', away: 'FPS', date: 'Feb 24, Time TBD', location: '' },
-            { id: 9, home: 'BIS', away: 'SPPS', date: 'Feb 28, Boys 4:30pm', location: 'BIS' },
-            { id: 10, home: 'BIS', away: 'SIE', date: 'TBD (No date picked)', location: 'BIS' }
-        ];
+        const baseSchedules = (Array.isArray(window.BIS_BASE_SCHEDULES) ? window.BIS_BASE_SCHEDULES : []).map((m) => ({ ...m }));
 
         function getCustomMatches() {
             try {
                 const raw = JSON.parse(localStorage.getItem(CUSTOM_MATCHES_KEY) || '[]');
                 if (!Array.isArray(raw)) return [];
-                return raw.filter((m) => Number.isFinite(Number(m?.id)));
+                return raw
+                    .map((m) => ({
+                        id: Number(m?.id),
+                        home: (m?.home || '').toString().trim(),
+                        away: (m?.away || '').toString().trim(),
+                        date: (m?.date || '').toString().trim(),
+                        location: (m?.location || '').toString().trim(),
+                        sport: (m?.sport || '').toString().trim(),
+                        level: (m?.level || '').toString().trim(),
+                        gender: (m?.gender || '').toString().trim()
+                    }))
+                    .filter((m) => Number.isFinite(m.id) && m.home && m.away && m.date);
             } catch (e) { return []; }
         }
 
@@ -1248,6 +1264,34 @@
             } catch (e) { console.error('Firebase init error', e); return false; }
         }
 
+        async function hydrateMissingMatchFromFirebase() {
+            if (match || !db || !Number.isFinite(matchId)) return;
+            try {
+                const doc = await db.collection('customMatches').doc(String(matchId)).get();
+                if (!doc.exists) return;
+                const data = doc.data() || {};
+                const parsed = {
+                    id: Number(matchId),
+                    home: (data.home || '').toString().trim(),
+                    away: (data.away || '').toString().trim(),
+                    date: (data.date || '').toString().trim(),
+                    location: (data.location || '').toString().trim(),
+                    sport: (data.sport || '').toString().trim(),
+                    level: (data.level || '').toString().trim(),
+                    gender: (data.gender || '').toString().trim()
+                };
+                if (!parsed.home || !parsed.away || !parsed.date) return;
+                const existing = getCustomMatches();
+                if (!existing.some((m) => Number(m.id) === parsed.id)) {
+                    existing.push(parsed);
+                    localStorage.setItem(CUSTOM_MATCHES_KEY, JSON.stringify(existing));
+                }
+                location.reload();
+            } catch (e) {
+                console.error('custom match hydrate error', e);
+            }
+        }
+
         function votesDocRef() { return db.collection('votes').doc(String(matchId)); }
 
         function listenVotesFirebase() {
@@ -1355,6 +1399,7 @@
         }
 
         const firebaseReady = initFirebaseIfConfigured();
+        if (firebaseReady) hydrateMissingMatchFromFirebase();
 
         // initialize vote UI to mirror index.html
         (function initLocalVoteUI(){
@@ -1865,10 +1910,12 @@
             if (currentTeamView === 'home' || currentTeamView === 'both') {
                 const homePlayers = formation.home || [];
                 homePlayers.forEach(player => {
+                    const pName = player.playerName ? `<span class="player-realname">${escapeHTML(player.playerName)}</span>` : '';
+                    const tooltip = player.playerName ? `${player.playerName} (${player.name})` : player.name;
                     playersHTML += `
-                        <div class="player-marker home" style="left: ${player.x}%; top: ${player.y}%;" title="${player.name}">
+                        <div class="player-marker home" style="left: ${player.x}%; top: ${player.y}%;" title="${escapeHTML(tooltip)}">
                             <div class="player-number">${player.number}</div>
-                            <div class="player-name">${player.name}</div>
+                            <div class="player-name">${escapeHTML(player.name)}${pName}</div>
                         </div>
                     `;
                 });
@@ -1877,10 +1924,12 @@
             if (currentTeamView === 'away' || currentTeamView === 'both') {
                 const awayPlayers = formation.away || [];
                 awayPlayers.forEach(player => {
+                    const pName = player.playerName ? `<span class="player-realname">${escapeHTML(player.playerName)}</span>` : '';
+                    const tooltip = player.playerName ? `${player.playerName} (${player.name})` : player.name;
                     playersHTML += `
-                        <div class="player-marker away" style="left: ${player.x}%; top: ${player.y}%;" title="${player.name}">
+                        <div class="player-marker away" style="left: ${player.x}%; top: ${player.y}%;" title="${escapeHTML(tooltip)}">
                             <div class="player-number">${player.number}</div>
-                            <div class="player-name">${player.name}</div>
+                            <div class="player-name">${escapeHTML(player.name)}${pName}</div>
                         </div>
                     `;
                 });
@@ -1942,13 +1991,14 @@
 
             const maxPlayers = sport === 'volleyball' ? 6 : sport === 'basketball' ? 5 : 11;
 
-            let html = `<div style="font-size:11px;color:var(--text-sub);margin-bottom:8px">Players ${players.length}/${maxPlayers} (X/Y: 0-100%)</div>`;
+            let html = `<div style="font-size:11px;color:var(--text-sub);margin-bottom:8px">Players ${players.length}/${maxPlayers} &nbsp;|&nbsp; # / Position / Player Name / X% / Y%</div>`;
 
             players.forEach((player, idx) => {
                 html += `
                     <div class="admin-row" style="margin-bottom:4px">
                         <input type="number" class="formation-player-num" data-idx="${idx}" value="${player.number}" placeholder="#" style="max-width:50px">
-                        <input type="text" class="formation-player-name" data-idx="${idx}" value="${player.name}" placeholder="Name">
+                        <input type="text" class="formation-player-name" data-idx="${idx}" value="${player.name}" placeholder="Position" style="max-width:70px">
+                        <input type="text" class="formation-player-realname" data-idx="${idx}" value="${player.playerName || ''}" placeholder="Player Name">
                         <input type="number" class="formation-player-x" data-idx="${idx}" value="${player.x}" placeholder="X%" min="0" max="100" style="max-width:60px">
                         <input type="number" class="formation-player-y" data-idx="${idx}" value="${player.y}" placeholder="Y%" min="0" max="100" style="max-width:60px">
                         <button class="theme-toggle formation-del-player" data-idx="${idx}">×</button>
@@ -1969,6 +2019,7 @@
                     players.splice(idx, 1);
                     saveCurrentFormation(sport, team, players);
                     renderAdminFormationPlayers();
+                    renderPlayers(currentSport);
                 });
             });
 
@@ -1976,9 +2027,10 @@
             if (addBtn) {
                 addBtn.addEventListener('click', () => {
                     const newNum = players.length + 1;
-                    players.push({ number: newNum, name: 'Player ' + newNum, x: 50, y: 50 });
+                    players.push({ number: newNum, name: '', playerName: '', x: 50, y: 50 });
                     saveCurrentFormation(sport, team, players);
                     renderAdminFormationPlayers();
+                    renderPlayers(currentSport);
                 });
             }
 
@@ -1990,12 +2042,15 @@
                         players[idx].number = Number(input.value) || 0;
                     } else if (input.classList.contains('formation-player-name')) {
                         players[idx].name = input.value || '';
+                    } else if (input.classList.contains('formation-player-realname')) {
+                        players[idx].playerName = input.value || '';
                     } else if (input.classList.contains('formation-player-x')) {
                         players[idx].x = Math.min(100, Math.max(0, Number(input.value) || 0));
                     } else if (input.classList.contains('formation-player-y')) {
                         players[idx].y = Math.min(100, Math.max(0, Number(input.value) || 0));
                     }
                     saveCurrentFormation(sport, team, players);
+                    renderPlayers(currentSport);
                 });
             });
         }

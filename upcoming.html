@@ -456,21 +456,24 @@
         height: 100%;
         background: #2563eb;
         width: 50%;
-        transition: width 0.5s ease;
+        transition: width 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+        will-change: width;
       }
 
       .vote-bar-mid {
         height: 100%;
         background: #9ca3af;
         width: 0%;
-        transition: width 0.5s ease;
+        transition: width 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+        will-change: width;
       }
 
       .vote-bar-right {
         height: 100%;
         background: #ef4444;
         width: 0%;
-        transition: width 0.5s ease;
+        transition: width 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+        will-change: width;
       }
 
       .vote-stats {
@@ -847,6 +850,7 @@
     </script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="data/schedules.js"></script>
     <script>
       let currentTab = 'upcoming';
       let currentSport = 'all';
@@ -877,104 +881,50 @@
         { id: 'spas', name: 'SPAS', logo: assetUrl('assets/spasmascot.png') },
         { id: 'fps', name: 'FPS', logo: assetUrl('assets/fpsmascot.jpeg') },
         { id: 'sie', name: 'SIE', logo: assetUrl('assets/siemascot.jpg') },
-        { id: 'bcc', name: 'BCC', logo: assetUrl('assets/bccmascot.png') },
+        { id: 'csis', name: 'CSIS', logo: assetUrl('assets/csismascot.png') },
+        { id: 'gsis', name: 'GSIS', logo: assetUrl('assets/gsismascot.png') },
         { id: 'cmis', name: 'CMIS', logo: assetUrl('assets/cmismascot.png') },
-        { id: 'sfs', name: 'SFS JV-B', logo: assetUrl('assets/sfsmascot.png') },
-        { id: 'wca', name: 'WCA', logo: assetUrl('assets/wcamascot.png') },
-        { id: 'icsp', name: 'ICSP', logo: assetUrl('assets/icspmascot.png') }
+        { id: 'bcc', name: 'BCC', logo: assetUrl('assets/bccmascot.png') },
+        { id: 'salt', name: 'SALT', logo: assetUrl('assets/saltmascot.svg') },
+        { id: 'chadwick', name: 'Chadwick JV', logo: assetUrl('assets/chadwickmascot.png') }
       ];
 
       const placeholderLogo = 'https://placehold.co/100x100/9CA3AF/ffffff?text=?';
       const CUSTOM_MATCHES_KEY = 'bis_custom_matches';
-      
-      // Updated schedules from BIS Athletics Important Events/Dates page
-      const baseSchedules = [
-        // Added from Important Events/Dates -> Past Events
-        { id: 1001, home: 'BIS', away: 'ICSP', date: 'Sep 4, 3:30pm', location: 'ICSP', sport: 'volleyball', level: 'HS', gender: 'Women/Men', presetPast: true },
-        { id: 1002, home: 'BIS', away: 'SPPS', date: 'Sep 5, 4:30pm', location: 'BIS', sport: 'volleyball', level: 'HS', gender: 'Women/Men', presetPast: true },
-        { id: 1003, home: 'BIS', away: 'FPS', date: 'Sep 10, 4:30pm', location: 'BIS', sport: 'volleyball', level: 'HS', gender: 'Boys/Girls', presetPast: true },
-        { id: 1004, home: 'BIS', away: 'GSIS', date: 'Sep 13, 3:30pm', location: 'GSIS', sport: 'volleyball', level: 'HS', gender: 'Women/Men', presetPast: true },
-        { id: 1005, home: 'BIS', away: 'CCAS', date: 'Sep 30, 5:00pm', location: 'BIS', sport: 'volleyball', level: 'HS', gender: 'Women/Men', presetPast: true },
-        { id: 1006, home: 'BIS', away: 'KKFS', date: 'Oct 7, 4:30pm', location: 'BIS', sport: 'volleyball', level: 'HS', gender: 'Girls', presetPast: true },
-        { id: 1007, home: 'BIS', away: 'ICSU', date: 'Oct 11, 3:00pm', location: 'ICSU', sport: 'volleyball', level: 'HS', gender: 'Women/Men', presetPast: true },
-        { id: 1008, home: 'BIS', away: 'LFS', date: 'Oct 15, 6:30pm', location: 'BIS', sport: 'volleyball', level: 'HS', gender: 'Girls', presetPast: true },
-        { id: 1009, home: 'BIS', away: 'SSI-Daechi', date: 'Oct 21, 5:00pm', location: 'BIS', sport: 'volleyball', level: 'HS', gender: 'Boys', presetPast: true },
-        { id: 1010, home: 'BIS', away: 'CMIS', date: 'Oct 22, 4:30pm', location: 'BIS', sport: 'volleyball', level: 'HS', gender: 'Women/Men', presetPast: true },
-        { id: 1011, home: 'BIS', away: 'CCAS', date: 'Oct 24, 5:10pm', location: 'Seocho Sports Center', sport: 'soccer', level: 'MS', gender: 'Boys', presetPast: true },
-        { id: 1012, home: 'BIS', away: 'MICA', date: 'Oct 25, 4:30pm', location: 'BIS', sport: 'volleyball', level: 'HS', gender: 'Girls', presetPast: true },
-        { id: 1013, home: 'BIS', away: 'SPPS', date: 'Oct 31, 2:30pm', location: 'Respia', sport: 'soccer', level: 'MS', gender: 'Boys', presetPast: true },
-        { id: 1014, home: 'BIS', away: 'CSIS', date: 'Nov 4, 4:15pm', location: 'Respia', sport: 'soccer', level: 'MS', gender: 'Boys', presetPast: true },
-        { id: 1015, home: 'BIS', away: 'SIE', date: 'Nov 8, 1:30pm', location: 'Respia', sport: 'soccer', level: 'MS', gender: 'Boys', presetPast: true },
-        { id: 1016, home: 'BIS', away: 'MICA', date: 'Nov 15, 4:30pm', location: 'MICA', sport: 'volleyball', level: 'MS', gender: 'Girls', presetPast: true },
-        { id: 1017, home: 'BIS', away: 'SCI', date: 'Nov 22, 4:00pm', location: 'Hwarang Park', sport: 'soccer', level: 'MS', gender: 'Boys', presetPast: true },
-        { id: 1018, home: 'BIS', away: 'SPPS', date: 'Nov 27, 3:30pm', location: 'SFS', sport: 'basketball', level: 'HS', gender: 'Boys', presetPast: true },
-        { id: 1019, home: 'BIS', away: 'CMIS', date: 'Dec 6, 4:30pm', location: 'BIS', sport: 'basketball', level: 'HS', gender: 'Boys', presetPast: true },
-        { id: 1020, home: 'BIS', away: 'SPAS', date: 'Dec 10, 4:30pm', location: 'BIS', sport: 'volleyball', level: 'MS', gender: 'Girls', presetPast: true },
-        { id: 1021, home: 'BIS', away: 'GSIS', date: 'Jan 8, 3:30pm', location: 'GSIS', sport: 'basketball', level: 'HS', gender: 'Boys', presetPast: true },
-        { id: 1022, home: 'BIS', away: 'CSIS', date: 'Jan 14, 4:30pm', location: 'BIS', sport: 'basketball', level: 'HS', gender: 'Boys', presetPast: true },
-        { id: 1023, home: 'BIS', away: 'ICSU', date: 'Jan 15, 4:00pm', location: 'BIS', sport: 'volleyball', level: 'MS', gender: 'Girls/Boys', presetPast: true },
-        { id: 1024, home: 'BIS', away: 'CMIS', date: 'Jan 16, 4:30pm', location: 'CMIS', sport: 'basketball', level: 'HS', gender: 'Boys', presetPast: true },
-        { id: 1025, home: 'BIS', away: 'SPPS', date: 'Jan 17, 5:15pm', location: 'SPPS', sport: 'volleyball', level: 'MS', gender: 'Girls/Boys', presetPast: true },
-        { id: 1026, home: 'BIS', away: 'FPS', date: 'Jan 22, 4:30pm', location: 'BIS', sport: 'volleyball', level: 'MS', gender: 'Girls', presetPast: true },
-        { id: 1027, home: 'BIS', away: 'MICA', date: 'Jan 24, 4:30pm', location: 'MICA', sport: 'basketball', level: 'HS', gender: 'Boys', presetPast: true },
-        { id: 1028, home: 'BIS', away: 'CCAS', date: 'Feb 4, 5:10pm', location: 'CCAS', sport: 'volleyball', level: 'MS', gender: 'Girls/Boys', presetPast: true },
-
-        // Added from Important Events/Dates page
-        { id: 35, home: 'BIS', away: 'SFS JV-B', date: 'Jan 30, 4:30pm', location: 'BIS', sport: 'basketball', level: 'HS', gender: 'Men' },
-        { id: 36, home: 'BIS', away: 'FPS', date: 'Feb 2, 4:15pm', location: 'BIS', sport: 'basketball', level: 'HS', gender: 'Men/Women' },
-        { id: 37, home: 'BIS', away: 'SPAS', date: 'Feb 2, 4:30pm', location: 'JV Sports', sport: 'volleyball', level: 'MS', gender: 'Girls/Boys' },
-
-        // Basketball Games
-        { id: 1, home: 'BIS', away: 'FPS', date: 'Feb 4, 4:30pm', location: 'BIS', sport: 'basketball', level: 'HS', gender: 'Men' },
-        { id: 2, home: 'BIS', away: 'MICA', date: 'Feb 7, 4:00pm', location: 'BIS', sport: 'basketball', level: 'HS', gender: 'Men' },
-        { id: 3, home: 'BIS', away: 'SPAS', date: 'Feb 11, 6:00pm', location: 'BIS', sport: 'basketball', level: 'HS', gender: 'Men' },
-        { id: 4, home: 'BIS', away: 'CCAS', date: 'Feb 11, 5:00pm', location: 'BIS', sport: 'basketball', level: 'HS', gender: 'Women' },
-        { id: 5, home: 'BIS', away: 'WCA', date: 'Feb 13, 4:30pm', location: 'BIS', sport: 'basketball', level: 'HS', gender: 'Men' },
-        { id: 6, home: 'BIS', away: 'Tournament', date: 'Feb 22', location: 'Fayston', sport: 'basketball', level: 'HS', gender: 'Men' },
-        { id: 7, home: 'BIS', away: 'BCC', date: 'Feb 25, 4:30pm', location: 'BIS', sport: 'basketball', level: 'HS', gender: 'Women/Men' },
-        { id: 16, home: 'BIS', away: 'SPPS', date: 'Mar 19, 4:00pm', location: 'SPPS', sport: 'basketball', level: 'MS', gender: 'Girls/Boys' },
-        { id: 23, home: 'BIS', away: 'CCAS', date: 'Apr 18, 5:10pm', location: 'CCAS', sport: 'basketball', level: 'MS', gender: 'Girls/Boys' },
-        { id: 25, home: 'BIS', away: 'CCAS', date: 'Apr 25, 4:00pm', location: 'BIS', sport: 'basketball', level: 'MS', gender: 'Boys/Girls' },
-        { id: 28, home: 'BIS', away: 'FPS', date: 'May 9, 4:00pm', location: 'FPS', sport: 'basketball', level: 'MS', gender: 'Girls/Boys' },
-        { id: 31, home: 'BIS', away: 'SPPS', date: 'May 16, 4:30pm', location: 'BIS', sport: 'basketball', level: 'MS', gender: 'Girls/Boys' },
-        { id: 33, home: 'BIS', away: 'FPS', date: 'May 21, 4:20pm', location: 'BIS', sport: 'basketball', level: 'MS', gender: 'Girls/Boys' },
-        
-        // Volleyball Games
-        { id: 8, home: 'BIS', away: 'ICSU', date: 'Feb 11, 4:30pm', location: 'ICSU', sport: 'volleyball', level: 'MS', gender: 'Boys/Girls' },
-        { id: 9, home: 'BIS', away: 'CCAS', date: 'Feb 11, 4:30pm', location: 'BIS', sport: 'volleyball', level: 'MS', gender: 'Boys/Girls' },
-        { id: 10, home: 'BIS', away: 'ICSU', date: 'Feb 19, 3:30pm', location: 'ICSU', sport: 'volleyball', level: 'MS', gender: 'Boys/Girls' },
-        { id: 11, home: 'BIS', away: 'MICA', date: 'Feb 21, 4:00pm', location: 'BIS', sport: 'volleyball', level: 'MS', gender: 'Girls' },
-        { id: 12, home: 'BIS', away: 'FPS', date: 'Feb 24, 4:30pm', location: 'BIS', sport: 'volleyball', level: 'MS', gender: 'Boys/Girls' },
-        { id: 13, home: 'BIS', away: 'SPPS', date: 'Feb 28, 4:30pm', location: 'BIS', sport: 'volleyball', level: 'MS', gender: 'Boys/Girls' },
-        
-        // Soccer Games (Spring)
-        { id: 14, home: 'BIS', away: 'CMIS', date: 'Mar 12, 2:30pm', location: 'BIS Respia', sport: 'soccer', level: 'HS', gender: 'Men' },
-        { id: 15, home: 'BIS', away: 'CCAS', date: 'Mar 18, 4:30pm', location: 'CCAS', sport: 'soccer', level: 'HS', gender: 'Men' },
-        { id: 17, home: 'BIS', away: 'SALT', date: 'Mar 25', location: 'TBD', sport: 'soccer', level: 'HS', gender: 'Men' },
-        { id: 18, home: 'BIS', away: 'ICSU', date: 'Apr 7, 4:30pm', location: 'ICSU', sport: 'soccer', level: 'HS', gender: 'Men' },
-        { id: 19, home: 'BIS', away: 'ICSP', date: 'Apr 8', location: 'TBD', sport: 'soccer', level: 'HS', gender: 'Men' },
-        { id: 20, home: 'BIS', away: 'ICSP', date: 'Apr 11, 3:45pm', location: 'ICSP', sport: 'soccer', level: 'HS', gender: 'Men' },
-        { id: 21, home: 'BIS', away: 'SPPS', date: 'Apr 15, 4:20pm', location: 'Gangnam', sport: 'soccer', level: 'HS', gender: 'Men' },
-        { id: 22, home: 'BIS', away: 'CCAS', date: 'Apr 17, 4:30pm', location: 'Songpa', sport: 'soccer', level: 'HS', gender: 'Men' },
-        { id: 24, home: 'BIS', away: 'FPS', date: 'Apr 23, 2:30pm', location: 'RESPIA', sport: 'soccer', level: 'HS', gender: 'Men' },
-        { id: 26, home: 'BIS', away: 'HEXA Cup', date: 'Apr 26', location: 'hexacup.com', sport: 'soccer', level: 'HS', gender: 'Men' },
-        { id: 27, home: 'BIS', away: 'SPAD', date: 'May 8, 4:15pm', location: 'RESPIA', sport: 'soccer', level: 'HS', gender: 'Men' },
-        { id: 29, home: 'BIS', away: 'Chadwick JV', date: 'May 13, 4:30pm', location: 'Chadwick', sport: 'soccer', level: 'HS', gender: 'Men' },
-        { id: 30, home: 'BIS', away: 'CCAS', date: 'May 15, 4:00pm', location: 'Songpa', sport: 'soccer', level: 'HS', gender: 'Men' },
-        { id: 32, home: 'BIS', away: 'SSI', date: 'May 20, 5:00pm', location: 'Daechi', sport: 'soccer', level: 'HS', gender: 'Men' },
-        { id: 34, home: 'BIS', away: 'CSIS', date: 'May 29, 4:15pm', location: 'RESPIA', sport: 'soccer', level: 'HS', gender: 'Men' }
-      ];
-
-      const getCustomMatches = () => {
+      const baseSchedules = Array.isArray(window.BIS_BASE_SCHEDULES)
+        ? window.BIS_BASE_SCHEDULES.map((m) => ({ ...m }))
+        : [];
+      const sanitizeMatch = (match) => {
+        const id = Number(match?.id);
+        const home = (match?.home || '').toString().trim();
+        const away = (match?.away || '').toString().trim();
+        const date = (match?.date || '').toString().trim();
+        if (!Number.isFinite(id) || !home || !away || !date) return null;
+        return {
+          id,
+          home,
+          away,
+          date,
+          location: (match?.location || '').toString().trim(),
+          sport: (match?.sport || 'soccer').toString().trim().toLowerCase(),
+          level: (match?.level || '').toString().trim(),
+          gender: (match?.gender || '').toString().trim(),
+          presetPast: !!match?.presetPast
+        };
+      };
+      const getCustomMatchesLocal = () => {
         try {
           const raw = JSON.parse(localStorage.getItem(CUSTOM_MATCHES_KEY) || '[]');
           if (!Array.isArray(raw)) return [];
-          return raw.filter((m) => Number.isFinite(Number(m?.id)));
+          return raw.map(sanitizeMatch).filter(Boolean);
         } catch (e) { return []; }
       };
-
-      const schedules = (() => {
-        const all = [...baseSchedules, ...getCustomMatches()];
+      const setCustomMatchesLocal = (list) => {
+        try { localStorage.setItem(CUSTOM_MATCHES_KEY, JSON.stringify(list || [])); } catch (e) {}
+      };
+      let customMatchesCache = getCustomMatchesLocal();
+      const buildSchedules = () => {
+        const all = [...baseSchedules, ...customMatchesCache];
         const seen = new Set();
         return all.filter((m) => {
           const id = Number(m?.id);
@@ -982,7 +932,8 @@
           seen.add(id);
           return true;
         });
-      })();
+      };
+      let schedules = buildSchedules();
       const PRESET_PAST_MATCH_IDS = new Set(baseSchedules.filter((m) => m?.presetPast).map((m) => Number(m.id)));
 
       const MATCH_SUB_KEY = 'bis_match_subscriptions';
@@ -996,6 +947,7 @@
       let db = null;
       let voteCountsCache = {};
       let finishedMatchesCache = {};
+      const lastVotePercents = {};
 
       let searchQuery = '';
 
@@ -1136,6 +1088,8 @@
       };
       const isMatchFinished = (matchId) => {
         if (PRESET_PAST_MATCH_IDS.has(Number(matchId))) return true;
+        const match = schedules.find((m) => Number(m.id) === Number(matchId));
+        if (isAutoPastMatch(match)) return true;
         if (useFirebase) return !!finishedMatchesCache[matchId];
         return !!getFinishedLocal()[matchId];
       };
@@ -1164,6 +1118,25 @@
         });
       };
 
+      const listenCustomMatchesFirebase = () => {
+        if (!db) return;
+        db.collection('customMatches').onSnapshot((snap) => {
+          const list = [];
+          snap.forEach((doc) => {
+            const data = doc.data() || {};
+            const normalized = sanitizeMatch({
+              ...data,
+              id: Number.isFinite(Number(data.id)) ? Number(data.id) : Number(doc.id)
+            });
+            if (normalized) list.push(normalized);
+          });
+          customMatchesCache = list;
+          setCustomMatchesLocal(list);
+          schedules = buildSchedules();
+          renderSchedule();
+        });
+      };
+
       const initFirebaseIfConfigured = () => {
         if (!hasFirebaseConfig || !window.firebase || !firebase.initializeApp) return false;
         try {
@@ -1172,6 +1145,7 @@
           useFirebase = true;
           listenVoteCountsFirebase();
           listenFinishedMatchesFirebase();
+          listenCustomMatchesFirebase();
           return true;
         } catch (e) {
           console.warn('Firebase init failed, falling back to localStorage.', e);
@@ -1226,6 +1200,61 @@
         return 'TBD';
       };
 
+      const monthToIndex = (monthRaw) => {
+        const key = (monthRaw || '').toString().trim().slice(0, 3).toLowerCase();
+        const map = {
+          jan: 0, feb: 1, mar: 2, apr: 3, may: 4, jun: 5,
+          jul: 6, aug: 7, sep: 8, oct: 9, nov: 10, dec: 11
+        };
+        return Object.prototype.hasOwnProperty.call(map, key) ? map[key] : null;
+      };
+
+      const parseMatchDay = (rawDate) => {
+        if (!rawDate || typeof rawDate !== 'string') return null;
+        const m = rawDate.match(/([A-Za-z]{3,9})\s*(\d{1,2})/);
+        if (!m) return null;
+        const monthIndex = monthToIndex(m[1]);
+        const day = Number(m[2]);
+        if (monthIndex === null || !Number.isFinite(day) || day < 1 || day > 31) return null;
+
+        const now = new Date();
+        const currentYear = now.getFullYear();
+        const currentMonth = now.getMonth();
+        let year = currentYear;
+
+        // School-season year inference (fall -> spring rollover).
+        if (currentMonth <= 4 && monthIndex >= 7) year = currentYear - 1;
+        if (currentMonth >= 7 && monthIndex <= 4) year = currentYear + 1;
+
+        return new Date(year, monthIndex, day);
+      };
+
+      const parseMatchDateTime = (rawDate) => {
+        const day = parseMatchDay(rawDate);
+        if (!day) return null;
+        const dt = new Date(day.getTime());
+        const t = (rawDate || '').toString().match(/(\d{1,2}):(\d{2})\s*(am|pm)?/i);
+        if (!t) {
+          dt.setHours(12, 0, 0, 0);
+          return dt;
+        }
+        let hour = Number(t[1]);
+        const minute = Number(t[2]);
+        const ampm = (t[3] || '').toLowerCase();
+        if (ampm === 'pm' && hour < 12) hour += 12;
+        if (ampm === 'am' && hour === 12) hour = 0;
+        dt.setHours(hour, Number.isFinite(minute) ? minute : 0, 0, 0);
+        return dt;
+      };
+
+      const isAutoPastMatch = (match) => {
+        const dayDate = parseMatchDay(match?.date);
+        if (!dayDate) return false;
+        const today = new Date();
+        const todayStart = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+        return todayStart.getTime() > dayDate.getTime();
+      };
+
       const renderSchedule = () => {
         const container = document.getElementById('scheduleList');
         if (!container) return;
@@ -1240,6 +1269,12 @@
           if (currentLevel !== 'all' && normalizeText(match.level) !== normalizeText(currentLevel)) return false;
           if (!matchesGender(match.gender, currentGender)) return false;
           return matchesQuery(match.home, match.away, match.location, match.date, safeSport, match.level, match.gender);
+        });
+        filteredMatches.sort((a, b) => {
+          const aTime = parseMatchDateTime(a?.date)?.getTime() ?? Number.POSITIVE_INFINITY;
+          const bTime = parseMatchDateTime(b?.date)?.getTime() ?? Number.POSITIVE_INFINITY;
+          if (aTime !== bTime) return aTime - bTime;
+          return Number(a?.id || 0) - Number(b?.id || 0);
         });
 
         if (filteredMatches.length === 0) {
@@ -1306,6 +1341,16 @@
 
           let voteHtml = '';
           if (!finished) {
+            const prev = lastVotePercents[match.id];
+            const canAnimateBars = !!prev && (
+              Number(prev.home) !== homePercent ||
+              Number(prev.draw) !== drawPercent ||
+              Number(prev.away) !== awayPercent
+            );
+            const startHome = canAnimateBars ? Number(prev.home) : homePercent;
+            const startDraw = canAnimateBars ? Number(prev.draw) : drawPercent;
+            const startAway = canAnimateBars ? Number(prev.away) : awayPercent;
+
             voteHtml = `
               <div class="vote-section">
                 <div class="vote-btns">
@@ -1313,10 +1358,16 @@
                   <button class="vote-btn match-vote ${votedChoice === 'draw' ? 'active' : ''}" data-match="${match.id}" data-side="draw" ${votedChoice ? 'disabled' : ''}>Vote Draw</button>
                   <button class="vote-btn match-vote ${votedChoice === 'away' ? 'active' : ''}" data-match="${match.id}" data-side="away" ${votedChoice ? 'disabled' : ''}>Vote ${safeAwayName}</button>
                 </div>
-                <div class="vote-bar-container">
-                  <div class="vote-bar-left" style="width: ${homePercent}%"></div>
-                  <div class="vote-bar-mid" style="width: ${drawPercent}%"></div>
-                  <div class="vote-bar-right" style="width: ${awayPercent}%"></div>
+                <div
+                  class="vote-bar-container"
+                  data-animate="${canAnimateBars ? '1' : '0'}"
+                  data-target-home="${homePercent}"
+                  data-target-draw="${drawPercent}"
+                  data-target-away="${awayPercent}"
+                >
+                  <div class="vote-bar-left" style="width: ${startHome}%"></div>
+                  <div class="vote-bar-mid" style="width: ${startDraw}%"></div>
+                  <div class="vote-bar-right" style="width: ${startAway}%"></div>
                 </div>
                 <div class="vote-stats">
                   <span>${homePercent}%</span>
@@ -1351,6 +1402,24 @@
             ${voteHtml}
           `;
           container.appendChild(card);
+
+          if (!finished) {
+            lastVotePercents[match.id] = { home: homePercent, draw: drawPercent, away: awayPercent };
+          }
+        });
+
+        requestAnimationFrame(() => {
+          container.querySelectorAll('.vote-bar-container[data-animate="1"]').forEach((barContainer) => {
+            const home = Number(barContainer.getAttribute('data-target-home') || 0);
+            const draw = Number(barContainer.getAttribute('data-target-draw') || 0);
+            const away = Number(barContainer.getAttribute('data-target-away') || 0);
+            const leftBar = barContainer.querySelector('.vote-bar-left');
+            const midBar = barContainer.querySelector('.vote-bar-mid');
+            const rightBar = barContainer.querySelector('.vote-bar-right');
+            if (leftBar) leftBar.style.width = `${home}%`;
+            if (midBar) midBar.style.width = `${draw}%`;
+            if (rightBar) rightBar.style.width = `${away}%`;
+          });
         });
       };
 
@@ -1469,10 +1538,18 @@
         const id = Number(matchBtn.dataset.match);
         const subs = getSubs();
         const wasSubscribed = !!subs[id];
+        if (!wasSubscribed) {
+          // Request notification permission on subscribe
+          requestNotifPermission().then((granted) => {
+            if (!granted) {
+              showToast('Notification permission required. Check browser settings.');
+            }
+          });
+        }
         subs[id] = !wasSubscribed;
         setSubs(subs);
         renderSchedule();
-        showToast(wasSubscribed ? 'Subscription removed' : 'Subscription saved');
+        showToast(wasSubscribed ? 'Notification removed' : 'Notification set 🔔');
       });
 
       // Card click -> detail page
@@ -1502,6 +1579,178 @@
         });
       }
       updateSearchSuggestions();
+
+      // ========== Notification System ==========
+      const NOTIF_SENT_KEY = 'bis_notif_sent';
+
+      const getSentNotifs = () => {
+        try { return JSON.parse(localStorage.getItem(NOTIF_SENT_KEY) || '{}'); } catch (e) { return {}; }
+      };
+      const markNotifSent = (key) => {
+        const sent = getSentNotifs();
+        sent[key] = Date.now();
+        // Clean up old notification records (30+ days)
+        const cutoff = Date.now() - 30 * 24 * 60 * 60 * 1000;
+        Object.keys(sent).forEach((k) => { if (sent[k] < cutoff) delete sent[k]; });
+        try { localStorage.setItem(NOTIF_SENT_KEY, JSON.stringify(sent)); } catch (e) {}
+      };
+      const wasNotifSent = (key) => !!getSentNotifs()[key];
+
+      const requestNotifPermission = async () => {
+        if (!('Notification' in window)) return false;
+        if (Notification.permission === 'granted') return true;
+        if (Notification.permission === 'denied') return false;
+        const result = await Notification.requestPermission();
+        return result === 'granted';
+      };
+
+      const sendBrowserNotification = (title, body, matchId) => {
+        if (!('Notification' in window) || Notification.permission !== 'granted') return;
+        try {
+          const notif = new Notification(title, {
+            body: body,
+            icon: ASSET_BASE + 'assets/bismascot.png',
+            badge: ASSET_BASE + 'assets/bismascot.png',
+            tag: `bis-match-${matchId}`,
+            renotify: true,
+            requireInteraction: false
+          });
+          notif.onclick = () => {
+            window.focus();
+            window.location.href = `details.html?id=${matchId}`;
+            notif.close();
+          };
+          // 10s auto-close
+          setTimeout(() => notif.close(), 10000);
+        } catch (e) { console.warn('Notification send failed:', e); }
+      };
+
+      const getDaysUntilMatch = (matchDate) => {
+        if (!matchDate) return null;
+        const now = new Date();
+        const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        const matchDayStart = new Date(matchDate.getFullYear(), matchDate.getMonth(), matchDate.getDate());
+        const diffMs = matchDayStart.getTime() - todayStart.getTime();
+        return Math.round(diffMs / (24 * 60 * 60 * 1000));
+      };
+
+      const getMinutesUntilMatch = (matchDateTime) => {
+        if (!matchDateTime) return null;
+        const now = new Date();
+        return (matchDateTime.getTime() - now.getTime()) / (60 * 1000);
+      };
+
+      const formatMatchInfo = (match) => {
+        const homeTeam = teams.find(t => t.name === match.home) || { name: match.home };
+        const awayTeam = teams.find(t => t.name === match.away) || { name: match.away };
+        const sportEmoji = match.sport === 'basketball' ? '🏀' : match.sport === 'volleyball' ? '🏐' : '⚽';
+        return {
+          teams: `${homeTeam.name} vs ${awayTeam.name}`,
+          sportEmoji,
+          location: match.location || 'TBD',
+          date: formatMatchDate(match.date)
+        };
+      };
+
+      const checkAndSendNotifications = () => {
+        if (!('Notification' in window) || Notification.permission !== 'granted') return;
+        const subs = getSubs();
+        const subscribedIds = Object.keys(subs).filter((id) => subs[id]);
+        if (subscribedIds.length === 0) return;
+
+        subscribedIds.forEach((matchIdStr) => {
+          const matchId = Number(matchIdStr);
+          const match = schedules.find((m) => Number(m.id) === matchId);
+          if (!match) return;
+          if (isMatchFinished(matchId)) return;
+
+          const matchDay = parseMatchDay(match.date);
+          const matchDateTime = parseMatchDateTime(match.date);
+          if (!matchDay) return;
+
+          const daysUntil = getDaysUntilMatch(matchDay);
+          const minutesUntil = matchDateTime ? getMinutesUntilMatch(matchDateTime) : null;
+          const info = formatMatchInfo(match);
+
+          // D-3: 3 days before
+          const d3Key = `${matchId}_d3`;
+          if (daysUntil === 3 && !wasNotifSent(d3Key)) {
+            sendBrowserNotification(
+              `${info.sportEmoji} Match in 3 days!`,
+              `${info.teams}\n📅 ${info.date} | 📍 ${info.location}`,
+              matchId
+            );
+            markNotifSent(d3Key);
+          }
+
+          // D-2: 2 days before
+          const d2Key = `${matchId}_d2`;
+          if (daysUntil === 2 && !wasNotifSent(d2Key)) {
+            sendBrowserNotification(
+              `${info.sportEmoji} Match in 2 days!`,
+              `${info.teams}\n📅 ${info.date} | 📍 ${info.location}`,
+              matchId
+            );
+            markNotifSent(d2Key);
+          }
+
+          // D-1: 1 day before
+          const d1Key = `${matchId}_d1`;
+          if (daysUntil === 1 && !wasNotifSent(d1Key)) {
+            sendBrowserNotification(
+              `${info.sportEmoji} Match is tomorrow!`,
+              `${info.teams}\n📅 ${info.date} | 📍 ${info.location}`,
+              matchId
+            );
+            markNotifSent(d1Key);
+          }
+
+          // D-Day: Match day
+          const d0Key = `${matchId}_d0`;
+          if (daysUntil === 0 && !wasNotifSent(d0Key)) {
+            sendBrowserNotification(
+              `${info.sportEmoji} Match today!`,
+              `${info.teams}\n📅 ${info.date} | 📍 ${info.location}`,
+              matchId
+            );
+            markNotifSent(d0Key);
+          }
+
+          // Match start time (2 min before ~ 1 min after)
+          if (minutesUntil !== null) {
+            const nowKey = `${matchId}_now`;
+            if (minutesUntil <= 2 && minutesUntil >= -1 && !wasNotifSent(nowKey)) {
+              sendBrowserNotification(
+                `🚨 ${info.sportEmoji} Match starting now!`,
+                `${info.teams} is starting now!\n📍 ${info.location}`,
+                matchId
+              );
+              markNotifSent(nowKey);
+            }
+          }
+        });
+      };
+
+      // Notification checker: runs every 60 seconds
+      let notifInterval = null;
+      const startNotifChecker = () => {
+        checkAndSendNotifications();
+        if (notifInterval) clearInterval(notifInterval);
+        notifInterval = setInterval(checkAndSendNotifications, 60 * 1000);
+      };
+
+      // Pause/resume checker on tab visibility
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden) {
+          if (notifInterval) { clearInterval(notifInterval); notifInterval = null; }
+        } else {
+          startNotifChecker();
+        }
+      });
+
+      // Start on page load
+      startNotifChecker();
+      // ========== End Notification System ==========
 
       // Init Firebase and render
       const firebaseReady = initFirebaseIfConfigured();

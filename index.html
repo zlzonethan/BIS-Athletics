@@ -507,6 +507,279 @@
 				color: #ef4444;
 			}
 
+			/* ── Calendar ── */
+			.calendar-wrap {
+				margin-top: 28px;
+			}
+			.cal-header {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				gap: 16px;
+				margin-bottom: 22px;
+			}
+			.cal-header h2 {
+				font-family: 'Black Han Sans', 'Noto Sans KR', sans-serif;
+				font-weight: 400;
+				font-size: 26px;
+				letter-spacing: 1px;
+				color: var(--accent);
+				min-width: 220px;
+				text-align: center;
+				transition: opacity 0.25s ease;
+			}
+			.cal-nav {
+				background: var(--glass);
+				border: 1px solid var(--border);
+				color: var(--text);
+				width: 40px;
+				height: 40px;
+				border-radius: 12px;
+				cursor: pointer;
+				font-size: 20px;
+				font-weight: 700;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				transition: all 0.2s cubic-bezier(.2,.9,.2,1);
+				backdrop-filter: blur(8px);
+			}
+			.cal-nav:hover {
+				transform: scale(1.08);
+				background: rgba(37,99,235,0.1);
+				color: #2563eb;
+				border-color: rgba(37,99,235,0.3);
+			}
+			.cal-nav:active { transform: scale(0.95); }
+			.cal-today-btn {
+				background: linear-gradient(135deg, #2563eb, #3b82f6);
+				color: #fff;
+				border: none;
+				padding: 6px 16px;
+				border-radius: 999px;
+				font-size: 13px;
+				font-weight: 700;
+				cursor: pointer;
+				transition: all 0.2s ease;
+				box-shadow: 0 2px 8px rgba(37,99,235,0.3);
+				letter-spacing: 0.5px;
+			}
+			.cal-today-btn:hover {
+				transform: translateY(-1px);
+				box-shadow: 0 4px 14px rgba(37,99,235,0.4);
+			}
+			.cal-body {
+				position: relative;
+			}
+			.cal-grid {
+				display: grid;
+				grid-template-columns: repeat(7, 1fr);
+				gap: 4px;
+				transition: opacity 0.3s ease, transform 0.3s ease;
+			}
+			.cal-grid.slide-left  { animation: calSlideLeft 0.35s cubic-bezier(.2,.9,.2,1); }
+			.cal-grid.slide-right { animation: calSlideRight 0.35s cubic-bezier(.2,.9,.2,1); }
+			@keyframes calSlideLeft {
+				from { opacity: 0; transform: translateX(40px); }
+				to   { opacity: 1; transform: translateX(0); }
+			}
+			@keyframes calSlideRight {
+				from { opacity: 0; transform: translateX(-40px); }
+				to   { opacity: 1; transform: translateX(0); }
+			}
+			.cal-dow {
+				text-align: center;
+				font-weight: 800;
+				font-size: 12px;
+				text-transform: uppercase;
+				letter-spacing: 1px;
+				color: var(--muted);
+				padding: 8px 0 10px;
+			}
+			.cal-dow.weekend { color: rgba(239,68,68,0.55); }
+			.cal-day {
+				aspect-ratio: 1;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+				gap: 3px;
+				border-radius: 16px;
+				font-size: 15px;
+				font-weight: 600;
+				color: var(--text);
+				position: relative;
+				transition: all 0.2s cubic-bezier(.2,.9,.2,1);
+				border: 2px solid transparent;
+			}
+			.cal-day.empty { visibility: hidden; }
+			.cal-day.past { opacity: 0.4; }
+			.cal-day.weekend-day { color: rgba(239,68,68,0.7); }
+			.cal-day.today {
+				background: linear-gradient(135deg, rgba(37,99,235,0.12), rgba(59,130,246,0.08));
+				border-color: rgba(37,99,235,0.35);
+				font-weight: 800;
+				color: #2563eb;
+			}
+			.cal-day.today .cal-day-num {
+				background: #2563eb;
+				color: #fff;
+				width: 28px;
+				height: 28px;
+				border-radius: 50%;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				font-size: 14px;
+			}
+			.cal-day.has-game {
+				cursor: pointer;
+				background: var(--card);
+				border-color: var(--border);
+				box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+			}
+			.cal-day.has-game:hover {
+				transform: translateY(-3px) scale(1.04);
+				box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+				border-color: rgba(37,99,235,0.3);
+				z-index: 10;
+			}
+			.cal-day.today.has-game {
+				background: linear-gradient(135deg, rgba(37,99,235,0.15), rgba(59,130,246,0.08));
+				border-color: rgba(37,99,235,0.4);
+				box-shadow: 0 2px 12px rgba(37,99,235,0.15);
+			}
+			.cal-day.has-game.past {
+				opacity: 0.5;
+			}
+			.cal-game-count {
+				position: absolute;
+				top: 4px;
+				right: 4px;
+				background: #ef4444;
+				color: #fff;
+				font-size: 10px;
+				font-weight: 800;
+				width: 18px;
+				height: 18px;
+				border-radius: 50%;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				line-height: 1;
+			}
+			.cal-dots {
+				display: flex;
+				gap: 3px;
+				justify-content: center;
+			}
+			.cal-dot {
+				width: 7px;
+				height: 7px;
+				border-radius: 50%;
+				box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+			}
+			.cal-dot.basketball { background: linear-gradient(135deg, #f59e0b, #d97706); }
+			.cal-dot.volleyball { background: linear-gradient(135deg, #3b82f6, #2563eb); }
+			.cal-dot.soccer     { background: linear-gradient(135deg, #10b981, #059669); }
+			.cal-dot.other       { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
+			.cal-tooltip {
+				display: none;
+				position: absolute;
+				bottom: calc(100% + 10px);
+				left: 50%;
+				transform: translateX(-50%);
+				background: var(--card);
+				border: 1px solid var(--border);
+				border-radius: 16px;
+				padding: 14px 16px;
+				box-shadow: 0 12px 36px rgba(0,0,0,0.18);
+				min-width: 200px;
+				white-space: nowrap;
+				z-index: 30;
+				font-size: 13px;
+				text-align: left;
+				backdrop-filter: blur(12px);
+				animation: calTipIn 0.2s ease;
+			}
+			.cal-tooltip::after {
+				content: '';
+				position: absolute;
+				top: 100%;
+				left: 50%;
+				transform: translateX(-50%);
+				border: 6px solid transparent;
+				border-top-color: var(--card);
+			}
+			@keyframes calTipIn {
+				from { opacity: 0; transform: translateX(-50%) translateY(4px); }
+				to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+			}
+			.cal-day.has-game:hover .cal-tooltip,
+			.cal-day.has-game:focus .cal-tooltip,
+			.cal-day.has-game.tip-active .cal-tooltip {
+				display: block;
+			}
+			.cal-tooltip-title {
+				font-weight: 800;
+				font-size: 12px;
+				text-transform: uppercase;
+				letter-spacing: 0.8px;
+				color: var(--muted);
+				margin-bottom: 8px;
+				padding-bottom: 6px;
+				border-bottom: 1px solid var(--border);
+			}
+			.cal-tooltip-row {
+				display: flex;
+				align-items: center;
+				gap: 8px;
+				padding: 5px 0;
+				color: var(--text);
+				font-weight: 600;
+				font-size: 13px;
+			}
+			.cal-tooltip-row + .cal-tooltip-row {
+				border-top: 1px solid var(--border);
+			}
+			.cal-tooltip-sport {
+				font-size: 11px;
+				font-weight: 700;
+				padding: 2px 8px;
+				border-radius: 999px;
+				color: #fff;
+			}
+			.cal-tooltip-sport.basketball { background: linear-gradient(135deg, #f59e0b, #d97706); }
+			.cal-tooltip-sport.volleyball { background: linear-gradient(135deg, #3b82f6, #2563eb); }
+			.cal-tooltip-sport.soccer     { background: linear-gradient(135deg, #10b981, #059669); }
+			.cal-tooltip-sport.other       { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
+			.cal-tooltip-teams {
+				font-weight: 800;
+				color: var(--accent);
+			}
+			.cal-tooltip-time {
+				color: var(--muted);
+				font-size: 12px;
+				margin-left: auto;
+			}
+			.cal-legend {
+				display: flex;
+				justify-content: center;
+				flex-wrap: wrap;
+				gap: 16px;
+				margin-top: 20px;
+				padding-top: 16px;
+				border-top: 1px solid var(--border);
+				font-size: 13px;
+				color: var(--muted);
+				font-weight: 600;
+			}
+			.cal-legend-item {
+				display: flex;
+				align-items: center;
+				gap: 6px;
+			}
+
 			@media (max-width: 860px) {
 				.top-nav {
 					gap: 40px;
@@ -741,6 +1014,7 @@
 		</script>
 		<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
 		<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+		<script src="data/schedules.js"></script>
 		<style>
 			/* iframe embed support */
 			html.in-iframe, html.in-iframe body {
@@ -798,6 +1072,68 @@
 				html.in-iframe .gender-tab,
 				html.in-iframe .theme-toggle {
 					min-height: 40px;
+				}
+				html.in-iframe .split-grid {
+					grid-template-columns: 1fr;
+					gap: 20px;
+				}
+				html.in-iframe .schedule-grid {
+					grid-template-columns: repeat(3, 1fr);
+					gap: 10px;
+				}
+				html.in-iframe .cal-grid {
+					gap: 3px;
+				}
+				html.in-iframe .cal-day {
+					border-radius: 10px;
+					font-size: 13px;
+				}
+				html.in-iframe .cal-day.today .cal-day-num {
+					width: 24px;
+					height: 24px;
+					font-size: 12px;
+				}
+				html.in-iframe .cal-game-count {
+					width: 16px;
+					height: 16px;
+					font-size: 9px;
+					top: 2px;
+					right: 2px;
+				}
+				html.in-iframe .cal-tooltip {
+					position: fixed;
+					max-width: 85vw;
+					white-space: normal;
+					word-break: break-word;
+				}
+				html.in-iframe .cal-header h2 {
+					font-size: 20px;
+					min-width: 160px;
+				}
+				html.in-iframe .cal-nav {
+					min-width: 40px;
+					min-height: 40px;
+				}
+				html.in-iframe .cal-today-btn {
+					min-height: 36px;
+					padding: 6px 14px;
+				}
+				html.in-iframe .cal-legend {
+					gap: 12px;
+					font-size: 12px;
+				}
+			}
+			@media (max-width: 480px) {
+				html.in-iframe .schedule-grid {
+					grid-template-columns: 1fr;
+				}
+				html.in-iframe .cal-day {
+					font-size: 12px;
+					border-radius: 8px;
+				}
+				html.in-iframe .cal-dot {
+					width: 5px;
+					height: 5px;
 				}
 			}
 		</style>
@@ -949,6 +1285,27 @@
 				</div>
 			</section>
 
+			<!-- Game Calendar -->
+			<section class="panel calendar-wrap" id="calendarSection">
+				<div class="panel-title">
+					<span>🗓️</span>
+					<span>Game Calendar</span>
+				</div>
+				<div class="cal-header">
+					<button class="cal-nav" id="calPrev" type="button" aria-label="Previous month">‹</button>
+					<h2 id="calMonth"></h2>
+					<button class="cal-nav" id="calNext" type="button" aria-label="Next month">›</button>
+					<button class="cal-today-btn" id="calToday" type="button">Today</button>
+				</div>
+				<div class="cal-body">
+					<div class="cal-grid" id="calGrid"></div>
+				</div>
+				<div class="cal-legend">
+					<span class="cal-legend-item"><span class="cal-dot basketball"></span> Basketball</span>
+					<span class="cal-legend-item"><span class="cal-dot volleyball"></span> Volleyball</span>
+					<span class="cal-legend-item"><span class="cal-dot soccer"></span> Soccer</span>
+				</div>
+			</section>
 
 			<section class="panel">
 				<div class="panel-title">
@@ -1106,30 +1463,107 @@
 						<hr style="margin:14px 0;border:none;border-top:1px solid rgba(0,0,0,0.08)" />
 						<div style="font-weight:800;font-size:15px">📅 Add Upcoming Match</div>
 						<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px">
-							<input id="adminNewHome" type="text" placeholder="Home team (e.g. BIS)" style="width:100%;padding:10px;border-radius:10px;border:1px solid rgba(0,0,0,0.08)" />
-							<input id="adminNewAway" type="text" placeholder="Away team (e.g. CCAS)" style="width:100%;padding:10px;border-radius:10px;border:1px solid rgba(0,0,0,0.08)" />
+							<div>
+								<label style="font-weight:700;display:block;margin-bottom:4px;font-size:13px">Home Team</label>
+								<select id="adminNewHome" style="width:100%;padding:10px;border-radius:10px;border:1px solid rgba(0,0,0,0.08)">
+									<option value="BIS">BIS</option>
+									<option value="SPPS">SPPS</option>
+									<option value="MICA">MICA</option>
+									<option value="CCAS">CCAS</option>
+									<option value="ICSU">ICSU</option>
+									<option value="SPAS">SPAS</option>
+									<option value="FPS">FPS</option>
+									<option value="SIE">SIE</option>
+									<option value="CSIS">CSIS</option>
+									<option value="GSIS">GSIS</option>
+									<option value="CMIS">CMIS</option>
+									<option value="ICSP">ICSP</option>
+									<option value="SFS">SFS</option>
+									<option value="SALT">SALT</option>
+									<option value="SPAD">SPAD</option>
+									<option value="SSI">SSI</option>
+									<option value="WCA">WCA</option>
+									<option value="BCC">BCC</option>
+									<option value="Chadwick JV">Chadwick JV</option>
+									<option value="__custom__">✏️ Type custom...</option>
+								</select>
+								<input id="adminNewHomeCustom" type="text" placeholder="Custom team name" style="width:100%;padding:10px;border-radius:10px;border:1px solid rgba(0,0,0,0.08);margin-top:4px;display:none" />
+							</div>
+							<div>
+								<label style="font-weight:700;display:block;margin-bottom:4px;font-size:13px">Away Team</label>
+								<select id="adminNewAway" style="width:100%;padding:10px;border-radius:10px;border:1px solid rgba(0,0,0,0.08)">
+									<option value="BIS">BIS</option>
+									<option value="SPPS">SPPS</option>
+									<option value="MICA">MICA</option>
+									<option value="CCAS">CCAS</option>
+									<option value="ICSU">ICSU</option>
+									<option value="SPAS">SPAS</option>
+									<option value="FPS">FPS</option>
+									<option value="SIE">SIE</option>
+									<option value="CSIS">CSIS</option>
+									<option value="GSIS">GSIS</option>
+									<option value="CMIS">CMIS</option>
+									<option value="ICSP">ICSP</option>
+									<option value="SFS">SFS</option>
+									<option value="SALT">SALT</option>
+									<option value="SPAD">SPAD</option>
+									<option value="SSI">SSI</option>
+									<option value="WCA">WCA</option>
+									<option value="BCC">BCC</option>
+									<option value="Chadwick JV">Chadwick JV</option>
+									<option value="__custom__">✏️ Type custom...</option>
+								</select>
+								<input id="adminNewAwayCustom" type="text" placeholder="Custom team name" style="width:100%;padding:10px;border-radius:10px;border:1px solid rgba(0,0,0,0.08);margin-top:4px;display:none" />
+							</div>
 						</div>
 						<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px">
-							<input id="adminNewDate" type="text" placeholder="Date/time (e.g. Mar 12, 4:30pm)" style="width:100%;padding:10px;border-radius:10px;border:1px solid rgba(0,0,0,0.08)" />
-							<input id="adminNewLocation" type="text" placeholder="Location (e.g. BIS)" style="width:100%;padding:10px;border-radius:10px;border:1px solid rgba(0,0,0,0.08)" />
+							<div>
+								<label style="font-weight:700;display:block;margin-bottom:4px;font-size:13px">Date</label>
+								<input id="adminNewDateOnly" type="date" style="width:100%;padding:10px;border-radius:10px;border:1px solid rgba(0,0,0,0.08)" />
+							</div>
+							<div>
+								<label style="font-weight:700;display:block;margin-bottom:4px;font-size:13px">Time</label>
+								<input id="adminNewTimeOnly" type="time" style="width:100%;padding:10px;border-radius:10px;border:1px solid rgba(0,0,0,0.08)" />
+							</div>
+						</div>
+						<input id="adminNewDate" type="hidden" />
+						<div style="display:grid;grid-template-columns:1fr;gap:10px;margin-top:8px">
+							<div>
+								<label style="font-weight:700;display:block;margin-bottom:4px;font-size:13px">Location</label>
+								<input id="adminNewLocation" type="text" placeholder="e.g. BIS, GSIS, Respia" style="width:100%;padding:10px;border-radius:10px;border:1px solid rgba(0,0,0,0.08)" />
+							</div>
 						</div>
 						<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:8px">
-							<select id="adminNewSport" style="width:100%;padding:10px;border-radius:10px;border:1px solid rgba(0,0,0,0.08)">
-								<option value="basketball">Basketball</option>
-								<option value="volleyball">Volleyball</option>
-								<option value="soccer">Soccer</option>
-							</select>
-							<select id="adminNewLevel" style="width:100%;padding:10px;border-radius:10px;border:1px solid rgba(0,0,0,0.08)">
-								<option value="HS">HS</option>
-								<option value="MS">MS</option>
-								<option value="ES">ES</option>
-							</select>
-							<input id="adminNewGender" type="text" placeholder="Gender (e.g. Boys/Girls)" style="width:100%;padding:10px;border-radius:10px;border:1px solid rgba(0,0,0,0.08)" />
+							<div>
+								<label style="font-weight:700;display:block;margin-bottom:4px;font-size:13px">Sport</label>
+								<select id="adminNewSport" style="width:100%;padding:10px;border-radius:10px;border:1px solid rgba(0,0,0,0.08)">
+									<option value="basketball">🏀 Basketball</option>
+									<option value="volleyball">🏐 Volleyball</option>
+									<option value="soccer">⚽ Soccer</option>
+								</select>
+							</div>
+							<div>
+								<label style="font-weight:700;display:block;margin-bottom:4px;font-size:13px">Level</label>
+								<select id="adminNewLevel" style="width:100%;padding:10px;border-radius:10px;border:1px solid rgba(0,0,0,0.08)">
+									<option value="HS">HS</option>
+									<option value="MS">MS</option>
+								</select>
+							</div>
+							<div>
+								<label style="font-weight:700;display:block;margin-bottom:4px;font-size:13px">Gender</label>
+								<select id="adminNewGender" style="width:100%;padding:10px;border-radius:10px;border:1px solid rgba(0,0,0,0.08)">
+									<option value="">-</option>
+									<option value="Boys">Boys</option>
+									<option value="Girls">Girls</option>
+									<option value="Boys/Girls">Boys and Girls</option>
+								</select>
+							</div>
 						</div>
 						<div style="display:flex;gap:8px;margin-top:10px;align-items:center;flex-wrap:wrap">
-							<button id="adminAddMatchBtn" class="theme-toggle">Add Match</button>
-							<button id="adminDeleteMatchBtn" class="theme-toggle">Delete Selected Custom Match</button>
-						</div>
+								<button id="adminAddMatchBtn" class="theme-toggle">Add Match</button>
+								<button id="adminUpdateMatchBtn" class="theme-toggle">Update Selected Custom Match</button>
+								<button id="adminDeleteMatchBtn" class="theme-toggle">Delete Selected Custom Match</button>
+							</div>
 						<div style="margin-top:12px">
 							<label style="font-weight:700;display:block;margin-bottom:6px">Live Overrides (JSON)</label>
 							<textarea id="adminJson" style="width:100%;height:120px;padding:12px;border-radius:8px;border:1px solid rgba(0,0,0,0.06);font-family:monospace;font-size:13px"></textarea>
@@ -1296,6 +1730,246 @@
 
 				initGenderTabs();
 				initSeasonTabs();
+
+				// ── Game Calendar ──
+				(function initCalendar() {
+					const SCHEDULES = Array.isArray(window.BIS_BASE_SCHEDULES) ? window.BIS_BASE_SCHEDULES : [];
+					const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+					const MONTH_ABBR = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+					const DOW = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+
+					function inferYear(monthIdx) {
+						return monthIdx >= 7 ? 2025 : 2026;
+					}
+
+					function parseGameDate(raw) {
+						if (!raw) return null;
+						const m = raw.match(/([A-Za-z]{3,9})\s*(\d{1,2})/);
+						if (!m) return null;
+						const mi = MONTH_ABBR.findIndex(n => n.toLowerCase() === m[1].slice(0,3).toLowerCase());
+						if (mi < 0) return null;
+						return { month: mi, day: Number(m[2]), year: inferYear(mi) };
+					}
+
+					const gameMap = {};
+					SCHEDULES.forEach(g => {
+						const d = parseGameDate(g.date);
+						if (!d) return;
+						const key = `${d.year}-${String(d.month+1).padStart(2,'0')}-${String(d.day).padStart(2,'0')}`;
+						(gameMap[key] = gameMap[key] || []).push(g);
+					});
+
+					const grid = document.getElementById('calGrid');
+					const monthEl = document.getElementById('calMonth');
+					const prevBtn = document.getElementById('calPrev');
+					const nextBtn = document.getElementById('calNext');
+					const todayBtn = document.getElementById('calToday');
+
+					const today = new Date();
+					let curYear = today.getFullYear();
+					let curMonth = today.getMonth();
+					let slideDir = null; // 'left' or 'right'
+
+					function sportClass(sport) {
+						const s = (sport || '').toLowerCase();
+						if (s.includes('basketball')) return 'basketball';
+						if (s.includes('volleyball')) return 'volleyball';
+						if (s.includes('soccer') || s.includes('football')) return 'soccer';
+						return 'other';
+					}
+
+					function sportLabel(sport) {
+						const s = (sport || '').toLowerCase();
+						if (s.includes('basketball')) return 'Basketball';
+						if (s.includes('volleyball')) return 'Volleyball';
+						if (s.includes('soccer')) return 'Soccer';
+						return sport || 'Other';
+					}
+
+					function renderCalendar() {
+						grid.innerHTML = '';
+						monthEl.textContent = `${MONTHS[curMonth]} ${curYear}`;
+
+						// Slide animation
+						if (slideDir) {
+							grid.classList.remove('slide-left', 'slide-right');
+							void grid.offsetWidth; // reflow
+							grid.classList.add(slideDir === 'left' ? 'slide-left' : 'slide-right');
+							slideDir = null;
+						}
+
+						// Day-of-week headers
+						DOW.forEach((d, i) => {
+							const el = document.createElement('div');
+							el.className = 'cal-dow' + (i === 0 || i === 6 ? ' weekend' : '');
+							el.textContent = d;
+							grid.appendChild(el);
+						});
+
+						const firstDay = new Date(curYear, curMonth, 1).getDay();
+						const daysInMonth = new Date(curYear, curMonth + 1, 0).getDate();
+						const todayDate = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+
+						for (let i = 0; i < firstDay; i++) {
+							const el = document.createElement('div');
+							el.className = 'cal-day empty';
+							grid.appendChild(el);
+						}
+
+						for (let day = 1; day <= daysInMonth; day++) {
+							const key = `${curYear}-${String(curMonth+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+							const games = gameMap[key] || [];
+							const isToday = day === today.getDate() && curMonth === today.getMonth() && curYear === today.getFullYear();
+							const thisDate = new Date(curYear, curMonth, day);
+							const isPast = thisDate < todayDate;
+							const dayOfWeek = thisDate.getDay();
+							const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
+
+							const cell = document.createElement('div');
+							let cls = 'cal-day';
+							if (isToday) cls += ' today';
+							if (games.length) cls += ' has-game';
+							if (isPast && !isToday) cls += ' past';
+							if (isWeekend && !isToday) cls += ' weekend-day';
+							cell.className = cls;
+							if (games.length) cell.tabIndex = 0;
+
+							const num = document.createElement('span');
+							num.className = 'cal-day-num';
+							num.textContent = day;
+							cell.appendChild(num);
+
+							if (games.length) {
+								// Game count badge (2+ games)
+								if (games.length > 1) {
+									const badge = document.createElement('span');
+									badge.className = 'cal-game-count';
+									badge.textContent = games.length;
+									cell.appendChild(badge);
+								}
+
+								// Sport dots
+								const dotsWrap = document.createElement('div');
+								dotsWrap.className = 'cal-dots';
+								const sports = [...new Set(games.map(g => sportClass(g.sport)))];
+								sports.forEach(s => {
+									const dot = document.createElement('span');
+									dot.className = 'cal-dot ' + s;
+									dotsWrap.appendChild(dot);
+								});
+								cell.appendChild(dotsWrap);
+
+								// Tooltip
+								const tip = document.createElement('div');
+								tip.className = 'cal-tooltip';
+
+								const tipTitle = document.createElement('div');
+								tipTitle.className = 'cal-tooltip-title';
+								tipTitle.textContent = `${MONTHS[curMonth]} ${day} · ${games.length} Game${games.length > 1 ? 's' : ''}`;
+								tip.appendChild(tipTitle);
+
+								games.forEach(g => {
+									const row = document.createElement('div');
+									row.className = 'cal-tooltip-row';
+
+									const sportBadge = document.createElement('span');
+									sportBadge.className = 'cal-tooltip-sport ' + sportClass(g.sport);
+									sportBadge.textContent = sportLabel(g.sport);
+									row.appendChild(sportBadge);
+
+									const teams = document.createElement('span');
+									teams.className = 'cal-tooltip-teams';
+									teams.textContent = `${g.home} vs ${g.away}`;
+									row.appendChild(teams);
+
+									const time = (g.date || '').match(/(\d{1,2}:\d{2}\s*[ap]m)/i);
+									if (time) {
+										const timeEl = document.createElement('span');
+										timeEl.className = 'cal-tooltip-time';
+										timeEl.textContent = time[1];
+										row.appendChild(timeEl);
+									}
+
+									tip.appendChild(row);
+								});
+								cell.appendChild(tip);
+							}
+
+							grid.appendChild(cell);
+						}
+					}
+
+					prevBtn.addEventListener('click', () => {
+						slideDir = 'right';
+						curMonth--;
+						if (curMonth < 0) { curMonth = 11; curYear--; }
+						renderCalendar();
+					});
+					nextBtn.addEventListener('click', () => {
+						slideDir = 'left';
+						curMonth++;
+						if (curMonth > 11) { curMonth = 0; curYear++; }
+						renderCalendar();
+					});
+					todayBtn.addEventListener('click', () => {
+						const wasMonth = curMonth;
+						curYear = today.getFullYear();
+						curMonth = today.getMonth();
+						if (curMonth !== wasMonth) slideDir = curMonth > wasMonth ? 'left' : 'right';
+						renderCalendar();
+					});
+
+					renderCalendar();
+
+					// Touch support: toggle tooltip on tap for mobile / iframe
+					let activeTipCell = null;
+					document.addEventListener('click', (e) => {
+						const cell = e.target.closest('.cal-day.has-game');
+						if (cell) {
+							// If same cell tapped again, hide
+							if (activeTipCell === cell) {
+								cell.classList.remove('tip-active');
+								activeTipCell = null;
+								return;
+							}
+							// Hide previous
+							if (activeTipCell) activeTipCell.classList.remove('tip-active');
+							cell.classList.add('tip-active');
+							activeTipCell = cell;
+
+							// Position tooltip for iframe (fixed positioning)
+							const tip = cell.querySelector('.cal-tooltip');
+							if (tip && document.documentElement.classList.contains('in-iframe')) {
+								const rect = cell.getBoundingClientRect();
+								tip.style.left = rect.left + rect.width / 2 + 'px';
+								tip.style.bottom = (window.innerHeight - rect.top + 8) + 'px';
+								// If tooltip goes above viewport, put it below
+								requestAnimationFrame(() => {
+									const tipRect = tip.getBoundingClientRect();
+									if (tipRect.top < 0) {
+										tip.style.bottom = 'auto';
+										tip.style.top = (rect.bottom + 8) + 'px';
+									}
+									// Clamp left/right
+									if (tipRect.right > window.innerWidth) {
+										tip.style.left = (window.innerWidth - tipRect.width - 8) + 'px';
+										tip.style.transform = 'none';
+									}
+									if (tipRect.left < 0) {
+										tip.style.left = '8px';
+										tip.style.transform = 'none';
+									}
+								});
+							}
+						} else {
+							// Clicked outside game cell, hide any active tooltip
+							if (activeTipCell) {
+								activeTipCell.classList.remove('tip-active');
+								activeTipCell = null;
+							}
+						}
+					});
+				})();
 				document.querySelectorAll('img').forEach((img, idx) => {
 					if (!img.hasAttribute('decoding')) img.setAttribute('decoding', 'async');
 					if (!img.hasAttribute('loading') && idx > 0) img.setAttribute('loading', 'lazy');
@@ -1336,58 +2010,157 @@
 				applyTheme(nextTheme);
 			});
 		</script>
-		<script>
-			// Admin dock script
-			(function(){
-				const LIVE_SCORE_KEY = 'bis_live_scores';
-				const CUSTOM_MATCHES_KEY = 'bis_custom_matches';
-				// Local copy of schedules to populate match selector (kept in sync manually)
-				const SCHEDULES = [
-					// Basketball Games
-					{ id: 1, home: 'BIS', away: 'FPS', date: 'Feb 4, 4:30pm' },
-					{ id: 2, home: 'BIS', away: 'MICA', date: 'Feb 7, 4:00pm' },
-					{ id: 3, home: 'BIS', away: 'SPAS', date: 'Feb 11, 6:00pm' },
-					{ id: 4, home: 'BIS', away: 'CCAS', date: 'Feb 11, 5:00pm' },
-					{ id: 5, home: 'BIS', away: 'WCA', date: 'Feb 13, 4:30pm' },
-					{ id: 6, home: 'BIS', away: 'Tournament', date: 'Feb 22' },
-					{ id: 7, home: 'BIS', away: 'BCC', date: 'Feb 25, 4:30pm' },
-					{ id: 16, home: 'BIS', away: 'SPPS', date: 'Mar 19, 4:00pm' },
-					{ id: 23, home: 'BIS', away: 'CCAS', date: 'Apr 18, 5:10pm' },
-					{ id: 25, home: 'BIS', away: 'CCAS', date: 'Apr 25, 4:00pm' },
-					{ id: 28, home: 'BIS', away: 'FPS', date: 'May 9, 4:00pm' },
-					{ id: 31, home: 'BIS', away: 'SPPS', date: 'May 16, 4:30pm' },
-					{ id: 33, home: 'BIS', away: 'FPS', date: 'May 21, 4:20pm' },
-					// Volleyball Games
-					{ id: 8, home: 'BIS', away: 'ICSU', date: 'Feb 11, 4:30pm' },
-					{ id: 9, home: 'BIS', away: 'CCAS', date: 'Feb 11, 4:30pm' },
-					{ id: 10, home: 'BIS', away: 'ICSU', date: 'Feb 19, 3:30pm' },
-					{ id: 11, home: 'BIS', away: 'MICA', date: 'Feb 21, 4:00pm' },
-					{ id: 12, home: 'BIS', away: 'FPS', date: 'Feb 24, 4:30pm' },
-					{ id: 13, home: 'BIS', away: 'SPPS', date: 'Feb 28, 4:30pm' },
-					// Soccer Games
-					{ id: 14, home: 'BIS', away: 'CMIS', date: 'Mar 12, 2:30pm' },
-					{ id: 15, home: 'BIS', away: 'CCAS', date: 'Mar 18, 4:30pm' },
-					{ id: 17, home: 'BIS', away: 'SALT', date: 'Mar 25' },
-					{ id: 18, home: 'BIS', away: 'ICSU', date: 'Apr 7, 4:30pm' },
-					{ id: 19, home: 'BIS', away: 'ICSP', date: 'Apr 8' },
-					{ id: 20, home: 'BIS', away: 'ICSP', date: 'Apr 11, 3:45pm' },
-					{ id: 21, home: 'BIS', away: 'SPPS', date: 'Apr 15, 4:20pm' },
-					{ id: 22, home: 'BIS', away: 'CCAS', date: 'Apr 17, 4:30pm' },
-					{ id: 24, home: 'BIS', away: 'FPS', date: 'Apr 23, 2:30pm' },
-					{ id: 26, home: 'BIS', away: 'HEXA Cup', date: 'Apr 26' },
-					{ id: 27, home: 'BIS', away: 'SPAD', date: 'May 8, 4:15pm' },
-					{ id: 29, home: 'BIS', away: 'Chadwick JV', date: 'May 13, 4:30pm' },
-					{ id: 30, home: 'BIS', away: 'CCAS', date: 'May 15, 4:00pm' },
-					{ id: 32, home: 'BIS', away: 'SSI', date: 'May 20, 5:00pm' },
-					{ id: 34, home: 'BIS', away: 'CSIS', date: 'May 29, 4:15pm' }
-				];
+			<script>
+				// Admin dock script
+				(function(){
+					const LIVE_SCORE_KEY = 'bis_live_scores';
+					const CUSTOM_MATCHES_KEY = 'bis_custom_matches';
+					const LIVE_EVENTS_KEY = 'bis_live_events';
+					const MATCH_META_KEY = 'bis_match_meta';
+					const FINISHED_KEY = 'bis_finished_matches';
+					const VOTE_COUNTS_KEY = 'bis_vote_counts';
+					const VOTES_KEY = 'bis_votes';
+					const MATCH_SUB_KEY = 'bis_match_subscriptions';
+					const CUSTOM_MATCH_COLLECTION = 'customMatches';
 					const ADMIN_PASSPHRASE_KEY = 'bis_admin_pass';
 					const LEGACY_ADMIN_PASSPHRASE_KEY = 'kis_admin_pass';
 					const DEFAULT_ADMIN_PASSPHRASE = 'BISathletic120712!';
+					const SCHEDULES = (Array.isArray(window.BIS_BASE_SCHEDULES) ? window.BIS_BASE_SCHEDULES : []).map((m) => ({
+						id: Number(m.id),
+						home: (m.home || '').toString(),
+						away: (m.away || '').toString(),
+						date: (m.date || '').toString(),
+						location: (m.location || '').toString(),
+						sport: (m.sport || '').toString(),
+						level: (m.level || '').toString(),
+						gender: (m.gender || '').toString()
+					})).filter((m) => Number.isFinite(m.id));
 
-				const $ = (sel) => document.querySelector(sel);
-				const adminToggle = $('#adminToggleBtn');
-				const adminBody = $('#adminBody');
+					let db = null;
+					const firebaseConfig = window.BIS_FIREBASE_CONFIG || {};
+					if (firebaseConfig.apiKey && window.firebase) {
+						try {
+							if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+							db = firebase.firestore();
+						} catch (e) { console.warn('Firebase init failed', e); }
+					}
+
+					const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+					const normalizeText = (v) => (v || '').toString().trim().toLowerCase();
+					const readJson = (key, fallback) => {
+						try { return JSON.parse(localStorage.getItem(key) || JSON.stringify(fallback)); }
+						catch (e) { return fallback; }
+					};
+					const writeJson = (key, value) => {
+						try { localStorage.setItem(key, JSON.stringify(value)); } catch (e) {}
+					};
+					const normalizeCustomMatch = (m) => {
+						const id = Number(m?.id);
+						const home = (m?.home || '').toString().trim();
+						const away = (m?.away || '').toString().trim();
+						const date = (m?.date || '').toString().trim();
+						if (!Number.isFinite(id) || !home || !away || !date) return null;
+						return {
+							id,
+							home,
+							away,
+							date,
+							location: (m?.location || '').toString().trim(),
+							sport: (m?.sport || 'soccer').toString().trim().toLowerCase(),
+							level: (m?.level || 'HS').toString().trim().toUpperCase(),
+							gender: (m?.gender || '').toString().trim()
+						};
+					};
+					const getCustomMatchesLocal = () => {
+						const raw = readJson(CUSTOM_MATCHES_KEY, []);
+						if (!Array.isArray(raw)) return [];
+						return raw.map(normalizeCustomMatch).filter(Boolean);
+					};
+					const setCustomMatchesLocal = (list) => writeJson(CUSTOM_MATCHES_KEY, list || []);
+					let customMatchesCache = getCustomMatchesLocal();
+
+					const getCustomMatches = () => customMatchesCache.slice();
+					const setCustomMatches = (list) => {
+						customMatchesCache = (Array.isArray(list) ? list : []).map(normalizeCustomMatch).filter(Boolean);
+						setCustomMatchesLocal(customMatchesCache);
+					};
+					const getAllMatches = () => {
+						const all = [...SCHEDULES, ...getCustomMatches()];
+						const seen = new Set();
+						return all.filter((m) => {
+							const id = Number(m?.id);
+							if (!Number.isFinite(id) || seen.has(id)) return false;
+							seen.add(id);
+							return true;
+						});
+					};
+					const getCustomById = (id) => getCustomMatches().find((m) => Number(m.id) === Number(id)) || null;
+					const formatShortDate = (raw) => {
+						if (!raw || typeof raw !== 'string') return '';
+						const m = raw.match(/([A-Za-z]{3,9}\s*\d{1,2})/);
+						return m ? m[1].trim() : raw;
+					};
+					const toDisplayDate = (datetimeLocalValue) => {
+						if (!datetimeLocalValue) return null;
+						const dt = new Date(datetimeLocalValue);
+						if (Number.isNaN(dt.getTime())) return null;
+						const month = monthNames[dt.getMonth()];
+						const day = dt.getDate();
+						let hour = dt.getHours();
+						const minute = String(dt.getMinutes()).padStart(2, '0');
+						const ampm = hour >= 12 ? 'pm' : 'am';
+						hour = hour % 12;
+						if (hour === 0) hour = 12;
+						return `${month} ${day}, ${hour}:${minute}${ampm}`;
+					};
+					const inferYearByMonth = (monthIndex) => {
+						const now = new Date();
+						const currentYear = now.getFullYear();
+						const currentMonth = now.getMonth();
+						let year = currentYear;
+						if (currentMonth <= 4 && monthIndex >= 7) year = currentYear - 1;
+						if (currentMonth >= 7 && monthIndex <= 4) year = currentYear + 1;
+						return year;
+					};
+					const toDatetimeLocal = (displayDate) => {
+						if (!displayDate || typeof displayDate !== 'string') return '';
+						const m = displayDate.match(/([A-Za-z]{3,9})\s*(\d{1,2})(?:,\s*(\d{1,2}):(\d{2})\s*(am|pm))?/i);
+						if (!m) return '';
+						const month = monthNames.findIndex((n) => n.toLowerCase() === m[1].slice(0, 3).toLowerCase());
+						const day = Number(m[2]);
+						if (month < 0 || !Number.isFinite(day)) return '';
+						let hour = Number(m[3] || 12);
+						const minute = Number(m[4] || 0);
+						const ampm = (m[5] || '').toLowerCase();
+						if (ampm === 'pm' && hour < 12) hour += 12;
+						if (ampm === 'am' && hour === 12) hour = 0;
+						const dt = new Date(inferYearByMonth(month), month, day, hour, minute, 0, 0);
+						if (Number.isNaN(dt.getTime())) return '';
+						const yyyy = dt.getFullYear();
+						const mm = String(dt.getMonth() + 1).padStart(2, '0');
+						const dd = String(dt.getDate()).padStart(2, '0');
+						const hh = String(dt.getHours()).padStart(2, '0');
+						const min = String(dt.getMinutes()).padStart(2, '0');
+						return `${yyyy}-${mm}-${dd}T${hh}:${min}`;
+					};
+					const isDuplicateMatch = (candidate, excludeId) => {
+						const cHome = normalizeText(candidate.home);
+						const cAway = normalizeText(candidate.away);
+						const cDate = normalizeText(candidate.date);
+						return getAllMatches().some((m) => {
+							if (Number(m.id) === Number(excludeId)) return false;
+							return normalizeText(m.home) === cHome &&
+								normalizeText(m.away) === cAway &&
+								normalizeText(m.date) === cDate;
+						});
+					};
+					const getNextMatchId = () => {
+						const allIds = getAllMatches().map((m) => Number(m.id)).filter((n) => Number.isFinite(n));
+						return Math.max(100, ...(allIds.length ? allIds : [99])) + 1;
+					};
+					const $ = (sel) => document.querySelector(sel);
+					const adminToggle = $('#adminToggleBtn');
+					const adminBody = $('#adminBody');
 				const matchSelect = $('#adminMatchSelect');
 				const statusInput = $('#adminStatus');
 				const streamInput = $('#adminStream');
@@ -1400,99 +2173,198 @@
 				const copyBtn = $('#adminCopyBtn');
 				const jsonArea = $('#adminJson');
 				const newHomeInput = $('#adminNewHome');
+				const newHomeCustomInput = $('#adminNewHomeCustom');
 				const newAwayInput = $('#adminNewAway');
+				const newAwayCustomInput = $('#adminNewAwayCustom');
 				const newDateInput = $('#adminNewDate');
+				const newDateOnlyInput = $('#adminNewDateOnly');
+				const newTimeOnlyInput = $('#adminNewTimeOnly');
 				const newLocationInput = $('#adminNewLocation');
-				const newSportInput = $('#adminNewSport');
-				const newLevelInput = $('#adminNewLevel');
-				const newGenderInput = $('#adminNewGender');
-				const addMatchBtn = $('#adminAddMatchBtn');
-				const deleteMatchBtn = $('#adminDeleteMatchBtn');
+					const newSportInput = $('#adminNewSport');
+					const newLevelInput = $('#adminNewLevel');
+					const newGenderInput = $('#adminNewGender');
+					const addMatchBtn = $('#adminAddMatchBtn');
+					const updateMatchBtn = $('#adminUpdateMatchBtn');
+					const deleteMatchBtn = $('#adminDeleteMatchBtn');
+					const finishBtn = $('#adminFinishBtn');
+					const resetBtn = $('#adminResetBtn');
 
-				function getCustomMatches(){
-					try {
-						const raw = JSON.parse(localStorage.getItem(CUSTOM_MATCHES_KEY) || '[]');
-						if (!Array.isArray(raw)) return [];
-						return raw.filter((m) => Number.isFinite(Number(m?.id)));
-					} catch(e){ return []; }
-				}
-
-				function setCustomMatches(list){
-					try { localStorage.setItem(CUSTOM_MATCHES_KEY, JSON.stringify(list || [])); } catch(e){}
-				}
-
-				function getAllMatches(){
-					const all = [...SCHEDULES, ...getCustomMatches()];
-					const seen = new Set();
-					return all.filter((m) => {
-						const id = Number(m?.id);
-						if (!Number.isFinite(id) || seen.has(id)) return false;
-						seen.add(id);
-						return true;
+					// Custom team toggle logic
+					if (newHomeInput) newHomeInput.addEventListener('change', () => {
+						newHomeCustomInput.style.display = newHomeInput.value === '__custom__' ? 'block' : 'none';
+						if (newHomeInput.value !== '__custom__') newHomeCustomInput.value = '';
 					});
-				}
+					if (newAwayInput) newAwayInput.addEventListener('change', () => {
+						newAwayCustomInput.style.display = newAwayInput.value === '__custom__' ? 'block' : 'none';
+						if (newAwayInput.value !== '__custom__') newAwayCustomInput.value = '';
+					});
 
-				function formatShortDate(raw){
-					if(!raw || typeof raw !== 'string') return '';
-					const m = raw.match(/([A-Za-z]{3,9}\s*\d{1,2})/);
-					return m ? m[1].trim() : raw;
-				}
+					// Sync date + time into hidden adminNewDate input
+					const syncDateTimeInputs = () => {
+						const dateVal = newDateOnlyInput?.value || '';
+						const timeVal = newTimeOnlyInput?.value || '';
+						if (dateVal && timeVal) {
+							newDateInput.value = `${dateVal}T${timeVal}`;
+						} else if (dateVal) {
+							newDateInput.value = `${dateVal}T12:00`;
+						} else {
+							newDateInput.value = '';
+						}
+					};
+					if (newDateOnlyInput) newDateOnlyInput.addEventListener('change', syncDateTimeInputs);
+					if (newTimeOnlyInput) newTimeOnlyInput.addEventListener('change', syncDateTimeInputs);
 
-				function populateMatchSelect(){
-					if(!matchSelect) return;
-					const current = String(matchSelect.value || '');
-					matchSelect.innerHTML = '';
+					// Helper: get actual team value (select or custom input)
+					const getHomeTeamValue = () => {
+						if (newHomeInput.value === '__custom__') return (newHomeCustomInput?.value || '').trim();
+						return (newHomeInput?.value || '').trim();
+					};
+					const getAwayTeamValue = () => {
+						if (newAwayInput.value === '__custom__') return (newAwayCustomInput?.value || '').trim();
+						return (newAwayInput?.value || '').trim();
+					};
+
+					// Helper: set select to team value (or custom)
+					const setTeamSelect = (selectEl, customEl, teamName) => {
+						const trimmed = (teamName || '').trim();
+						const opt = Array.from(selectEl.options).find(o => o.value === trimmed && o.value !== '__custom__');
+						if (opt) {
+							selectEl.value = trimmed;
+							customEl.style.display = 'none';
+							customEl.value = '';
+						} else {
+							selectEl.value = '__custom__';
+							customEl.style.display = 'block';
+							customEl.value = trimmed;
+						}
+					};
+
+					// Helper: populate date/time from datetime-local string
+					const setDateTimeInputs = (datetimeLocalStr) => {
+						if (!datetimeLocalStr) {
+							if (newDateOnlyInput) newDateOnlyInput.value = '';
+							if (newTimeOnlyInput) newTimeOnlyInput.value = '';
+							return;
+						}
+						const parts = datetimeLocalStr.split('T');
+						if (newDateOnlyInput) newDateOnlyInput.value = parts[0] || '';
+						if (newTimeOnlyInput) newTimeOnlyInput.value = parts[1] || '';
+					};
+
+					const clearMatchForm = () => {
+						newHomeInput.value = 'BIS';
+						newHomeCustomInput.style.display = 'none';
+						newHomeCustomInput.value = '';
+						newAwayInput.value = 'BIS';
+						newAwayCustomInput.style.display = 'none';
+						newAwayCustomInput.value = '';
+						newDateInput.value = '';
+						if (newDateOnlyInput) newDateOnlyInput.value = '';
+						if (newTimeOnlyInput) newTimeOnlyInput.value = '';
+						newLocationInput.value = '';
+						newSportInput.value = 'basketball';
+						newLevelInput.value = 'HS';
+						newGenderInput.value = '';
+					};
+					const populateMatchSelect = () => {
+						if(!matchSelect) return;
+						const current = String(matchSelect.value || '');
+						matchSelect.innerHTML = '';
 					const customIdSet = new Set(getCustomMatches().map((m) => String(m.id)));
 					getAllMatches().forEach((s)=>{
 						const opt = document.createElement('option');
 						opt.value = String(s.id);
 						const shortDate = formatShortDate(s.date);
 						const tag = customIdSet.has(String(s.id)) ? ' [custom]' : '';
-						opt.textContent = `${s.home} vs ${s.away} (#${s.id}) — ${shortDate}${tag}`;
-						matchSelect.appendChild(opt);
-					});
-					if (current && matchSelect.querySelector(`option[value="${current}"]`)) matchSelect.value = current;
-				}
-				populateMatchSelect();
+							opt.textContent = `${s.home} vs ${s.away} (#${s.id}) — ${shortDate}${tag}`;
+							matchSelect.appendChild(opt);
+						});
+						if (current && matchSelect.querySelector(`option[value="${current}"]`)) matchSelect.value = current;
+					};
+					populateMatchSelect();
 
-				function getAll() { try { return JSON.parse(localStorage.getItem(LIVE_SCORE_KEY)||'{}'); } catch(e){ return {}; } }
-				function setAll(obj){ try{ localStorage.setItem(LIVE_SCORE_KEY, JSON.stringify(obj)); }catch(e){}
-				}
-
-						function getLocalAdminPassphrase(){
-							try {
-								const current = localStorage.getItem(ADMIN_PASSPHRASE_KEY) || '';
-								if (current) return current;
-								const legacy = localStorage.getItem(LEGACY_ADMIN_PASSPHRASE_KEY) || '';
-								if (legacy) {
-									localStorage.setItem(ADMIN_PASSPHRASE_KEY, legacy);
-									return legacy;
-								}
-								return '';
-							} catch(e){ return ''; }
-						}
-						function setLocalAdminPassphrase(pass){
-							try { localStorage.setItem('bis_admin_pass', pass); } catch(e){}
-						}
-						function getEffectiveAdminPassphrase(){
-							return (window.BIS_ADMIN_PASSPHRASE || getLocalAdminPassphrase() || DEFAULT_ADMIN_PASSPHRASE || '').trim();
-						}
-						function promptPass(){
-							let configured = getEffectiveAdminPassphrase();
-							if (!configured) {
-								const create = confirm('No admin passphrase is configured. Create a local admin passphrase on this browser now?');
-								if (!create) return { ok: false, reason: 'not_configured' };
-								const newPass = prompt('Create admin passphrase (min 4 chars)');
-								if (newPass === null) return { ok: false, reason: 'cancelled' };
-								const trimmed = (newPass || '').trim();
-								if (trimmed.length < 4) return { ok: false, reason: 'weak' };
-								setLocalAdminPassphrase(trimmed);
-								configured = trimmed;
+					const getAll = () => readJson(LIVE_SCORE_KEY, {});
+					const setAll = (obj) => writeJson(LIVE_SCORE_KEY, obj || {});
+					const cleanupLocalMatchArtifacts = (id) => {
+						const keys = [LIVE_SCORE_KEY, LIVE_EVENTS_KEY, MATCH_META_KEY, FINISHED_KEY, VOTE_COUNTS_KEY, VOTES_KEY, MATCH_SUB_KEY];
+						keys.forEach((key) => {
+							const data = readJson(key, {});
+							if (data && typeof data === 'object' && Object.prototype.hasOwnProperty.call(data, id)) {
+								delete data[id];
+								writeJson(key, data);
 							}
-							const p = prompt('Admin passphrase');
-							if (p===null) return { ok: false, reason: 'cancelled' };
-							return p===configured ? { ok: true } : { ok: false, reason: 'wrong' };
+						});
+					};
+					const cleanupRemoteMatchArtifacts = async (id) => {
+						if (!db) return;
+						await Promise.allSettled([
+							db.collection('finishedMatches').doc(String(id)).delete(),
+							db.collection('votes').doc(String(id)).delete()
+						]);
+					};
+					const saveCustomMatch = async (match) => {
+						if (db) {
+							await db.collection(CUSTOM_MATCH_COLLECTION).doc(String(match.id)).set(match, { merge: true });
 						}
+						const next = getCustomMatches().filter((m) => Number(m.id) !== Number(match.id));
+						next.push(match);
+						setCustomMatches(next);
+					};
+					const removeCustomMatch = async (id) => {
+						if (db) {
+							await db.collection(CUSTOM_MATCH_COLLECTION).doc(String(id)).delete();
+						}
+						setCustomMatches(getCustomMatches().filter((m) => Number(m.id) !== Number(id)));
+					};
+					const syncCustomMatchesFromFirebase = () => {
+						if (!db) return;
+						db.collection(CUSTOM_MATCH_COLLECTION).onSnapshot((snap) => {
+							const next = [];
+							snap.forEach((doc) => {
+								const data = doc.data() || {};
+								const parsed = normalizeCustomMatch({ ...data, id: Number(data.id || doc.id) });
+								if (parsed) next.push(parsed);
+							});
+							setCustomMatches(next);
+							populateMatchSelect();
+						});
+					};
+					syncCustomMatchesFromFirebase();
+
+					function getLocalAdminPassphrase(){
+						try {
+							const current = localStorage.getItem(ADMIN_PASSPHRASE_KEY) || '';
+							if (current) return current;
+							const legacy = localStorage.getItem(LEGACY_ADMIN_PASSPHRASE_KEY) || '';
+							if (legacy) {
+								localStorage.setItem(ADMIN_PASSPHRASE_KEY, legacy);
+								return legacy;
+							}
+							return '';
+						} catch(e){ return ''; }
+					}
+					function setLocalAdminPassphrase(pass){
+						try { localStorage.setItem('bis_admin_pass', pass); } catch(e){}
+					}
+					function getEffectiveAdminPassphrase(){
+						return (window.BIS_ADMIN_PASSPHRASE || getLocalAdminPassphrase() || DEFAULT_ADMIN_PASSPHRASE || '').trim();
+					}
+					function promptPass(){
+						let configured = getEffectiveAdminPassphrase();
+						if (!configured) {
+							const create = confirm('No admin passphrase is configured. Create a local admin passphrase on this browser now?');
+							if (!create) return { ok: false, reason: 'not_configured' };
+							const newPass = prompt('Create admin passphrase (min 4 chars)');
+							if (newPass === null) return { ok: false, reason: 'cancelled' };
+							const trimmed = (newPass || '').trim();
+							if (trimmed.length < 4) return { ok: false, reason: 'weak' };
+							setLocalAdminPassphrase(trimmed);
+							configured = trimmed;
+						}
+						const p = prompt('Admin passphrase');
+						if (p===null) return { ok: false, reason: 'cancelled' };
+						return p===configured ? { ok: true } : { ok: false, reason: 'wrong' };
+					}
 
 				adminToggle.addEventListener('click', ()=>{
 					if (adminBody.style.display === 'none' || adminBody.style.display === '') {
@@ -1508,20 +2380,31 @@
 					} else { adminBody.style.display = 'none'; adminToggle.textContent = 'Open'; }
 				});
 
-				function refreshJson(){ const all = getAll(); jsonArea.value = JSON.stringify(all, null, 2); }
+					function refreshJson(){ const all = getAll(); jsonArea.value = JSON.stringify(all, null, 2); }
 
-				matchSelect.addEventListener('change', ()=>{
-					const id = String(matchSelect.value || '');
+					matchSelect.addEventListener('change', ()=>{
+						const id = String(matchSelect.value || '');
 					if(!id) return;
 					const all = getAll();
 					const entry = all[id]||{};
 					statusInput.value = entry.status||'scheduled';
 					streamInput.value = entry.streamUrl||'';
 					setInput.value = entry.setNumber||'';
-					noteInput.value = entry.note||'';
-					homeInput.value = Number.isFinite(entry.homeScore)?entry.homeScore:'';
-					awayInput.value = Number.isFinite(entry.awayScore)?entry.awayScore:'';
-				});
+						noteInput.value = entry.note||'';
+						homeInput.value = Number.isFinite(entry.homeScore)?entry.homeScore:'';
+						awayInput.value = Number.isFinite(entry.awayScore)?entry.awayScore:'';
+						const custom = getCustomById(id);
+						if (custom) {
+							setTeamSelect(newHomeInput, newHomeCustomInput, custom.home || '');
+							setTeamSelect(newAwayInput, newAwayCustomInput, custom.away || '');
+							setDateTimeInputs(toDatetimeLocal(custom.date || ''));
+							syncDateTimeInputs();
+							newLocationInput.value = custom.location || '';
+							newSportInput.value = custom.sport || 'basketball';
+							newLevelInput.value = custom.level || 'HS';
+							newGenderInput.value = custom.gender || '';
+						}
+					});
 
 				saveBtn.addEventListener('click', ()=>{
 					const id = String(matchSelect.value || ''); if(!id){ alert('Select a match'); return; }
@@ -1546,63 +2429,100 @@
 					jsonArea.select(); try{ document.execCommand('copy'); alert('Copied to clipboard'); }catch(e){ alert('Copy failed'); }
 				});
 
-				addMatchBtn?.addEventListener('click', ()=>{
-					const home = (newHomeInput?.value || '').trim();
-					const away = (newAwayInput?.value || '').trim();
-					const date = (newDateInput?.value || '').trim();
-					const location = (newLocationInput?.value || '').trim();
-					const sport = (newSportInput?.value || 'basketball').trim();
-					const level = (newLevelInput?.value || 'HS').trim();
-					const gender = (newGenderInput?.value || '').trim();
-					if (!home || !away || !date) {
-						alert('Home, Away, and Date are required.');
-						return;
-					}
-					const allIds = getAllMatches().map((m) => Number(m.id)).filter((n) => Number.isFinite(n));
-					const nextId = Math.max(100, ...(allIds.length ? allIds : [99])) + 1;
-					const custom = getCustomMatches();
-					custom.push({ id: nextId, home, away, date, location, sport, level, gender });
-					setCustomMatches(custom);
-					populateMatchSelect();
-					matchSelect.value = String(nextId);
-					newHomeInput.value = '';
-					newAwayInput.value = '';
-					newDateInput.value = '';
-					newLocationInput.value = '';
-					newGenderInput.value = '';
-					alert(`Custom match added (#${nextId})`);
-				});
+					addMatchBtn?.addEventListener('click', async ()=>{
+						syncDateTimeInputs();
+						const home = getHomeTeamValue();
+						const away = getAwayTeamValue();
+						const date = toDisplayDate(newDateInput?.value || '');
+						const location = (newLocationInput?.value || '').trim();
+						const sport = (newSportInput?.value || 'basketball').trim().toLowerCase();
+						const level = (newLevelInput?.value || 'HS').trim().toUpperCase();
+						const gender = (newGenderInput?.value || '').trim();
+						if (!home || !away || !date) {
+							alert('Home, Away, and Date/Time are required.');
+							return;
+						}
+						const nextId = getNextMatchId();
+						const nextMatch = normalizeCustomMatch({ id: nextId, home, away, date, location, sport, level, gender });
+						if (!nextMatch) {
+							alert('Invalid custom match data.');
+							return;
+						}
+						if (isDuplicateMatch(nextMatch)) {
+							alert('A match with the same Home/Away/Date already exists.');
+							return;
+						}
+						try {
+							await saveCustomMatch(nextMatch);
+						} catch (e) {
+							console.error(e);
+							alert('Failed to save custom match.');
+							return;
+						}
+						populateMatchSelect();
+						matchSelect.value = String(nextId);
+						clearMatchForm();
+						alert(`Custom match added (#${nextId})`);
+					});
 
-				deleteMatchBtn?.addEventListener('click', ()=>{
-					const id = String(matchSelect.value || '');
-					if (!id) { alert('Select a match'); return; }
-					const custom = getCustomMatches();
+					updateMatchBtn?.addEventListener('click', async ()=>{
+						const selectedId = Number(matchSelect.value || '');
+						if (!Number.isFinite(selectedId)) { alert('Select a match'); return; }
+						const existing = getCustomById(selectedId);
+						if (!existing) { alert('Selected match is not a custom match.'); return; }
+						syncDateTimeInputs();
+						const home = getHomeTeamValue();
+						const away = getAwayTeamValue();
+						const date = toDisplayDate(newDateInput?.value || '');
+						const location = (newLocationInput?.value || '').trim();
+						const sport = (newSportInput?.value || 'basketball').trim().toLowerCase();
+						const level = (newLevelInput?.value || 'HS').trim().toUpperCase();
+						const gender = (newGenderInput?.value || '').trim();
+						const nextMatch = normalizeCustomMatch({ id: selectedId, home, away, date, location, sport, level, gender });
+						if (!nextMatch) { alert('Home, Away, and Date/Time are required.'); return; }
+						if (isDuplicateMatch(nextMatch, selectedId)) {
+							alert('A match with the same Home/Away/Date already exists.');
+							return;
+						}
+						try {
+							await saveCustomMatch(nextMatch);
+						} catch (e) {
+							console.error(e);
+							alert('Failed to update custom match.');
+							return;
+						}
+						populateMatchSelect();
+						matchSelect.value = String(selectedId);
+						alert(`Custom match updated (#${selectedId})`);
+					});
+
+					deleteMatchBtn?.addEventListener('click', async ()=>{
+						const id = String(matchSelect.value || '');
+						if (!id) { alert('Select a match'); return; }
+						const custom = getCustomMatches();
 					const next = custom.filter((m) => String(m.id) !== id);
 					if (next.length === custom.length) {
-						alert('Selected match is not a custom match.');
-						return;
-					}
-					setCustomMatches(next);
-					populateMatchSelect();
-					alert(`Deleted custom match #${id}`);
-				});
+							alert('Selected match is not a custom match.');
+							return;
+						}
+						if (!confirm(`Delete custom match #${id}?`)) return;
+						try {
+							await removeCustomMatch(id);
+							cleanupLocalMatchArtifacts(id);
+							await cleanupRemoteMatchArtifacts(id);
+						} catch (e) {
+							console.error(e);
+							alert('Failed to delete custom match.');
+							return;
+						}
+						populateMatchSelect();
+						clearMatchForm();
+						alert(`Deleted custom match #${id}`);
+					});
 
-				// Firebase match finish feature
-				let db = null;
-				const firebaseConfig = window.BIS_FIREBASE_CONFIG || {};
-				if (firebaseConfig.apiKey && window.firebase) {
-					try {
-						if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-						db = firebase.firestore();
-					} catch(e) { console.warn('Firebase init failed', e); }
-				}
-
-				const finishBtn = $('#adminFinishBtn');
-				const resetBtn = $('#adminResetBtn');
-
-				finishBtn.addEventListener('click', async ()=>{
-					const id = String(matchSelect.value || '');
-					if(!id){ alert('Select a match'); return; }
+					finishBtn.addEventListener('click', async ()=>{
+						const id = String(matchSelect.value || '');
+						if(!id){ alert('Select a match'); return; }
 					const hs = Number(homeInput.value); 
 					const as = Number(awayInput.value);
 					const homeScore = Number.isFinite(hs) ? hs : 0;
@@ -1655,13 +2575,16 @@
 						localStorage.setItem('bis_finished_matches', JSON.stringify(finished));
 						alert('Match reverted to Upcoming (local)');
 					}
-				});
+					});
 
-				// initialize
-				jsonArea.addEventListener('input', ()=>{
-					try{ const parsed = JSON.parse(jsonArea.value); setAll(parsed); }catch(e){}
-				});
-			})();
-		</script>
+					// initialize
+					jsonArea.addEventListener('input', ()=>{
+						try{ const parsed = JSON.parse(jsonArea.value); setAll(parsed); }catch(e){}
+					});
+					if (matchSelect.value) {
+						matchSelect.dispatchEvent(new Event('change'));
+					}
+				})();
+			</script>
 		</body>
 	</html>
