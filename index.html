@@ -78,6 +78,13 @@
                                 overflow-x: hidden;
                         }
 
+			html {
+				scrollbar-width: none;
+			}
+			html::-webkit-scrollbar {
+				display: none;
+			}
+
 			body {
 				font-family: 'Noto Sans KR', system-ui, -apple-system, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
 				background: var(--bg);
@@ -613,7 +620,9 @@
 				border: 2px solid transparent;
 			}
 			.cal-day.empty { visibility: hidden; }
-			.cal-day.past { opacity: 0.4; }
+			.cal-day.past .cal-day-num,
+			.cal-day.past .cal-dots,
+			.cal-day.past .cal-game-count { opacity: 0.4; }
 			.cal-day.weekend-day { color: rgba(239,68,68,0.7); }
 			.cal-day.today {
 				background: linear-gradient(135deg, rgba(37,99,235,0.12), rgba(59,130,246,0.08));
@@ -649,7 +658,9 @@
 				border-color: rgba(37,99,235,0.4);
 				box-shadow: 0 2px 12px rgba(37,99,235,0.15);
 			}
-			.cal-day.has-game.past {
+			.cal-day.has-game.past .cal-day-num,
+			.cal-day.has-game.past .cal-dots,
+			.cal-day.has-game.past .cal-game-count {
 				opacity: 0.5;
 			}
 			.cal-game-count {
@@ -738,6 +749,18 @@
 				color: var(--text);
 				font-weight: 600;
 				font-size: 13px;
+			}
+			.cal-tooltip-row.clickable {
+				cursor: pointer;
+				border-radius: 8px;
+				padding: 7px 8px;
+				margin: 0 -8px;
+				transition: background-color 0.2s ease;
+			}
+			.cal-tooltip-row.clickable:hover,
+			.cal-tooltip-row.clickable:focus-visible {
+				background: color-mix(in srgb, var(--accent) 10%, transparent);
+				outline: none;
 			}
 			.cal-tooltip-row + .cal-tooltip-row {
 				border-top: 1px solid var(--border);
@@ -1029,113 +1052,6 @@
 			html.in-iframe body {
 				-webkit-text-size-adjust: 100%;
 			}
-			@media (max-width: 720px) {
-				html.in-iframe .wrap {
-					padding: 10px 10px calc(16px + env(safe-area-inset-bottom));
-				}
-				html.in-iframe .nav-center {
-					display: flex;
-					flex-direction: column;
-					gap: 8px;
-					align-items: center;
-				}
-				html.in-iframe .nav-left,
-				html.in-iframe .nav-right {
-					width: 100%;
-					justify-content: center;
-					gap: 8px;
-					flex-wrap: wrap;
-				}
-				html.in-iframe .top-nav .nav-item {
-					min-height: 40px;
-					padding: 6px 8px;
-					font-size: 13px;
-				}
-				html.in-iframe .hero {
-					margin-top: 12px;
-				}
-				html.in-iframe .hero h1 {
-					font-size: clamp(28px, 10vw, 44px);
-				}
-				html.in-iframe .panel {
-					padding: 16px 12px 18px;
-					border-radius: 16px;
-				}
-				html.in-iframe .season-tabs,
-				html.in-iframe .gender-tabs {
-					overflow-x: auto;
-					white-space: nowrap;
-					scrollbar-width: thin;
-					-webkit-overflow-scrolling: touch;
-				}
-				html.in-iframe .season-tab,
-				html.in-iframe .gender-tab,
-				html.in-iframe .theme-toggle {
-					min-height: 40px;
-				}
-				html.in-iframe .split-grid {
-					grid-template-columns: 1fr;
-					gap: 20px;
-				}
-				html.in-iframe .schedule-grid {
-					grid-template-columns: repeat(3, 1fr);
-					gap: 10px;
-				}
-				html.in-iframe .cal-grid {
-					gap: 3px;
-				}
-				html.in-iframe .cal-day {
-					border-radius: 10px;
-					font-size: 13px;
-				}
-				html.in-iframe .cal-day.today .cal-day-num {
-					width: 24px;
-					height: 24px;
-					font-size: 12px;
-				}
-				html.in-iframe .cal-game-count {
-					width: 16px;
-					height: 16px;
-					font-size: 9px;
-					top: 2px;
-					right: 2px;
-				}
-				html.in-iframe .cal-tooltip {
-					position: fixed;
-					max-width: 85vw;
-					white-space: normal;
-					word-break: break-word;
-				}
-				html.in-iframe .cal-header h2 {
-					font-size: 20px;
-					min-width: 160px;
-				}
-				html.in-iframe .cal-nav {
-					min-width: 40px;
-					min-height: 40px;
-				}
-				html.in-iframe .cal-today-btn {
-					min-height: 36px;
-					padding: 6px 14px;
-				}
-				html.in-iframe .cal-legend {
-					gap: 12px;
-					font-size: 12px;
-				}
-			}
-			@media (max-width: 480px) {
-				html.in-iframe .schedule-grid {
-					grid-template-columns: 1fr;
-				}
-				html.in-iframe .cal-day {
-					font-size: 12px;
-					border-radius: 8px;
-				}
-				html.in-iframe .cal-dot {
-					width: 5px;
-					height: 5px;
-				}
-			}
 		</style>
 		<script>
 			// Detect iframe and add class
@@ -1404,18 +1320,37 @@
 			</div>
 
 			<!-- Admin dock (bottom of index only) -->
+			<!-- Password Modal -->
+			<div id="passModal" style="display:none;position:fixed;inset:0;z-index:99999;background:rgba(2,6,23,0.5);display:none;align-items:center;justify-content:center;padding:24px">
+				<div style="background:var(--card);border-radius:16px;padding:28px 24px;max-width:360px;width:100%;box-shadow:0 30px 60px rgba(0,0,0,0.3);border:1px solid var(--border)">
+					<div style="font-weight:800;font-size:16px;margin-bottom:4px" id="passModalTitle">Admin Passphrase</div>
+					<div style="font-size:13px;color:var(--muted);margin-bottom:16px" id="passModalDesc">Enter passphrase to continue</div>
+					<input id="passModalInput" type="password" placeholder="Passphrase" style="width:100%;padding:12px 14px;border-radius:10px;border:1px solid var(--border);background:var(--panel);color:var(--text);font-size:15px;outline:none" />
+					<div id="passModalError" style="color:#ef4444;font-size:12px;margin-top:8px;display:none"></div>
+					<div style="display:flex;gap:8px;margin-top:16px;justify-content:flex-end">
+						<button id="passModalCancel" class="theme-toggle" style="padding:8px 18px">Cancel</button>
+						<button id="passModalOk" class="theme-toggle" style="padding:8px 18px;background:var(--accent);color:#fff;border-color:var(--accent)">Confirm</button>
+					</div>
+				</div>
+			</div>
 			<div id="adminDock" style="margin-top:28px">
 				<div class="panel" id="adminPanel" style="padding:18px;">
 					<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-						<div style="font-weight:800;font-size:18px">🔧 Live Score Admin</div>
+						<div style="font-weight:800;font-size:18px">🔧 Admin</div>
 						<div>
 							<button id="adminToggleBtn" class="theme-toggle">Open</button>
 						</div>
 					</div>
 					<div id="adminBody" style="display:none;gap:12px">
-						<div style="margin-top:8px">
-							<label style="font-weight:700;display:block;margin-bottom:6px">Stream URL (YouTube)</label>
-							<input id="adminStream" type="text" placeholder="https://www.youtube.com/watch?v=..." style="width:100%;padding:10px;border-radius:10px;border:1px solid rgba(0,0,0,0.08)" />
+						<div style="margin-top:8px;display:grid;grid-template-columns:1fr 1fr;gap:12px">
+							<div>
+								<label style="font-weight:700;display:block;margin-bottom:6px">Stream URL 1</label>
+								<input id="adminStream" type="text" placeholder="YouTube link (main)" style="width:100%;padding:10px;border-radius:10px;border:1px solid rgba(0,0,0,0.08)" />
+							</div>
+							<div>
+								<label style="font-weight:700;display:block;margin-bottom:6px">Stream URL 2</label>
+								<input id="adminStream2" type="text" placeholder="YouTube link (optional)" style="width:100%;padding:10px;border-radius:10px;border:1px solid rgba(0,0,0,0.08)" />
+							</div>
 						</div>
 						<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
 							<div>
@@ -1872,6 +1807,24 @@
 									const row = document.createElement('div');
 									row.className = 'cal-tooltip-row';
 
+									if (g.id !== undefined && g.id !== null && String(g.id).trim() !== '') {
+										row.classList.add('clickable');
+										row.tabIndex = 0;
+										row.setAttribute('role', 'link');
+										const detailUrl = `details.html?id=${encodeURIComponent(String(g.id))}`;
+										const goToDetail = (event) => {
+											event.stopPropagation();
+											window.location.href = detailUrl;
+										};
+										row.addEventListener('click', goToDetail);
+										row.addEventListener('keydown', (event) => {
+											if (event.key === 'Enter' || event.key === ' ') {
+												event.preventDefault();
+												goToDetail(event);
+											}
+										});
+									}
+
 									const sportBadge = document.createElement('span');
 									sportBadge.className = 'cal-tooltip-sport ' + sportClass(g.sport);
 									sportBadge.textContent = sportLabel(g.sport);
@@ -2164,6 +2117,7 @@
 				const matchSelect = $('#adminMatchSelect');
 				const statusInput = $('#adminStatus');
 				const streamInput = $('#adminStream');
+				const streamInput2 = $('#adminStream2');
 				const setInput = $('#adminSet');
 				const noteInput = $('#adminNote');
 				const homeInput = $('#adminHomeScore');
@@ -2271,7 +2225,20 @@
 						const current = String(matchSelect.value || '');
 						matchSelect.innerHTML = '';
 					const customIdSet = new Set(getCustomMatches().map((m) => String(m.id)));
-					getAllMatches().forEach((s)=>{
+					const now = new Date();
+					now.setHours(0, 0, 0, 0);
+					getAllMatches().filter((s) => {
+						// Skip matches flagged as preset past
+						if (s.presetPast) return false;
+						// Parse date and skip if it's in the past
+						const dtl = toDatetimeLocal(s.date);
+						if (dtl) {
+							const matchDate = new Date(dtl);
+							matchDate.setHours(0, 0, 0, 0);
+							if (matchDate < now) return false;
+						}
+						return true;
+					}).forEach((s)=>{
 						const opt = document.createElement('option');
 						opt.value = String(s.id);
 						const shortDate = formatShortDate(s.date);
@@ -2349,26 +2316,56 @@
 					function getEffectiveAdminPassphrase(){
 						return (window.BIS_ADMIN_PASSPHRASE || getLocalAdminPassphrase() || DEFAULT_ADMIN_PASSPHRASE || '').trim();
 					}
-					function promptPass(){
+					function showPassModal(title, desc) {
+						return new Promise((resolve) => {
+							const modal = document.getElementById('passModal');
+							const input = document.getElementById('passModalInput');
+							const errEl = document.getElementById('passModalError');
+							const okBtn = document.getElementById('passModalOk');
+							const cancelBtn = document.getElementById('passModalCancel');
+							document.getElementById('passModalTitle').textContent = title || 'Admin Passphrase';
+							document.getElementById('passModalDesc').textContent = desc || 'Enter passphrase to continue';
+							input.value = '';
+							errEl.style.display = 'none';
+							modal.style.display = 'flex';
+							setTimeout(() => input.focus(), 50);
+							const cleanup = () => {
+								modal.style.display = 'none';
+								okBtn.removeEventListener('click', onOk);
+								cancelBtn.removeEventListener('click', onCancel);
+								input.removeEventListener('keydown', onKey);
+							};
+							const onOk = () => { cleanup(); resolve(input.value); };
+							const onCancel = () => { cleanup(); resolve(null); };
+							const onKey = (e) => { if (e.key === 'Enter') onOk(); if (e.key === 'Escape') onCancel(); };
+							okBtn.addEventListener('click', onOk);
+							cancelBtn.addEventListener('click', onCancel);
+							input.addEventListener('keydown', onKey);
+						});
+					}
+					function showPassError(msg) {
+						const errEl = document.getElementById('passModalError');
+						errEl.textContent = msg;
+						errEl.style.display = 'block';
+					}
+					async function promptPass(){
 						let configured = getEffectiveAdminPassphrase();
 						if (!configured) {
-							const create = confirm('No admin passphrase is configured. Create a local admin passphrase on this browser now?');
-							if (!create) return { ok: false, reason: 'not_configured' };
-							const newPass = prompt('Create admin passphrase (min 4 chars)');
+							const newPass = await showPassModal('Create Passphrase', 'No passphrase configured. Create one (min 4 chars).');
 							if (newPass === null) return { ok: false, reason: 'cancelled' };
 							const trimmed = (newPass || '').trim();
 							if (trimmed.length < 4) return { ok: false, reason: 'weak' };
 							setLocalAdminPassphrase(trimmed);
 							configured = trimmed;
 						}
-						const p = prompt('Admin passphrase');
+						const p = await showPassModal('Admin Passphrase', 'Enter passphrase to open admin panel.');
 						if (p===null) return { ok: false, reason: 'cancelled' };
 						return p===configured ? { ok: true } : { ok: false, reason: 'wrong' };
 					}
 
-				adminToggle.addEventListener('click', ()=>{
+				adminToggle.addEventListener('click', async ()=>{
 					if (adminBody.style.display === 'none' || adminBody.style.display === '') {
-							const auth = promptPass();
+							const auth = await promptPass();
 							if(!auth.ok){
 								if (auth.reason === 'not_configured') alert('Admin passphrase is not configured.');
 								else if (auth.reason === 'weak') alert('Passphrase must be at least 4 characters.');
@@ -2389,6 +2386,7 @@
 					const entry = all[id]||{};
 					statusInput.value = entry.status||'scheduled';
 					streamInput.value = entry.streamUrl||'';
+				streamInput2.value = entry.streamUrl2||'';
 					setInput.value = entry.setNumber||'';
 						noteInput.value = entry.note||'';
 						homeInput.value = Number.isFinite(entry.homeScore)?entry.homeScore:'';
@@ -2412,6 +2410,7 @@
 					all[id] = all[id]||{};
 					all[id].status = statusInput.value || 'scheduled';
 					all[id].streamUrl = (streamInput.value || '').trim();
+					all[id].streamUrl2 = (streamInput2.value || '').trim();
 					const setNum = Number(setInput.value);
 					if(Number.isFinite(setNum) && setNum>0) all[id].setNumber = setNum; else delete all[id].setNumber;
 					all[id].note = noteInput.value || '';

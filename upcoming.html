@@ -51,6 +51,8 @@
 
       * { box-sizing: border-box; margin: 0; padding: 0; }
     html, body { margin: 0 !important; padding: 0 !important; border: 0 !important; }
+    html { scrollbar-width: none; }
+    html::-webkit-scrollbar { display: none; }
 
       body {
         font-family: 'Noto Sans KR', system-ui, -apple-system, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
@@ -101,11 +103,8 @@
         display: flex;
         align-items: center;
         gap: 10px;
-        min-height: 40px;
-        padding: 6px 10px;
-        border-radius: 10px;
-        text-decoration: none;
         color: var(--nav-muted);
+        text-decoration: none;
       }
 
       .top-nav .nav-item:hover, .top-nav .nav-item:focus { text-decoration: none; }
@@ -549,29 +548,17 @@
         animation: votedPulse 500ms ease;
       }
 
-      @media (max-width: 900px) {
-        .nav-center { column-gap: 24px; }
-        .nav-left, .nav-right { gap: 20px; }
-      }
-
-      @media (max-width: 720px) {
-        .wrap { padding: 14px 14px calc(64px + env(safe-area-inset-bottom)); }
-        .top-nav { gap: 12px; }
+      @media (max-width: 860px) {
+        .top-nav { gap: 40px; }
         .nav-center {
           display: flex;
-          flex-direction: column;
-          gap: 8px;
-          align-items: center;
+          gap: 32px;
+          flex-wrap: wrap;
+          justify-content: center;
         }
         .nav-left, .nav-right {
-          width: 100%;
+          gap: 24px;
           justify-content: center;
-          gap: 8px;
-          flex-wrap: wrap;
-        }
-        .top-nav .nav-item {
-          font-size: 14px;
-          padding: 7px 10px;
         }
         .theme-toggle {
           position: static;
@@ -655,11 +642,11 @@
         }
       }
 
-      @media (max-width: 480px) {
-        .wrap { padding: 12px 10px calc(56px + env(safe-area-inset-bottom)); }
-        .top-nav { gap: 8px; }
-        .nav-center { gap: 6px; }
-        .nav-left, .nav-right { gap: 6px; font-size: 13px; }
+      @media (max-width: 600px) {
+        .wrap { padding: 12px 16px 60px; }
+        .top-nav { gap: 20px; }
+        .nav-center { gap: 16px; }
+        .nav-left, .nav-right { gap: 16px; font-size: 14px; }
         .top-nav .logo { width: 40px; height: 40px; }
         .hero h1 { font-size: 32px; }
         .hero .season { font-size: 14px; }
@@ -722,46 +709,6 @@
       }
       html.in-iframe body {
         -webkit-text-size-adjust: 100%;
-      }
-      @media (max-width: 720px) {
-        html.in-iframe .wrap {
-          padding: 10px 10px calc(16px + env(safe-area-inset-bottom));
-        }
-        html.in-iframe .nav-center {
-          display: flex;
-          flex-direction: column;
-          gap: 8px;
-          align-items: center;
-        }
-        html.in-iframe .nav-left,
-        html.in-iframe .nav-right {
-          width: 100%;
-          justify-content: center;
-          gap: 8px;
-          flex-wrap: wrap;
-        }
-        html.in-iframe .top-nav .nav-item {
-          min-height: 40px;
-          padding: 6px 8px;
-          font-size: 13px;
-        }
-        html.in-iframe .tabs,
-        html.in-iframe .sport-tabs {
-          overflow-x: auto;
-          white-space: nowrap;
-          scrollbar-width: thin;
-          -webkit-overflow-scrolling: touch;
-        }
-        html.in-iframe .tab-btn,
-        html.in-iframe .sport-tab,
-        html.in-iframe .vote-btn,
-        html.in-iframe .theme-toggle {
-          min-height: 40px;
-        }
-        html.in-iframe .search-input {
-          min-height: 42px;
-          font-size: 16px;
-        }
       }
     </style>
     <script>

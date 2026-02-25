@@ -55,6 +55,12 @@
             min-height: 100vh;
             min-height: 100dvh;
         }
+        html {
+            scrollbar-width: none;
+        }
+        html::-webkit-scrollbar {
+            display: none;
+        }
         /* iframe embed support */
         html.in-iframe, html.in-iframe body {
             width: 100%;
@@ -75,41 +81,6 @@
         }
         html.in-iframe body {
             -webkit-text-size-adjust: 100%;
-        }
-        @media (max-width: 720px) {
-            html.in-iframe body {
-                padding: 10px;
-            }
-            html.in-iframe .top-actions {
-                top: 8px;
-                right: 8px;
-                gap: 6px;
-            }
-            html.in-iframe .theme-toggle {
-                min-width: 40px;
-                min-height: 40px;
-            }
-            html.in-iframe .card {
-                padding: 16px 12px;
-                border-radius: 16px;
-            }
-            html.in-iframe .team-vs img {
-                width: 48px;
-                height: 48px;
-                margin-bottom: 6px;
-            }
-            html.in-iframe .formation-tabs,
-            html.in-iframe .team-formation-switch {
-                overflow-x: auto;
-                white-space: nowrap;
-                scrollbar-width: thin;
-                -webkit-overflow-scrolling: touch;
-            }
-            html.in-iframe .formation-tab,
-            html.in-iframe .team-switch-btn,
-            html.in-iframe .vote-btn {
-                min-height: 40px;
-            }
         }
         body,
         .card,
@@ -286,10 +257,42 @@
             background: var(--muted-surface);
         }
 
+        .stream-dual {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0;
+        }
+
+        .stream-dual .stream-single {
+            position: relative;
+        }
+
+        .stream-dual .stream-single + .stream-single {
+            border-left: 1px solid var(--muted-border);
+        }
+
         .stream iframe {
             width: 100%;
             height: 360px;
             border: 0;
+        }
+
+        .stream-dual iframe {
+            height: 280px;
+        }
+
+        .stream-label {
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            background: rgba(0,0,0,0.6);
+            color: #fff;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 3px 8px;
+            border-radius: 6px;
+            z-index: 2;
+            pointer-events: none;
         }
 
         .stream-placeholder {
@@ -812,6 +815,9 @@
             .team-vs span { font-size: 12px; }
             .score-num { font-size: 16px; }
             .stream iframe { height: 150px; }
+            .stream-dual { grid-template-columns: 1fr; }
+            .stream-dual .stream-single + .stream-single { border-left: none; border-top: 1px solid var(--muted-border); }
+            .stream-dual iframe { height: 150px; }
         }
 
         @media (max-width: 360px) {
@@ -939,13 +945,31 @@
         </div>
     </div>
 
+    <!-- Password Modal -->
+    <div id="passModal" style="display:none;position:fixed;inset:0;z-index:999999;background:rgba(2,6,23,0.5);align-items:center;justify-content:center;padding:24px">
+        <div style="background:var(--card-bg);border-radius:16px;padding:28px 24px;max-width:360px;width:100%;box-shadow:0 30px 60px rgba(0,0,0,0.3);border:1px solid var(--muted-border)">
+            <div style="font-weight:800;font-size:16px;margin-bottom:4px" id="passModalTitle">Admin Passphrase</div>
+            <div style="font-size:13px;color:var(--text-sub);margin-bottom:16px" id="passModalDesc">Enter passphrase to continue</div>
+            <input id="passModalInput" type="password" placeholder="Passphrase" style="width:100%;padding:12px 14px;border-radius:10px;border:1px solid var(--muted-border);background:var(--card-bg);color:var(--text-main);font-size:15px;outline:none" />
+            <div id="passModalError" style="color:#ef4444;font-size:12px;margin-top:8px;display:none"></div>
+            <div style="display:flex;gap:8px;margin-top:16px;justify-content:flex-end">
+                <button id="passModalCancel" class="theme-toggle" style="padding:8px 18px">Cancel</button>
+                <button id="passModalOk" class="theme-toggle" style="padding:8px 18px;background:var(--primary-color);color:#fff;border-color:var(--primary-color)">Confirm</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Admin Modal -->
     <div id="adminModal" class="admin-modal hidden" aria-hidden="true">
         <div class="admin-panel">
             <h3>⚙️ Match Management</h3>
             <div class="admin-row">
-                <label style="min-width:80px">Stream URL</label>
-                <input type="text" id="adminStream" placeholder="YouTube link">
+                <label style="min-width:80px">Stream URL 1</label>
+                <input type="text" id="adminStream" placeholder="YouTube link (main)">
+            </div>
+            <div class="admin-row">
+                <label style="min-width:80px">Stream URL 2</label>
+                <input type="text" id="adminStream2" placeholder="YouTube link (optional)">
             </div>
             <div class="admin-row">
                 <label style="min-width:80px">Status</label>
@@ -1169,25 +1193,35 @@
 
             const streamContainer = document.getElementById('streamContainer');
             const streamUrl = live.streamUrl || '';
-            if (streamUrl) {
-                const embedUrl = toYouTubeEmbed(streamUrl);
-                if (embedUrl) {
-                    streamContainer.innerHTML = `
-                        <iframe
-                            src="${embedUrl}"
-                            title="YouTube live stream"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                            allowfullscreen
-                        ></iframe>
-                    `;
-                } else {
-                    streamContainer.innerHTML = `<div class="stream-placeholder">A valid YouTube link is required.</div>`;
-                }
-            } else {
-                streamContainer.innerHTML = `<div class="stream-placeholder">A streaming link has not been added yet.</div>`;
-            }
+            const streamUrl2 = live.streamUrl2 || '';
+            const embedUrl1 = streamUrl ? toYouTubeEmbed(streamUrl) : null;
+            const embedUrl2 = streamUrl2 ? toYouTubeEmbed(streamUrl2) : null;
+
             if (location.protocol === 'file:') {
                 streamContainer.innerHTML = `<div class="stream-placeholder">YouTube embeds may be blocked on local files (file://). Please open via a local server.</div>`;
+            } else if (embedUrl1 && embedUrl2) {
+                // Two streams side-by-side
+                streamContainer.innerHTML = `
+                    <div class="stream-dual">
+                        <div class="stream-single">
+                            <span class="stream-label">Stream 1</span>
+                            <iframe src="${embedUrl1}" title="YouTube stream 1" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                        </div>
+                        <div class="stream-single">
+                            <span class="stream-label">Stream 2</span>
+                            <iframe src="${embedUrl2}" title="YouTube stream 2" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                        </div>
+                    </div>
+                `;
+            } else if (embedUrl1) {
+                // Single stream
+                streamContainer.innerHTML = `
+                    <iframe src="${embedUrl1}" title="YouTube live stream" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                `;
+            } else if (streamUrl) {
+                streamContainer.innerHTML = `<div class="stream-placeholder">A valid YouTube link is required.</div>`;
+            } else {
+                streamContainer.innerHTML = `<div class="stream-placeholder">A streaming link has not been added yet.</div>`;
             }
 
             const timeline = document.getElementById('timeline');
@@ -1564,7 +1598,35 @@
             try { return JSON.parse(localStorage.getItem(MATCH_META_KEY) || '{}'); } catch(e){ return {}; }
         }
 
-        function promptForAdmin() {
+        function showPassModal(title, desc) {
+            return new Promise((resolve) => {
+                const modal = document.getElementById('passModal');
+                const input = document.getElementById('passModalInput');
+                const errEl = document.getElementById('passModalError');
+                const okBtn = document.getElementById('passModalOk');
+                const cancelBtn = document.getElementById('passModalCancel');
+                document.getElementById('passModalTitle').textContent = title || 'Admin Passphrase';
+                document.getElementById('passModalDesc').textContent = desc || 'Enter passphrase to continue';
+                input.value = '';
+                errEl.style.display = 'none';
+                modal.style.display = 'flex';
+                setTimeout(() => input.focus(), 50);
+                const cleanup = () => {
+                    modal.style.display = 'none';
+                    okBtn.removeEventListener('click', onOk);
+                    cancelBtn.removeEventListener('click', onCancel);
+                    input.removeEventListener('keydown', onKey);
+                };
+                const onOk = () => { cleanup(); resolve(input.value); };
+                const onCancel = () => { cleanup(); resolve(null); };
+                const onKey = (e) => { if (e.key === 'Enter') onOk(); if (e.key === 'Escape') onCancel(); };
+                okBtn.addEventListener('click', onOk);
+                cancelBtn.addEventListener('click', onCancel);
+                input.addEventListener('keydown', onKey);
+            });
+        }
+
+        async function promptForAdmin() {
             let saved = (window.BIS_ADMIN_PASSPHRASE || '').trim();
             if (!saved) {
                 try {
@@ -1580,16 +1642,14 @@
             }
             if (!saved) saved = DEFAULT_ADMIN_PASSPHRASE;
             if (!saved) {
-                const create = confirm('No admin passphrase is configured. Create a local admin passphrase on this browser now?');
-                if (!create) return { ok: false, reason: 'not_configured' };
-                const newPass = prompt('Create admin passphrase (min 4 chars)');
+                const newPass = await showPassModal('Create Passphrase', 'No passphrase configured. Create one (min 4 chars).');
                 if (newPass === null) return { ok: false, reason: 'cancelled' };
                 const trimmed = (newPass || '').trim();
                 if (trimmed.length < 4) return { ok: false, reason: 'weak' };
                 saved = trimmed;
                 try { localStorage.setItem(ADMIN_PASSPHRASE_KEY, saved); } catch(e) {}
             }
-            const pass = prompt('Enter admin passphrase');
+            const pass = await showPassModal('Admin Passphrase', 'Enter passphrase to open admin panel.');
             if (pass === null) return { ok: false, reason: 'cancelled' };
             return pass === saved ? { ok: true } : { ok: false, reason: 'wrong' };
         }
@@ -1617,6 +1677,7 @@
             const events = (eventsAll[matchId] || []).slice().sort((a,b)=> (a.minute||0)-(b.minute||0));
 
             document.getElementById('adminStream').value = live.streamUrl || '';
+            document.getElementById('adminStream2').value = live.streamUrl2 || '';
             document.getElementById('adminStatus').value = live.status || (meta.status || 'scheduled');
             document.getElementById('adminHomeScore').value = Number.isFinite(live.homeScore) ? live.homeScore : '';
             document.getElementById('adminAwayScore').value = Number.isFinite(live.awayScore) ? live.awayScore : '';
@@ -1651,8 +1712,8 @@
 
         const adminOpenBtn = document.getElementById('adminOpenBtn');
         if (adminOpenBtn) {
-            adminOpenBtn.addEventListener('click', ()=>{
-                const auth = promptForAdmin();
+            adminOpenBtn.addEventListener('click', async ()=>{
+                const auth = await promptForAdmin();
                 if(!auth.ok){
                     if (auth.reason === 'not_configured') alert('Admin passphrase is not configured.');
                     else if (auth.reason === 'weak') alert('Passphrase must be at least 4 characters.');
@@ -1664,9 +1725,9 @@
         }
 
         // open if url has admin=1
-        (function(){
+        (async function(){
             if (qs('admin') !== '1') return;
-            const auth = promptForAdmin();
+            const auth = await promptForAdmin();
             if (auth.ok) {
                 showAdminModal();
                 return;
@@ -1706,6 +1767,7 @@
             const eventsAll = getAllLiveEvents();
 
             const streamUrl = document.getElementById('adminStream').value.trim();
+            const streamUrl2 = document.getElementById('adminStream2').value.trim();
             const status = document.getElementById('adminStatus').value;
             const homeScore = Number(document.getElementById('adminHomeScore').value) || 0;
             const awayScore = Number(document.getElementById('adminAwayScore').value) || 0;
@@ -1715,6 +1777,7 @@
 
             const entry = liveAll[matchId] || {};
             entry.streamUrl = streamUrl || entry.streamUrl;
+            entry.streamUrl2 = streamUrl2 || '';
             entry.status = status;
             entry.homeScore = homeScore;
             entry.awayScore = awayScore;
