@@ -713,6 +713,7 @@
       html.in-iframe-mobile .wrap {
         max-width: 100%;
         padding: 12px 14px 24px;
+        overflow-x: clip;
       }
       html.in-iframe-mobile .nav-center {
         display: flex;
@@ -732,6 +733,24 @@
       }
       html.in-iframe-mobile .hero h1 {
         font-size: 36px;
+      }
+      html.in-iframe-mobile .content,
+      html.in-iframe-mobile .section-card,
+      html.in-iframe-mobile .match-card {
+        min-width: 0;
+        max-width: 100%;
+      }
+      html.in-iframe-mobile .section-card {
+        padding: 12px 10px 8px;
+        border-radius: 16px;
+      }
+      html.in-iframe-mobile .tabs,
+      html.in-iframe-mobile .sport-tabs {
+        flex-wrap: wrap;
+      }
+      html.in-iframe-mobile img {
+        max-width: 100%;
+        height: auto;
       }
     </style>
     <script>

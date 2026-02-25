@@ -84,6 +84,7 @@
         }
         html.in-iframe-mobile body {
             padding: 12px;
+            overflow-x: hidden;
         }
         html.in-iframe-mobile .top-actions {
             top: 10px;
@@ -92,6 +93,22 @@
         html.in-iframe-mobile .card {
             padding: 16px;
             border-radius: 20px;
+        }
+        html.in-iframe-mobile .container,
+        html.in-iframe-mobile .card {
+            min-width: 0;
+            max-width: 100%;
+        }
+        html.in-iframe-mobile .formation-tabs,
+        html.in-iframe-mobile .team-formation-switch,
+        html.in-iframe-mobile .vote-btns {
+            min-width: 0;
+        }
+        html.in-iframe-mobile img,
+        html.in-iframe-mobile iframe,
+        html.in-iframe-mobile video {
+            max-width: 100%;
+            height: auto;
         }
         body,
         .card,

@@ -175,6 +175,7 @@
       html.in-iframe-mobile .wrap {
         max-width: 100%;
         padding: 12px 14px 24px;
+        overflow-x: clip;
       }
       html.in-iframe-mobile .nav-center {
         display: flex;
@@ -194,6 +195,35 @@
       }
       html.in-iframe-mobile h1 {
         font-size: 34px;
+      }
+      html.in-iframe-mobile .panel {
+        padding: 18px 12px;
+        border-radius: 16px;
+      }
+      html.in-iframe-mobile .tabs {
+        margin-top: 12px;
+        padding: 4px;
+        gap: 6px;
+      }
+      html.in-iframe-mobile .tab-btn {
+        padding: 8px 10px;
+        font-size: 13px;
+      }
+      html.in-iframe-mobile .tab-panels,
+      html.in-iframe-mobile .hs-grid,
+      html.in-iframe-mobile .hs-card {
+        min-width: 0;
+      }
+      html.in-iframe-mobile .hs-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+      html.in-iframe-mobile .hs-card {
+        padding: 12px;
+      }
+      html.in-iframe-mobile img {
+        max-width: 100%;
+        height: auto;
       }
     </style>
     <script>
