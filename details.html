@@ -82,6 +82,17 @@
         html.in-iframe body {
             -webkit-text-size-adjust: 100%;
         }
+        html.in-iframe-mobile body {
+            padding: 12px;
+        }
+        html.in-iframe-mobile .top-actions {
+            top: 10px;
+            right: 10px;
+        }
+        html.in-iframe-mobile .card {
+            padding: 16px;
+            border-radius: 20px;
+        }
         body,
         .card,
         .status-badge,
@@ -854,13 +865,17 @@
     <script>
         // Detect iframe and add class
         (function() {
+            const ua = navigator.userAgent || '';
+            const isLikelyMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(ua) || (navigator.maxTouchPoints > 1 && /Macintosh/i.test(ua));
             try {
                 if (window.self !== window.top || window.frameElement) {
                     document.documentElement.classList.add('in-iframe');
+                    if (isLikelyMobile) document.documentElement.classList.add('in-iframe-mobile');
                 }
             } catch (e) {
                 // Cross-origin iframe case
                 document.documentElement.classList.add('in-iframe');
+                if (isLikelyMobile) document.documentElement.classList.add('in-iframe-mobile');
             }
         })();
     </script>
@@ -955,6 +970,17 @@
             <div style="display:flex;gap:8px;margin-top:16px;justify-content:flex-end">
                 <button id="passModalCancel" class="theme-toggle" style="padding:8px 18px">Cancel</button>
                 <button id="passModalOk" class="theme-toggle" style="padding:8px 18px;background:var(--primary-color);color:#fff;border-color:var(--primary-color)">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="siteDialogModal" style="display:none;position:fixed;inset:0;z-index:1000000;background:rgba(2,6,23,0.5);align-items:center;justify-content:center;padding:24px">
+        <div style="background:var(--card-bg);border-radius:16px;padding:28px 24px;max-width:420px;width:100%;box-shadow:0 30px 60px rgba(0,0,0,0.3);border:1px solid var(--muted-border)">
+            <div style="font-weight:800;font-size:16px;margin-bottom:6px" id="siteDialogTitle">알림</div>
+            <div style="font-size:14px;color:var(--text-main);line-height:1.5;white-space:pre-wrap" id="siteDialogMessage"></div>
+            <div style="display:flex;gap:8px;margin-top:18px;justify-content:flex-end">
+                <button id="siteDialogCancel" class="theme-toggle" style="padding:8px 18px;display:none">취소</button>
+                <button id="siteDialogOk" class="theme-toggle" style="padding:8px 18px;background:var(--primary-color);color:#fff;border-color:var(--primary-color)">확인</button>
             </div>
         </div>
     </div>
@@ -1625,6 +1651,44 @@
                 input.addEventListener('keydown', onKey);
             });
         }
+
+        function showSiteDialog(opts = {}) {
+            return new Promise((resolve) => {
+                const modal = document.getElementById('siteDialogModal');
+                const titleEl = document.getElementById('siteDialogTitle');
+                const msgEl = document.getElementById('siteDialogMessage');
+                const okBtn = document.getElementById('siteDialogOk');
+                const cancelBtn = document.getElementById('siteDialogCancel');
+                const showCancel = !!opts.showCancel;
+                titleEl.textContent = opts.title || (showCancel ? '확인' : '알림');
+                msgEl.textContent = opts.message || '';
+                okBtn.textContent = opts.okText || '확인';
+                cancelBtn.textContent = opts.cancelText || '취소';
+                cancelBtn.style.display = showCancel ? 'inline-flex' : 'none';
+                modal.style.display = 'flex';
+                setTimeout(() => okBtn.focus(), 10);
+                const cleanup = () => {
+                    modal.style.display = 'none';
+                    okBtn.removeEventListener('click', onOk);
+                    cancelBtn.removeEventListener('click', onCancel);
+                    document.removeEventListener('keydown', onKey);
+                };
+                const onOk = () => { cleanup(); resolve(true); };
+                const onCancel = () => { cleanup(); resolve(false); };
+                const onKey = (e) => {
+                    if (e.key === 'Escape') onCancel();
+                    if (e.key === 'Enter') onOk();
+                };
+                okBtn.addEventListener('click', onOk);
+                cancelBtn.addEventListener('click', onCancel);
+                document.addEventListener('keydown', onKey);
+            });
+        }
+
+        function siteAlert(message, title = '알림') {
+            return showSiteDialog({ title, message: String(message ?? ''), showCancel: false, okText: '확인' });
+        }
+        window.alert = (message) => { void siteAlert(message); };
 
         async function promptForAdmin() {
             let saved = (window.BIS_ADMIN_PASSPHRASE || '').trim();

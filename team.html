@@ -172,16 +172,43 @@
       html.in-iframe body {
         -webkit-text-size-adjust: 100%;
       }
+      html.in-iframe-mobile .wrap {
+        max-width: 100%;
+        padding: 12px 14px 24px;
+      }
+      html.in-iframe-mobile .nav-center {
+        display: flex;
+        gap: 16px;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      html.in-iframe-mobile .nav-left,
+      html.in-iframe-mobile .nav-right {
+        gap: 16px;
+        justify-content: center;
+        font-size: 14px;
+      }
+      html.in-iframe-mobile .top-nav .logo {
+        width: 40px;
+        height: 40px;
+      }
+      html.in-iframe-mobile h1 {
+        font-size: 34px;
+      }
     </style>
     <script>
       // Detect iframe and add class
       (function() {
+        const ua = navigator.userAgent || '';
+        const isLikelyMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(ua) || (navigator.maxTouchPoints > 1 && /Macintosh/i.test(ua));
         try {
           if (window.self !== window.top || window.frameElement) {
             document.documentElement.classList.add('in-iframe');
+            if (isLikelyMobile) document.documentElement.classList.add('in-iframe-mobile');
           }
         } catch (e) {
           document.documentElement.classList.add('in-iframe');
+          if (isLikelyMobile) document.documentElement.classList.add('in-iframe-mobile');
         }
       })();
     </script>
