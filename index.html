@@ -582,7 +582,7 @@
 			.cal-grid {
 				display: grid;
 				grid-template-columns: repeat(7, 1fr);
-				gap: 6px;
+				gap: 4px;
 				transition: opacity 0.3s ease, transform 0.3s ease;
 			}
 			.cal-grid.slide-left  { animation: calSlideLeft 0.35s cubic-bezier(.2,.9,.2,1); }
@@ -619,9 +619,7 @@
 				position: relative;
 				transition: all 0.2s cubic-bezier(.2,.9,.2,1);
 				border: 2px solid transparent;
-				overflow: visible;
-				max-width: 100%;
-				box-sizing: border-box;
+				overflow: hidden;
 			}
 			.cal-day.empty { visibility: hidden; }
 			.cal-day.past .cal-day-num,
@@ -649,12 +647,11 @@
 				cursor: pointer;
 				background: var(--card);
 				border-color: var(--border);
-				box-shadow: 0 1px 4px rgba(0,0,0,0.04);
-				transform: scale(0.92);
+				box-shadow: 0 2px 8px rgba(0,0,0,0.04);
 			}
 			.cal-day.has-game:hover {
-				transform: scale(0.96);
-				box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+				transform: translateY(-3px) scale(1.04);
+				box-shadow: 0 8px 20px rgba(0,0,0,0.1);
 				border-color: rgba(37,99,235,0.3);
 				z-index: 10;
 			}
@@ -670,14 +667,14 @@
 			}
 			.cal-game-count {
 				position: absolute;
-				top: 4px;
-				right: 4px;
+				top: 2px;
+				right: 2px;
 				background: #ef4444;
 				color: #fff;
-				font-size: 10px;
+				font-size: clamp(7px, 1.8vw, 10px);
 				font-weight: 800;
-				width: 18px;
-				height: 18px;
+				width: clamp(13px, 3.5vw, 18px);
+				height: clamp(13px, 3.5vw, 18px);
 				border-radius: 50%;
 				display: flex;
 				align-items: center;
