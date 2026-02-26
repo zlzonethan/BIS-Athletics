@@ -172,73 +172,124 @@
       html.in-iframe body {
         -webkit-text-size-adjust: 100%;
       }
-      html.in-iframe-mobile .wrap {
-        max-width: 100%;
-        padding: 12px 14px 24px;
-        overflow-x: clip;
-      }
-      html.in-iframe-mobile .nav-center {
-        display: flex;
-        gap: 16px;
-        flex-wrap: wrap;
-        justify-content: center;
-      }
-      html.in-iframe-mobile .nav-left,
-      html.in-iframe-mobile .nav-right {
-        gap: 16px;
-        justify-content: center;
-        font-size: 14px;
-      }
-      html.in-iframe-mobile .top-nav .logo {
-        width: 40px;
-        height: 40px;
-      }
-      html.in-iframe-mobile h1 {
-        font-size: 34px;
-      }
-      html.in-iframe-mobile .panel {
-        padding: 18px 12px;
-        border-radius: 16px;
-      }
-      html.in-iframe-mobile .tabs {
-        margin-top: 12px;
-        padding: 4px;
-        gap: 6px;
-      }
-      html.in-iframe-mobile .tab-btn {
-        padding: 8px 10px;
-        font-size: 13px;
-      }
-      html.in-iframe-mobile .tab-panels,
-      html.in-iframe-mobile .hs-grid,
-      html.in-iframe-mobile .hs-card {
-        min-width: 0;
-      }
-      html.in-iframe-mobile .hs-grid {
-        grid-template-columns: 1fr;
-        gap: 12px;
-      }
-      html.in-iframe-mobile .hs-card {
-        padding: 12px;
-      }
-      html.in-iframe-mobile img {
-        max-width: 100%;
-        height: auto;
+
+      /* Mobile iframe (Google Sites embed) */
+      @media (max-width: 768px) {
+        html.in-iframe .nav-center {
+          display: flex;
+          gap: 12px;
+          flex-wrap: wrap;
+          justify-content: center;
+        }
+        html.in-iframe .nav-left,
+        html.in-iframe .nav-right {
+          gap: 14px;
+          justify-content: center;
+          font-size: 13px;
+        }
+        html.in-iframe .top-nav .logo {
+          width: 38px;
+          height: 38px;
+        }
+        html.in-iframe h1 {
+          font-size: 32px;
+        }
+        html.in-iframe .panel {
+          padding: 18px 12px;
+          border-radius: 16px;
+        }
+        html.in-iframe .tabs {
+          gap: 6px;
+          padding: 4px;
+        }
+        html.in-iframe .tab-btn {
+          padding: 8px 10px;
+          font-size: 13px;
+        }
+        html.in-iframe .panel-title {
+          font-size: 17px;
+        }
+        html.in-iframe .hs-grid {
+          grid-template-columns: 1fr;
+          gap: 12px;
+        }
+        html.in-iframe .hs-card {
+          padding: 12px;
+        }
+        html.in-iframe .hs-title {
+          font-size: 14px;
+        }
+        html.in-iframe .hs-meta {
+          font-size: 11px;
+        }
+        html.in-iframe .hs-list {
+          font-size: 11px;
+        }
+        html.in-iframe .hs-badge {
+          padding: 3px 6px;
+          font-size: 11px;
+        }
+        html.in-iframe .hs-label {
+          font-size: 10px;
+        }
+        html.in-iframe .hs-value {
+          font-size: 11px;
+        }
+        html.in-iframe .accordion-title {
+          font-size: 11px;
+        }
+        html.in-iframe .roster-grid {
+          grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+          gap: 4px;
+        }
+        html.in-iframe .roster-item {
+          padding: 5px 8px;
+          font-size: 10px;
+        }
+        html.in-iframe .game-item {
+          padding: 6px 8px;
+          font-size: 10px;
+        }
+        html.in-iframe .staff-item {
+          padding: 6px 10px;
+          font-size: 11px;
+        }
+        html.in-iframe .uniform-gallery {
+          grid-template-columns: repeat(2, 1fr);
+          gap: 8px;
+        }
+        html.in-iframe .uniform-label {
+          font-size: 10px;
+        }
+        html.in-iframe .match-card {
+          padding: 12px;
+          border-radius: 12px;
+        }
+        html.in-iframe .match-card-title {
+          font-size: 14px;
+        }
+        html.in-iframe .match-card-meta {
+          font-size: 11px;
+        }
+        html.in-iframe .details-button {
+          padding: 8px 12px;
+          font-size: 13px;
+        }
+        html.in-iframe .theme-toggle {
+          padding: 6px 10px;
+          font-size: 13px;
+        }
       }
     </style>
     <script>
       // Detect iframe and add class
       (function() {
-        const ua = navigator.userAgent || '';
-        const isLikelyMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(ua) || (navigator.maxTouchPoints > 1 && /Macintosh/i.test(ua));
         try {
           if (window.self !== window.top || window.frameElement) {
             document.documentElement.classList.add('in-iframe');
-            if (isLikelyMobile) document.documentElement.classList.add('in-iframe-mobile');
           }
         } catch (e) {
           document.documentElement.classList.add('in-iframe');
-          if (isLikelyMobile) document.documentElement.classList.add('in-iframe-mobile');
         }
       })();
     </script>

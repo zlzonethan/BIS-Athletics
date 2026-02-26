@@ -84,12 +84,6 @@
 			html::-webkit-scrollbar {
 				display: none;
 			}
-			body {
-				scrollbar-width: none;
-			}
-			body::-webkit-scrollbar {
-				display: none;
-			}
 
 			body {
 				font-family: 'Noto Sans KR', system-ui, -apple-system, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
@@ -1051,110 +1045,104 @@
 				height: 100%;
 				overflow-x: hidden;
 			}
-			html.in-iframe .wrap {
-				max-width: 100%;
-				padding: 12px 16px 24px;
-			}
 			html.in-iframe body {
 				-webkit-text-size-adjust: 100%;
 			}
-			html.in-iframe-mobile .wrap {
+			html.in-iframe .wrap {
 				max-width: 100%;
-				padding: 12px 14px 24px;
-				overflow-x: clip;
+				padding: 12px 12px 24px;
 			}
-			html.in-iframe-mobile .nav-center {
+
+			/* Force mobile-friendly layout in iframe */
+			html.in-iframe .split-grid {
+				grid-template-columns: 1fr;
+				gap: 20px;
+			}
+			html.in-iframe .schedule-grid {
+				grid-template-columns: 1fr;
+				gap: 12px;
+			}
+			html.in-iframe .teams {
+				grid-template-columns: 1fr;
+			}
+			html.in-iframe .nav-center {
 				display: flex;
 				gap: 16px;
 				flex-wrap: wrap;
 				justify-content: center;
 			}
-			html.in-iframe-mobile .nav-left,
-			html.in-iframe-mobile .nav-right {
+			html.in-iframe .nav-left,
+			html.in-iframe .nav-right {
 				gap: 16px;
 				justify-content: center;
 				font-size: 14px;
 			}
-			html.in-iframe-mobile .top-nav .logo {
-				width: 40px;
-				height: 40px;
-			}
-			html.in-iframe-mobile .hero h1 {
-				font-size: 36px;
-			}
-			html.in-iframe-mobile .panel {
-				margin-top: 20px;
-				padding: 24px 14px 26px;
+			html.in-iframe .panel {
+				padding: 22px 16px 26px;
 				border-radius: 20px;
 			}
-			html.in-iframe-mobile .panel-title {
+			html.in-iframe .split-panel {
+				--panel-hpad: 16px;
+				padding: 20px 16px 22px;
+			}
+			html.in-iframe .team-card {
+				padding: 20px 16px 18px;
+			}
+			html.in-iframe .mascot {
+				width: 90px;
+				height: 90px;
+				margin: 8px 0 14px;
+			}
+			html.in-iframe .hero h1 {
+				font-size: clamp(32px, 10vw, 56px);
+			}
+			html.in-iframe .gender-panels {
+				min-height: 0;
+			}
+			html.in-iframe .gender-content {
+				position: relative;
+				inset: auto;
+			}
+			html.in-iframe .gender-content:not(.active) {
+				display: none;
+			}
+			html.in-iframe .gender-content.active {
+				position: relative;
+				opacity: 1;
+				transform: none;
+				pointer-events: auto;
+			}
+			html.in-iframe .cal-tooltip {
+				min-width: 160px;
+				white-space: normal;
+				word-break: break-word;
+			}
+			html.in-iframe .stats {
+				gap: 18px;
+			}
+			html.in-iframe .stat .value {
 				font-size: 20px;
-				margin-bottom: 16px;
 			}
-			html.in-iframe-mobile .split-grid {
-				grid-template-columns: 1fr;
-				gap: 14px;
-			}
-			html.in-iframe-mobile .split-panel {
-				--panel-hpad: 12px;
-				padding: 16px var(--panel-hpad) 18px;
-				border-radius: 18px;
-				min-width: 0;
-			}
-			html.in-iframe-mobile .gender-tabs {
-				padding: 0 var(--panel-hpad) 8px;
-			}
-			html.in-iframe-mobile .gender-tab {
-				font-size: 14px;
-				padding: 4px 6px 8px;
-			}
-			html.in-iframe-mobile .gender-content {
-				min-width: 0;
-			}
-			html.in-iframe-mobile .centered-panel .team-card,
-			html.in-iframe-mobile .team-card {
-				width: 100%;
-				max-width: 100%;
-				padding: 16px 12px 14px;
-				border-radius: 16px;
-				min-width: 0;
-			}
-			html.in-iframe-mobile .team-card h3 {
-				font-size: 18px;
-				margin-bottom: 8px;
-			}
-			html.in-iframe-mobile .mascot {
-				width: 92px;
-				height: 92px;
-				margin: 8px 0 12px;
-			}
-			html.in-iframe-mobile .stats {
-				gap: 14px;
-			}
-			html.in-iframe-mobile .gender-panels,
-			html.in-iframe-mobile .season-tabs,
-			html.in-iframe-mobile .schedule-grid {
-				min-width: 0;
-			}
-			html.in-iframe-mobile img {
-				max-width: 100%;
-				height: auto;
+			html.in-iframe #adminDock {
+				display: none;
 			}
 		</style>
 		<script>
 			// Detect iframe and add class
 			(function() {
-				const ua = navigator.userAgent || '';
-				const isLikelyMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(ua) || (navigator.maxTouchPoints > 1 && /Macintosh/i.test(ua));
 				try {
 					if (window.self !== window.top || window.frameElement) {
 						document.documentElement.classList.add('in-iframe');
-						if (isLikelyMobile) document.documentElement.classList.add('in-iframe-mobile');
 					}
 				} catch (e) {
 					document.documentElement.classList.add('in-iframe');
-					if (isLikelyMobile) document.documentElement.classList.add('in-iframe-mobile');
 				}
+				// Also detect Google Sites referrer
+				try {
+					if (document.referrer && document.referrer.includes('sites.google.com')) {
+						document.documentElement.classList.add('in-iframe');
+					}
+				} catch (e) {}
 			})();
 		</script>
 	</head>
@@ -1422,16 +1410,6 @@
 					<div style="display:flex;gap:8px;margin-top:16px;justify-content:flex-end">
 						<button id="passModalCancel" class="theme-toggle" style="padding:8px 18px">Cancel</button>
 						<button id="passModalOk" class="theme-toggle" style="padding:8px 18px;background:var(--accent);color:#fff;border-color:var(--accent)">Confirm</button>
-					</div>
-				</div>
-			</div>
-			<div id="siteDialogModal" style="display:none;position:fixed;inset:0;z-index:100000;background:rgba(2,6,23,0.5);align-items:center;justify-content:center;padding:24px">
-				<div style="background:var(--card);border-radius:16px;padding:28px 24px;max-width:420px;width:100%;box-shadow:0 30px 60px rgba(0,0,0,0.3);border:1px solid var(--border)">
-					<div style="font-weight:800;font-size:16px;margin-bottom:6px" id="siteDialogTitle">알림</div>
-					<div style="font-size:14px;color:var(--text);line-height:1.5;white-space:pre-wrap" id="siteDialogMessage"></div>
-					<div style="display:flex;gap:8px;margin-top:18px;justify-content:flex-end">
-						<button id="siteDialogCancel" class="theme-toggle" style="padding:8px 18px;display:none">취소</button>
-						<button id="siteDialogOk" class="theme-toggle" style="padding:8px 18px;background:var(--accent);color:#fff;border-color:var(--accent)">확인</button>
 					</div>
 				</div>
 			</div>
@@ -2450,45 +2428,6 @@
 						errEl.textContent = msg;
 						errEl.style.display = 'block';
 					}
-					function showSiteDialog(opts = {}) {
-						return new Promise((resolve) => {
-							const modal = document.getElementById('siteDialogModal');
-							const titleEl = document.getElementById('siteDialogTitle');
-							const msgEl = document.getElementById('siteDialogMessage');
-							const okBtn = document.getElementById('siteDialogOk');
-							const cancelBtn = document.getElementById('siteDialogCancel');
-							const showCancel = !!opts.showCancel;
-							titleEl.textContent = opts.title || (showCancel ? '확인' : '알림');
-							msgEl.textContent = opts.message || '';
-							okBtn.textContent = opts.okText || '확인';
-							cancelBtn.textContent = opts.cancelText || '취소';
-							cancelBtn.style.display = showCancel ? 'inline-flex' : 'none';
-							modal.style.display = 'flex';
-							setTimeout(() => okBtn.focus(), 10);
-							const cleanup = () => {
-								modal.style.display = 'none';
-								okBtn.removeEventListener('click', onOk);
-								cancelBtn.removeEventListener('click', onCancel);
-								document.removeEventListener('keydown', onKey);
-							};
-							const onOk = () => { cleanup(); resolve(true); };
-							const onCancel = () => { cleanup(); resolve(false); };
-							const onKey = (e) => {
-								if (e.key === 'Escape') onCancel();
-								if (e.key === 'Enter') onOk();
-							};
-							okBtn.addEventListener('click', onOk);
-							cancelBtn.addEventListener('click', onCancel);
-							document.addEventListener('keydown', onKey);
-						});
-					}
-					function siteAlert(message, title = '알림') {
-						return showSiteDialog({ title, message: String(message ?? ''), showCancel: false, okText: '확인' });
-					}
-					function siteConfirm(message, title = '확인') {
-						return showSiteDialog({ title, message: String(message ?? ''), showCancel: true, okText: '확인', cancelText: '취소' });
-					}
-					window.alert = (message) => { void siteAlert(message); };
 					async function promptPass(){
 						let configured = getEffectiveAdminPassphrase();
 						if (!configured) {
@@ -2645,7 +2584,7 @@
 							alert('Selected match is not a custom match.');
 							return;
 						}
-						if (!(await siteConfirm(`Delete custom match #${id}?`))) return;
+						if (!confirm(`Delete custom match #${id}?`)) return;
 						try {
 							await removeCustomMatch(id);
 							cleanupLocalMatchArtifacts(id);
@@ -2696,7 +2635,7 @@
 				resetBtn.addEventListener('click', async ()=>{
 					const id = String(matchSelect.value || '');
 					if(!id){ alert('Select a match'); return; }
-					if(!(await siteConfirm('Revert this match to Upcoming?'))) return;
+					if(!confirm('Revert this match to Upcoming?')) return;
 					
 					if (db) {
 						try {
