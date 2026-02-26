@@ -522,16 +522,17 @@
 				display: flex;
 				align-items: center;
 				justify-content: center;
-				gap: 16px;
+				gap: 10px;
 				margin-bottom: 22px;
+				flex-wrap: wrap;
 			}
 			.cal-header h2 {
 				font-family: 'Black Han Sans', 'Noto Sans KR', sans-serif;
 				font-weight: 400;
-				font-size: 26px;
+				font-size: clamp(20px, 5vw, 26px);
 				letter-spacing: 1px;
 				color: var(--accent);
-				min-width: 220px;
+				min-width: 0;
 				text-align: center;
 				transition: opacity 0.25s ease;
 			}
@@ -610,14 +611,15 @@
 				flex-direction: column;
 				align-items: center;
 				justify-content: center;
-				gap: 3px;
-				border-radius: 16px;
-				font-size: 15px;
+				gap: 2px;
+				border-radius: clamp(10px, 2.5vw, 16px);
+				font-size: clamp(12px, 3vw, 15px);
 				font-weight: 600;
 				color: var(--text);
 				position: relative;
 				transition: all 0.2s cubic-bezier(.2,.9,.2,1);
 				border: 2px solid transparent;
+				overflow: hidden;
 			}
 			.cal-day.empty { visibility: hidden; }
 			.cal-day.past .cal-day-num,
@@ -1128,6 +1130,49 @@
 				}
 				html.in-iframe .stat .value {
 					font-size: 20px;
+				}
+				html.in-iframe .cal-header {
+					gap: 8px;
+				}
+				html.in-iframe .cal-header h2 {
+					font-size: 20px;
+					min-width: 0;
+				}
+				html.in-iframe .cal-nav {
+					width: 34px;
+					height: 34px;
+					font-size: 18px;
+					border-radius: 10px;
+					flex-shrink: 0;
+				}
+				html.in-iframe .cal-today-btn {
+					padding: 5px 12px;
+					font-size: 12px;
+					flex-shrink: 0;
+				}
+				html.in-iframe .cal-grid {
+					gap: 2px;
+				}
+				html.in-iframe .cal-day {
+					border-radius: 10px;
+					font-size: 13px;
+					border-width: 1.5px;
+				}
+				html.in-iframe .cal-dot {
+					width: 5px;
+					height: 5px;
+				}
+				html.in-iframe .cal-game-count {
+					width: 14px;
+					height: 14px;
+					font-size: 8px;
+					top: 2px;
+					right: 2px;
+				}
+				html.in-iframe .cal-day.today .cal-day-num {
+					width: 24px;
+					height: 24px;
+					font-size: 12px;
 				}
 			}
 		</style>
