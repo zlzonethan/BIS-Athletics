@@ -1039,7 +1039,7 @@
 		<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 		<script src="data/schedules.js"></script>
 		<style>
-			/* iframe embed support */
+			/* iframe embed support — always applied */
 			html.in-iframe, html.in-iframe body {
 				width: 100%;
 				height: 100%;
@@ -1050,51 +1050,6 @@
 			}
 			html.in-iframe .wrap {
 				max-width: 100%;
-				padding: 12px 12px 24px;
-			}
-
-			/* Force mobile-friendly layout in iframe */
-			html.in-iframe .split-grid {
-				grid-template-columns: 1fr;
-				gap: 20px;
-			}
-			html.in-iframe .schedule-grid {
-				grid-template-columns: 1fr;
-				gap: 12px;
-			}
-			html.in-iframe .teams {
-				grid-template-columns: 1fr;
-			}
-			html.in-iframe .nav-center {
-				display: flex;
-				gap: 16px;
-				flex-wrap: wrap;
-				justify-content: center;
-			}
-			html.in-iframe .nav-left,
-			html.in-iframe .nav-right {
-				gap: 16px;
-				justify-content: center;
-				font-size: 14px;
-			}
-			html.in-iframe .panel {
-				padding: 22px 16px 26px;
-				border-radius: 20px;
-			}
-			html.in-iframe .split-panel {
-				--panel-hpad: 16px;
-				padding: 20px 16px 22px;
-			}
-			html.in-iframe .team-card {
-				padding: 20px 16px 18px;
-			}
-			html.in-iframe .mascot {
-				width: 90px;
-				height: 90px;
-				margin: 8px 0 14px;
-			}
-			html.in-iframe .hero h1 {
-				font-size: clamp(32px, 10vw, 56px);
 			}
 			html.in-iframe .gender-panels {
 				min-height: 0;
@@ -1117,14 +1072,63 @@
 				white-space: normal;
 				word-break: break-word;
 			}
-			html.in-iframe .stats {
-				gap: 18px;
-			}
-			html.in-iframe .stat .value {
-				font-size: 20px;
-			}
 			html.in-iframe #adminDock {
 				display: none;
+			}
+
+			/* iframe + narrow viewport only (mobile) */
+			@media (max-width: 860px) {
+				html.in-iframe .wrap {
+					padding: 12px 12px 24px;
+				}
+				html.in-iframe .split-grid {
+					grid-template-columns: 1fr;
+					gap: 20px;
+				}
+				html.in-iframe .schedule-grid {
+					grid-template-columns: 1fr;
+					gap: 12px;
+				}
+				html.in-iframe .teams {
+					grid-template-columns: 1fr;
+				}
+				html.in-iframe .nav-center {
+					display: flex;
+					gap: 16px;
+					flex-wrap: wrap;
+					justify-content: center;
+				}
+				html.in-iframe .nav-left,
+				html.in-iframe .nav-right {
+					gap: 16px;
+					justify-content: center;
+					font-size: 14px;
+				}
+				html.in-iframe .panel {
+					padding: 22px 16px 26px;
+					border-radius: 20px;
+				}
+				html.in-iframe .split-panel {
+					--panel-hpad: 16px;
+					padding: 20px 16px 22px;
+				}
+				html.in-iframe .team-card {
+					padding: 20px 16px 18px;
+				}
+				html.in-iframe .mascot {
+					width: 90px;
+					height: 90px;
+					margin: 8px 0 14px;
+				}
+				html.in-iframe .hero h1 {
+					font-size: clamp(32px, 10vw, 56px);
+				}
+				html.in-iframe .stats {
+					gap: 18px;
+				}
+				html.in-iframe .stat .value {
+					font-size: 20px;
+				}
 			}
 		</style>
 		<script>
