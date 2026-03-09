@@ -6,6 +6,14 @@ service cloud.firestore {
       return request.auth != null && request.auth.token.admin == true;
     }
 
+    function canWriteTeamPage() {
+      return request.auth != null &&
+        request.resource.data.keys().hasOnly(['tabs', 'updatedAt', 'updatedBy']) &&
+        request.resource.data.tabs is list &&
+        (!request.resource.data.keys().hasAny(['updatedAt']) || request.resource.data.updatedAt is string) &&
+        (!request.resource.data.keys().hasAny(['updatedBy']) || request.resource.data.updatedBy is string);
+    }
+
     function isValidVoteDoc() {
       return request.resource.data.keys().hasOnly(['home', 'draw', 'away']) &&
         (!request.resource.data.keys().hasAny(['home']) || request.resource.data.home is int) &&
@@ -55,6 +63,16 @@ service cloud.firestore {
     match /finishedMatches/{matchId} {
       allow read: if true;
       allow write: if isAdmin();
+    }
+
+    match /customMatches/{matchId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /teamPageContent/{docId} {
+      allow read: if true;
+      allow write: if canWriteTeamPage();
     }
 
     match /{document=**} {

@@ -1,0 +1,1171 @@
+:root {
+	--bg: #f4f5f7;
+	--text: #0f172a;
+	--muted: #6b7280;
+	--card: #ffffff;
+	--shadow: 0 20px 60px rgba(15, 23, 42, 0.12);
+	--accent: #0b1b3a;
+	--panel: #fefefe;
+	--nav-muted: rgba(15, 23, 42, 0.7);
+	--glass: rgba(255, 255, 255, 0.6);
+	--border: rgba(148, 163, 184, 0.14);
+	--split-bg: linear-gradient(180deg, rgba(255,255,255,0.95), rgba(255,255,255,0.85));
+	--tab-track: rgba(15, 23, 42, 0.14);
+}
+
+body.dark {
+	--bg: #0a1120;
+	--text: #f8fafc;
+	--muted: #9aa4b2;
+	--card: #0f1a2b;
+	--shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
+	--accent: #e2e8f0;
+	--panel: #121d2e;
+	--nav-muted: rgba(248, 250, 252, 0.8);
+	--glass: rgba(12, 20, 36, 0.75);
+	--border: rgba(255,255,255,0.06);
+	--split-bg: linear-gradient(180deg, rgba(12,20,36,0.95), rgba(12,20,36,0.85));
+	--tab-track: rgba(255,255,255,0.06);
+}
+
+@media (prefers-color-scheme: dark) {
+	body:not(.light) {
+		--bg: #0a1120;
+		--text: #f8fafc;
+		--muted: #9aa4b2;
+		--card: #0f1a2b;
+		--shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
+		--accent: #e2e8f0;
+		--panel: #121d2e;
+		--nav-muted: rgba(248, 250, 252, 0.8);
+		--glass: rgba(12, 20, 36, 0.75);
+	}
+}
+
+* {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+}
+
+                        html, body {
+                                margin: 0 !important;
+                                padding: 0 !important;
+                                border: 0 !important;
+                                width: 100%;
+                                overflow-x: hidden;
+                        }
+
+html {
+	scrollbar-width: none;
+}
+html::-webkit-scrollbar {
+	display: none;
+}
+
+body {
+	font-family: 'Noto Sans KR', system-ui, -apple-system, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+	background: var(--bg);
+	color: var(--text);
+	min-height: 100vh;
+	transition: background 0.3s ease, color 0.3s ease;
+}
+
+.wrap {
+	max-width: 1200px;
+	margin: 0 auto;
+	padding: 18px 24px 80px;
+	padding-bottom: max(80px, env(safe-area-inset-bottom, 0px));
+}
+
+.top-nav {
+	position: relative;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 0;
+	color: var(--nav-muted);
+	font-weight: 700;
+	letter-spacing: 0.4px;
+}
+
+.nav-center {
+	display: grid;
+	grid-template-columns: 1fr auto 1fr;
+	align-items: center;
+	column-gap: 80px;
+	margin: 0 auto;
+	width: 100%;
+}
+
+.nav-left,
+.nav-right {
+	display: flex;
+	align-items: center;
+	gap: 120px;
+}
+
+.nav-left {
+	justify-content: flex-end;
+}
+
+.nav-right {
+	justify-content: flex-start;
+}
+
+.top-nav .nav-item {
+	position: relative;
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	color: var(--nav-muted);
+	text-decoration: none;
+}
+
+.top-nav .nav-item:hover,
+.top-nav .nav-item:focus {
+	text-decoration: none;
+}
+
+.theme-toggle {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	background: var(--glass);
+	border: 1px solid rgba(148, 163, 184, 0.2);
+	color: var(--text);
+	padding: 8px 14px;
+	border-radius: 999px;
+	cursor: pointer;
+	font-weight: 600;
+	backdrop-filter: blur(6px);
+	transition: all 0.3s ease;
+}
+
+.theme-toggle:hover {
+	transform: scale(1.02);
+}
+
+.theme-toggle-wrap {
+	margin-top: 28px;
+	display: flex;
+	justify-content: center;
+}
+
+.top-nav .logo {
+	width: 48px;
+	height: 48px;
+	object-fit: contain;
+}
+
+.hero {
+	text-align: center;
+	margin-top: 18px;
+}
+
+.hero h1 {
+	font-family: 'Black Han Sans', 'Noto Sans KR', sans-serif;
+	font-weight: 400;
+	font-size: clamp(48px, 8vw, 96px);
+	letter-spacing: 1px;
+}
+
+.hero .season {
+	font-weight: 700;
+	color: var(--text);
+	margin-top: 6px;
+}
+
+.panel {
+	margin-top: 28px;
+	background: var(--card);
+	border-radius: 30px;
+	padding: 38px 44px 48px;
+	box-shadow: none;
+	border: 1px solid var(--border);
+	transition: background 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.panel-title {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 12px;
+	font-size: 26px;
+	font-weight: 800;
+	letter-spacing: 0.6px;
+	margin-bottom: 26px;
+	color: var(--accent);
+}
+
+.teams {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 60px;
+	align-items: center;
+	text-align: center;
+}
+
+.split-grid {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 32px;
+	align-items: start;
+}
+
+.split-panel {
+	background: var(--split-bg);
+	border-radius: 26px;
+	--panel-hpad: 26px;
+	padding: 24px var(--panel-hpad) 26px;
+	display: grid;
+	gap: 18px;
+	box-shadow: var(--shadow);
+	border: 1px solid var(--border);
+}
+
+.split-title {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	font-size: 20px;
+	font-weight: 800;
+	color: var(--accent);
+}
+
+.gender-tabs {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	align-items: end;
+	gap: 0;
+	position: relative;
+	/* horizontal padding matches panel horizontal padding variable */
+	padding: 0 var(--panel-hpad) 10px;
+	justify-self: start;
+	width: 100%;
+	--tab-accent: #2563eb;
+	--active-tab: 0;
+	overflow: hidden;
+}
+
+/* base track that stretches to the card edges (account for panel padding)
+   negative offsets match the panel horizontal padding (26px) so the line
+   reaches the rounded card edge visually. */
+
+.gender-tabs::before {
+	content: "";
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	height: 2px;
+	background: var(--tab-track);
+	border-radius: 999px;
+}
+
+/* sliding accent that sits on top of the base track and animates between
+   the two halves. left calculation offsets the panel padding so the blue
+   bar aligns visually with the card edges. */
+
+.gender-tabs::after {
+	content: "";
+	position: absolute;
+	left: 0;
+	bottom: 0;
+	/* exact half width so each tab corresponds to 50% */
+	width: 50%;
+	height: 3px;
+	background: var(--tab-accent);
+	border-radius: 999px;
+	transform: translateX(calc(var(--active-tab) * 100%));
+	transition: transform 0.28s cubic-bezier(.2,.9,.2,1);
+}
+
+.gender-tab {
+	border: none;
+	background: transparent;
+	color: var(--text);
+	font-weight: 800;
+	padding: 4px 10px 8px;
+	cursor: pointer;
+	position: relative;
+	font-size: 16px;
+	transition: color 0.2s ease;
+}
+
+.gender-tab.active {
+	color: var(--tab-accent);
+}
+
+.gender-content {
+	position: absolute;
+	inset: 0;
+	opacity: 0;
+	transform: translateX(calc(var(--slide-dir, 1) * 18px));
+	transition: transform 0.35s cubic-bezier(.2,.9,.2,1), opacity 0.25s ease;
+	pointer-events: none;
+}
+
+.gender-content.active {
+	display: grid;
+	gap: 12px;
+	opacity: 1;
+	transform: translateX(0);
+	pointer-events: auto;
+}
+
+.gender-panels {
+	position: relative;
+	width: 100%;
+	min-height: 320px;
+	height: var(--panel-height, auto);
+	transition: height 0.25s ease;
+}
+
+.centered-panel .split-title {
+	justify-content: center;
+}
+
+.centered-panel .gender-tabs {
+	justify-self: center;
+}
+
+.centered-panel .gender-content {
+	justify-items: center;
+}
+
+.centered-panel .team-card {
+	width: 100%;
+	max-width: 420px;
+}
+
+.schedule-grid {
+	display: grid;
+	grid-template-columns: repeat(5, minmax(0, 1fr));
+	gap: 24px;
+	text-align: center;
+	margin-top: 12px;
+}
+
+.season-tabs {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	align-items: end;
+	gap: 0;
+	position: relative;
+	padding: 0 12px 10px;
+	margin-bottom: 18px;
+	--tab-accent: #2563eb;
+	--active-tab: 0;
+}
+
+.season-tabs::before {
+	content: "";
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	height: 2px;
+	background: var(--tab-track);
+	border-radius: 999px;
+}
+
+.season-tabs::after {
+	content: "";
+	position: absolute;
+	left: 0;
+	bottom: 0;
+	width: calc(100% / 3);
+	height: 3px;
+	background: var(--tab-accent);
+	border-radius: 999px;
+	transform: translateX(calc(var(--active-tab) * 100%));
+	transition: transform 0.28s cubic-bezier(.2,.9,.2,1);
+}
+
+.season-tab {
+	border: none;
+	background: transparent;
+	color: var(--text);
+	font-weight: 800;
+	padding: 6px 10px 8px;
+	cursor: pointer;
+	font-size: 16px;
+	transition: color 0.2s ease;
+}
+
+.season-tab.active {
+	color: var(--tab-accent);
+}
+
+.season-content {
+	display: none;
+}
+
+.season-content.active {
+	display: block;
+}
+
+.schedule-col {
+	background: var(--panel);
+	border-radius: 20px;
+	padding: 18px 16px 20px;
+	min-height: 220px;
+	display: grid;
+	gap: 10px;
+}
+
+.schedule-col h3 {
+	font-size: 28px;
+	font-weight: 800;
+	color: var(--accent);
+}
+
+.season-label {
+	font-weight: 800;
+	color: var(--text);
+}
+
+.season-item {
+	color: var(--muted);
+	font-weight: 600;
+}
+
+.team-card {
+	background: var(--panel);
+	border-radius: 22px;
+	padding: 28px 22px 22px;
+	transition: background 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+	text-align: center;
+	box-shadow: var(--shadow);
+}
+
+.team-card:hover {
+	transform: translateY(-4px);
+	box-shadow: 0 16px 30px rgba(15, 23, 42, 0.14);
+}
+
+.team-card h3 {
+	font-size: 22px;
+	margin-bottom: 12px;
+}
+
+.mascot {
+	width: 120px;
+	height: 120px;
+	object-fit: contain;
+	margin: 12px 0 18px;
+}
+
+.stats {
+	display: flex;
+	justify-content: center;
+	gap: 26px;
+	font-weight: 700;
+	margin-top: 8px;
+}
+
+.stat {
+	display: grid;
+	gap: 4px;
+	min-width: 56px;
+}
+
+.stat .value {
+	font-size: 22px;
+}
+
+.stat .label {
+	letter-spacing: 1px;
+	font-size: 12px;
+	text-transform: uppercase;
+}
+
+.stat.win .value {
+	color: #10b981;
+}
+
+.stat.draw .value {
+	color: #94a3b8;
+}
+
+.stat.lose .value {
+	color: #ef4444;
+}
+
+/* ── Calendar ── */
+.calendar-wrap {
+	margin-top: 28px;
+}
+.cal-header {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 10px;
+	margin-bottom: 22px;
+	flex-wrap: wrap;
+}
+.cal-header h2 {
+	font-family: 'Black Han Sans', 'Noto Sans KR', sans-serif;
+	font-weight: 400;
+	font-size: clamp(20px, 5vw, 26px);
+	letter-spacing: 1px;
+	color: var(--accent);
+	min-width: 0;
+	text-align: center;
+	transition: opacity 0.25s ease;
+}
+.cal-nav {
+	background: var(--glass);
+	border: 1px solid var(--border);
+	color: var(--text);
+	width: 40px;
+	height: 40px;
+	border-radius: 12px;
+	cursor: pointer;
+	font-size: 20px;
+	font-weight: 700;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	transition: all 0.2s cubic-bezier(.2,.9,.2,1);
+	backdrop-filter: blur(8px);
+}
+.cal-nav:hover {
+	transform: scale(1.08);
+	background: rgba(37,99,235,0.1);
+	color: #2563eb;
+	border-color: rgba(37,99,235,0.3);
+}
+.cal-nav:active { transform: scale(0.95); }
+.cal-today-btn {
+	background: linear-gradient(135deg, #2563eb, #3b82f6);
+	color: #fff;
+	border: none;
+	padding: 6px 16px;
+	border-radius: 999px;
+	font-size: 13px;
+	font-weight: 700;
+	cursor: pointer;
+	transition: all 0.2s ease;
+	box-shadow: 0 2px 8px rgba(37,99,235,0.3);
+	letter-spacing: 0.5px;
+}
+.cal-today-btn:hover {
+	transform: translateY(-1px);
+	box-shadow: 0 4px 14px rgba(37,99,235,0.4);
+}
+.cal-body {
+	position: relative;
+}
+.cal-grid {
+	display: grid;
+	grid-template-columns: repeat(7, 1fr);
+	gap: 4px;
+	transition: opacity 0.3s ease, transform 0.3s ease;
+}
+.cal-grid.slide-left  { animation: calSlideLeft 0.35s cubic-bezier(.2,.9,.2,1); }
+.cal-grid.slide-right { animation: calSlideRight 0.35s cubic-bezier(.2,.9,.2,1); }
+@keyframes calSlideLeft {
+	from { opacity: 0; transform: translateX(40px); }
+	to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes calSlideRight {
+	from { opacity: 0; transform: translateX(-40px); }
+	to   { opacity: 1; transform: translateX(0); }
+}
+.cal-dow {
+	text-align: center;
+	font-weight: 800;
+	font-size: 12px;
+	text-transform: uppercase;
+	letter-spacing: 1px;
+	color: var(--muted);
+	padding: 8px 0 10px;
+}
+.cal-dow.weekend { color: rgba(239,68,68,0.55); }
+.cal-day {
+	aspect-ratio: 1;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 2px;
+	border-radius: clamp(10px, 2.5vw, 16px);
+	font-size: clamp(12px, 3vw, 15px);
+	font-weight: 600;
+	color: var(--text);
+	position: relative;
+	transition: all 0.2s cubic-bezier(.2,.9,.2,1);
+	border: 2px solid transparent;
+	overflow: hidden;
+}
+.cal-day.empty { visibility: hidden; }
+.cal-day.past .cal-day-num,
+.cal-day.past .cal-dots,
+.cal-day.past .cal-game-count { opacity: 0.4; }
+.cal-day.weekend-day { color: rgba(239,68,68,0.7); }
+.cal-day.today {
+	background: linear-gradient(135deg, rgba(37,99,235,0.12), rgba(59,130,246,0.08));
+	border-color: rgba(37,99,235,0.35);
+	font-weight: 800;
+	color: #2563eb;
+}
+.cal-day.today .cal-day-num {
+	background: #2563eb;
+	color: #fff;
+	width: 28px;
+	height: 28px;
+	border-radius: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 14px;
+}
+.cal-day.has-game {
+	cursor: pointer;
+	background: var(--card);
+	border-color: var(--border);
+	box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+.cal-day.has-game:hover {
+	transform: translateY(-3px) scale(1.04);
+	box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+	border-color: rgba(37,99,235,0.3);
+	z-index: 10;
+}
+.cal-day.today.has-game {
+	background: linear-gradient(135deg, rgba(37,99,235,0.15), rgba(59,130,246,0.08));
+	border-color: rgba(37,99,235,0.4);
+	box-shadow: 0 2px 12px rgba(37,99,235,0.15);
+}
+.cal-day.has-game.past .cal-day-num,
+.cal-day.has-game.past .cal-dots,
+.cal-day.has-game.past .cal-game-count {
+	opacity: 0.5;
+}
+.cal-game-count {
+	position: absolute;
+	top: 2px;
+	right: 2px;
+	background: #ef4444;
+	color: #fff;
+	font-size: clamp(7px, 1.8vw, 10px);
+	font-weight: 800;
+	width: clamp(13px, 3.5vw, 18px);
+	height: clamp(13px, 3.5vw, 18px);
+	border-radius: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	line-height: 1;
+}
+.cal-dots {
+	display: flex;
+	gap: 3px;
+	justify-content: center;
+}
+.cal-dot {
+	width: 7px;
+	height: 7px;
+	border-radius: 50%;
+	box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+}
+.cal-dot.basketball { background: linear-gradient(135deg, #f59e0b, #d97706); }
+.cal-dot.volleyball { background: linear-gradient(135deg, #3b82f6, #2563eb); }
+.cal-dot.soccer     { background: linear-gradient(135deg, #10b981, #059669); }
+.cal-dot.other       { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
+.cal-tooltip {
+	display: none;
+	position: absolute;
+	bottom: calc(100% + 10px);
+	left: 50%;
+	transform: translateX(-50%);
+	background: var(--card);
+	border: 1px solid var(--border);
+	border-radius: 16px;
+	padding: 14px 16px;
+	box-shadow: 0 12px 36px rgba(0,0,0,0.18);
+	min-width: 200px;
+	max-width: min(320px, 90vw);
+	white-space: normal;
+	word-break: break-word;
+	z-index: 30;
+	font-size: 13px;
+	text-align: left;
+	backdrop-filter: blur(12px);
+	animation: calTipIn 0.2s ease;
+}
+.cal-tooltip::after {
+	content: '';
+	position: absolute;
+	top: 100%;
+	left: 50%;
+	transform: translateX(-50%);
+	border: 6px solid transparent;
+	border-top-color: var(--card);
+}
+@keyframes calTipIn {
+	from { opacity: 0; transform: translateX(-50%) translateY(4px); }
+	to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+.cal-day.has-game:hover .cal-tooltip,
+.cal-day.has-game:focus .cal-tooltip,
+.cal-day.has-game.tip-active .cal-tooltip {
+	display: block;
+}
+.cal-tooltip-title {
+	font-weight: 800;
+	font-size: 12px;
+	text-transform: uppercase;
+	letter-spacing: 0.8px;
+	color: var(--muted);
+	margin-bottom: 8px;
+	padding-bottom: 6px;
+	border-bottom: 1px solid var(--border);
+}
+.cal-tooltip-row {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	padding: 5px 0;
+	color: var(--text);
+	font-weight: 600;
+	font-size: 13px;
+}
+.cal-tooltip-row.clickable {
+	cursor: pointer;
+	border-radius: 8px;
+	padding: 7px 8px;
+	margin: 0 -8px;
+	transition: background-color 0.2s ease;
+}
+.cal-tooltip-row.clickable:hover,
+.cal-tooltip-row.clickable:focus-visible {
+	background: color-mix(in srgb, var(--accent) 10%, transparent);
+	outline: none;
+}
+.cal-tooltip-row + .cal-tooltip-row {
+	border-top: 1px solid var(--border);
+}
+.cal-tooltip-sport {
+	font-size: 11px;
+	font-weight: 700;
+	padding: 2px 8px;
+	border-radius: 999px;
+	color: #fff;
+}
+.cal-tooltip-sport.basketball { background: linear-gradient(135deg, #f59e0b, #d97706); }
+.cal-tooltip-sport.volleyball { background: linear-gradient(135deg, #3b82f6, #2563eb); }
+.cal-tooltip-sport.soccer     { background: linear-gradient(135deg, #10b981, #059669); }
+.cal-tooltip-sport.other       { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
+.cal-tooltip-teams {
+	font-weight: 800;
+	color: var(--accent);
+}
+.cal-tooltip-time {
+	color: var(--muted);
+	font-size: 12px;
+	margin-left: auto;
+}
+.cal-legend {
+	display: flex;
+	justify-content: center;
+	flex-wrap: wrap;
+	gap: 16px;
+	margin-top: 20px;
+	padding-top: 16px;
+	border-top: 1px solid var(--border);
+	font-size: 13px;
+	color: var(--muted);
+	font-weight: 600;
+}
+.cal-legend-item {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+}
+
+@media (max-width: 860px) {
+	.top-nav {
+		gap: 40px;
+	}
+
+	.nav-center {
+		display: flex;
+		gap: 32px;
+		flex-wrap: wrap;
+		justify-content: center;
+	}
+
+	.nav-left,
+	.nav-right {
+		gap: 24px;
+		justify-content: center;
+	}
+
+	.theme-toggle {
+		margin-top: 0;
+	}
+
+	.teams {
+		grid-template-columns: 1fr;
+	}
+
+	.split-grid {
+		grid-template-columns: 1fr;
+	}
+
+	.schedule-grid {
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+	}
+
+	/* Calendar tooltip: fix overflow on small screens */
+	.cal-tooltip {
+		max-width: min(280px, 85vw);
+		font-size: 12px;
+	}
+
+	.cal-day.has-game {
+		-webkit-tap-highlight-color: transparent;
+	}
+
+	.cal-day.has-game:active {
+		transform: scale(0.95);
+	}
+}
+
+@media (max-width: 600px) {
+	.wrap {
+		padding: 12px 16px 60px;
+		padding-left: max(16px, env(safe-area-inset-left, 0px));
+		padding-right: max(16px, env(safe-area-inset-right, 0px));
+		padding-bottom: max(60px, env(safe-area-inset-bottom, 0px));
+	}
+
+	.top-nav {
+		gap: 20px;
+	}
+
+	.nav-center {
+		gap: 16px;
+	}
+
+	.nav-left,
+	.nav-right {
+		gap: 16px;
+		font-size: 14px;
+	}
+
+	.top-nav .logo {
+		width: 40px;
+		height: 40px;
+	}
+
+	.hero h1 {
+		font-size: clamp(36px, 10vw, 60px);
+	}
+
+	.hero p {
+		font-size: 14px;
+	}
+
+	.panel {
+		margin-top: 20px;
+		padding: 24px 18px 28px;
+		border-radius: 20px;
+	}
+
+	.panel-title {
+		font-size: 20px;
+		margin-bottom: 18px;
+	}
+
+	.team-item {
+		padding: 14px;
+	}
+
+	.team-logo {
+		width: 40px;
+		height: 40px;
+	}
+
+	.team-name {
+		font-size: 14px;
+	}
+
+	.team-record {
+		font-size: 12px;
+	}
+
+	.split-card {
+		padding: 16px;
+		border-radius: 16px;
+	}
+
+	.tabs {
+		padding: 4px;
+		gap: 4px;
+	}
+
+	.tab-btn {
+		padding: 8px 12px;
+		font-size: 13px;
+	}
+
+	.schedule-item {
+		padding: 14px;
+	}
+
+	.schedule-teams img {
+		width: 28px;
+		height: 28px;
+	}
+
+	.schedule-teams span {
+		font-size: 13px;
+	}
+
+	.theme-toggle {
+		padding: 6px 12px;
+		font-size: 14px;
+	}
+
+	.stat-row {
+		gap: 10px;
+	}
+
+	.stat .value {
+		font-size: 18px;
+	}
+
+	.stat .label {
+		font-size: 11px;
+	}
+}
+
+@media (max-width: 360px) {
+	.wrap {
+		padding: 10px 12px 50px;
+	}
+
+	.nav-left,
+	.nav-right {
+		gap: 12px;
+		font-size: 12px;
+	}
+
+	.top-nav .logo {
+		width: 36px;
+		height: 36px;
+	}
+
+	.hero h1 {
+		font-size: 28px;
+	}
+
+	.hero p {
+		font-size: 12px;
+	}
+
+	.panel {
+		padding: 18px 14px 22px;
+		border-radius: 16px;
+	}
+
+	.panel-title {
+		font-size: 16px;
+		margin-bottom: 14px;
+	}
+
+	.team-item {
+		padding: 12px;
+	}
+
+	.team-logo {
+		width: 32px;
+		height: 32px;
+	}
+
+	.team-name {
+		font-size: 12px;
+	}
+
+	.team-record {
+		font-size: 10px;
+	}
+
+	.tab-btn {
+		padding: 6px 8px;
+		font-size: 11px;
+	}
+
+	.schedule-teams img {
+		width: 24px;
+		height: 24px;
+	}
+
+	.schedule-teams span {
+		font-size: 11px;
+	}
+
+	.theme-toggle {
+		padding: 5px 10px;
+		font-size: 12px;
+	}
+
+	.stat .value {
+		font-size: 16px;
+	}
+
+	.stat .label {
+		font-size: 10px;
+	}
+
+	.schedule-grid {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 10px;
+	}
+
+	.cal-tooltip {
+		max-width: min(250px, 80vw);
+		padding: 10px 12px;
+		font-size: 11px;
+	}
+}
+
+/* ── iframe embed support ── */
+/* iframe embed support — always applied */
+html.in-iframe, html.in-iframe body {
+	width: 100%;
+	height: 100%;
+	overflow-x: hidden;
+}
+html.in-iframe body {
+	-webkit-text-size-adjust: 100%;
+}
+html.in-iframe .wrap {
+	max-width: 100%;
+}
+html.in-iframe .gender-panels {
+	min-height: 0;
+}
+html.in-iframe .gender-content {
+	position: relative;
+	inset: auto;
+}
+html.in-iframe .gender-content:not(.active) {
+	display: none;
+}
+html.in-iframe .gender-content.active {
+	position: relative;
+	opacity: 1;
+	transform: none;
+	pointer-events: auto;
+}
+html.in-iframe .cal-tooltip {
+	min-width: 160px;
+	white-space: normal;
+	word-break: break-word;
+}
+html.in-iframe #adminDock {
+	display: none;
+}
+
+/* iframe + narrow viewport only (mobile) */
+@media (max-width: 860px) {
+	html.in-iframe .wrap {
+		padding: 12px 12px 24px;
+	}
+	html.in-iframe .split-grid {
+		grid-template-columns: 1fr;
+		gap: 20px;
+	}
+	html.in-iframe .schedule-grid {
+		grid-template-columns: 1fr;
+		gap: 12px;
+	}
+	html.in-iframe .teams {
+		grid-template-columns: 1fr;
+	}
+	html.in-iframe .nav-center {
+		display: flex;
+		gap: 16px;
+		flex-wrap: wrap;
+		justify-content: center;
+	}
+	html.in-iframe .nav-left,
+	html.in-iframe .nav-right {
+		gap: 16px;
+		justify-content: center;
+		font-size: 14px;
+	}
+	html.in-iframe .panel {
+		padding: 22px 16px 26px;
+		border-radius: 20px;
+	}
+	html.in-iframe .split-panel {
+		--panel-hpad: 16px;
+		padding: 20px 16px 22px;
+	}
+	html.in-iframe .team-card {
+		padding: 20px 16px 18px;
+	}
+	html.in-iframe .mascot {
+		width: 90px;
+		height: 90px;
+		margin: 8px 0 14px;
+	}
+	html.in-iframe .hero h1 {
+		font-size: clamp(32px, 10vw, 56px);
+	}
+	html.in-iframe .stats {
+		gap: 18px;
+	}
+	html.in-iframe .stat .value {
+		font-size: 20px;
+	}
+	html.in-iframe .cal-header {
+		gap: 8px;
+	}
+	html.in-iframe .cal-header h2 {
+		font-size: 20px;
+		min-width: 0;
+	}
+	html.in-iframe .cal-nav {
+		width: 34px;
+		height: 34px;
+		font-size: 18px;
+		border-radius: 10px;
+		flex-shrink: 0;
+	}
+	html.in-iframe .cal-today-btn {
+		padding: 5px 12px;
+		font-size: 12px;
+		flex-shrink: 0;
+	}
+	html.in-iframe .cal-grid {
+		gap: 2px;
+	}
+	html.in-iframe .cal-day {
+		border-radius: 10px;
+		font-size: 13px;
+		border-width: 1.5px;
+	}
+	html.in-iframe .cal-dot {
+		width: 5px;
+		height: 5px;
+	}
+	html.in-iframe .cal-game-count {
+		width: 14px;
+		height: 14px;
+		font-size: 8px;
+		top: 2px;
+		right: 2px;
+	}
+	html.in-iframe .cal-day.today .cal-day-num {
+		width: 24px;
+		height: 24px;
+		font-size: 12px;
+	}
+}
