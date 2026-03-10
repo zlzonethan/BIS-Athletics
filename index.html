@@ -49,7 +49,7 @@
 				// Also detect Google Sites referrer
 				try {
 					if (document.referrer && document.referrer.includes('sites.google.com')) {
-						document.documentElement.classList.add('in-iframe');
+						document.documentElement.classList.add('in-iframe', 'google-sites-embed');
 					}
 				} catch (e) {}
 			})();
