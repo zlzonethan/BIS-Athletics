@@ -7,6 +7,12 @@
   const adminBody = document.getElementById('teamAdminBody');
   const adminStatus = document.getElementById('teamAdminStatus');
   const authStatus = document.getElementById('teamAdminAuthStatus');
+  const loginModal = document.getElementById('teamAdminLoginModal');
+  const loginStatus = document.getElementById('teamAdminLoginStatus');
+  const loginEmailInput = document.getElementById('teamAdminLoginEmail');
+  const loginPasswordInput = document.getElementById('teamAdminLoginPassword');
+  const loginCancelBtn = document.getElementById('teamAdminLoginCancelBtn');
+  const loginSubmitBtn = document.getElementById('teamAdminLoginSubmitBtn');
   const authEmailInput = document.getElementById('teamAdminEmail');
   const authPasswordInput = document.getElementById('teamAdminPassword');
   const signInBtn = document.getElementById('teamAdminSignInBtn');
@@ -120,6 +126,12 @@
   if (auth) {
     auth.onAuthStateChanged((user) => {
       currentUser = user || null;
+      if (currentUser && loginModal && !loginModal.hidden) {
+        setLoginModalOpen(false);
+      }
+      if (!currentUser && !adminBody.hidden) {
+        setAdminOpen(false);
+      }
       refreshAuthUi();
     });
   } else {
@@ -127,12 +139,21 @@
   }
 
   function bindControls() {
-    adminToggle.addEventListener('click', () => {
-      adminBody.hidden = !adminBody.hidden;
-      adminToggle.textContent = adminBody.hidden ? 'Team Admin' : 'Close Admin';
+    adminToggle.addEventListener('click', async () => {
       if (!adminBody.hidden) {
-        refreshEditor();
+        setAdminOpen(false);
+        return;
       }
+      if (!auth) {
+        setStatus('Firebase Auth is unavailable on this page.', 'warn');
+        alert('Firebase Auth is unavailable on this page.');
+        return;
+      }
+      if (!currentUser) {
+        setLoginModalOpen(true);
+        return;
+      }
+      setAdminOpen(true);
     });
 
     tabSelect.addEventListener('change', () => {
@@ -215,28 +236,13 @@
     });
 
     signInBtn.addEventListener('click', async () => {
-      if (!auth) {
-        setStatus('Firebase Auth is unavailable on this page.', 'warn');
-        return;
-      }
-      const email = asText(authEmailInput.value);
-      const password = asText(authPasswordInput.value);
-      if (!email || !password) {
-        alert('Enter both email and password.');
-        return;
-      }
-      signInBtn.disabled = true;
-      try {
-        await auth.signInWithEmailAndPassword(email, password);
-        authPasswordInput.value = '';
-        setStatus('Signed in. Remote save is ready.', 'ok');
-      } catch (error) {
-        console.warn('Firebase sign-in failed', error);
-        alert(error && error.message ? error.message : 'Failed to sign in.');
-        setStatus('Sign-in failed. Check Firebase Auth setup.', 'warn');
-      } finally {
-        signInBtn.disabled = false;
-      }
+      await signInWithCredentials({
+        email: asText(authEmailInput.value),
+        password: asText(authPasswordInput.value),
+        triggerButton: signInBtn,
+        openAdminOnSuccess: false,
+        source: 'panel'
+      });
     });
 
     signOutBtn.addEventListener('click', async () => {
@@ -245,10 +251,53 @@
       }
       try {
         await auth.signOut();
-        setStatus('Signed out. Save will stay local until you sign in again.');
+        setAdminOpen(false);
+        setStatus('Signed out. Sign in again to open Team Admin.');
       } catch (error) {
         console.warn('Firebase sign-out failed', error);
         setStatus('Sign-out failed.', 'warn');
+      }
+    });
+
+    loginSubmitBtn?.addEventListener('click', async () => {
+      await signInWithCredentials({
+        email: asText(loginEmailInput?.value),
+        password: asText(loginPasswordInput?.value),
+        triggerButton: loginSubmitBtn,
+        openAdminOnSuccess: true,
+        source: 'modal'
+      });
+    });
+
+    loginCancelBtn?.addEventListener('click', () => {
+      setLoginModalOpen(false);
+    });
+
+    loginModal?.addEventListener('click', (event) => {
+      if (event.target === loginModal) {
+        setLoginModalOpen(false);
+      }
+    });
+
+    loginPasswordInput?.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        loginSubmitBtn?.click();
+      }
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        setLoginModalOpen(false);
+      }
+    });
+
+    loginEmailInput?.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter' && !loginPasswordInput?.value) {
+        event.preventDefault();
+        loginPasswordInput?.focus();
+      }
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        setLoginModalOpen(false);
       }
     });
 
@@ -283,6 +332,77 @@
     });
   }
 
+  function setAdminOpen(isOpen) {
+    adminBody.hidden = !isOpen;
+    adminToggle.textContent = isOpen ? 'Close Admin' : 'Team Admin';
+    if (isOpen) {
+      refreshEditor();
+    }
+  }
+
+  function setLoginModalOpen(isOpen) {
+    if (!loginModal) {
+      return;
+    }
+    loginModal.hidden = !isOpen;
+    if (!isOpen) {
+      if (loginPasswordInput) loginPasswordInput.value = '';
+      if (loginStatus) {
+        loginStatus.textContent = '로그인해야 Team Admin이 열립니다.';
+        loginStatus.dataset.tone = '';
+      }
+      return;
+    }
+    if (loginStatus) {
+      loginStatus.textContent = '로그인해야 Team Admin이 열립니다.';
+      loginStatus.dataset.tone = '';
+    }
+    if (loginEmailInput) {
+      loginEmailInput.value = authEmailInput?.value || loginEmailInput.value || '';
+    }
+    if (loginPasswordInput) {
+      loginPasswordInput.value = '';
+    }
+    setTimeout(() => (loginEmailInput || loginPasswordInput)?.focus(), 0);
+  }
+
+  async function signInWithCredentials({ email, password, triggerButton, openAdminOnSuccess, source }) {
+    if (!auth) {
+      setStatus('Firebase Auth is unavailable on this page.', 'warn');
+      return;
+    }
+    if (!email || !password) {
+      alert('Enter both email and password.');
+      return;
+    }
+    if (triggerButton) triggerButton.disabled = true;
+    try {
+      await auth.signInWithEmailAndPassword(email, password);
+      if (authEmailInput) authEmailInput.value = email;
+      if (authPasswordInput) authPasswordInput.value = '';
+      if (loginEmailInput) loginEmailInput.value = email;
+      if (loginPasswordInput) loginPasswordInput.value = '';
+      if (openAdminOnSuccess) {
+        setLoginModalOpen(false);
+        setAdminOpen(true);
+        setStatus('Signed in. Team Admin opened.', 'ok');
+      } else {
+        setStatus('Signed in. Remote save is ready.', 'ok');
+      }
+    } catch (error) {
+      console.warn('Firebase sign-in failed', error);
+      const message = error && error.message ? error.message : 'Failed to sign in.';
+      if (source === 'modal' && loginStatus) {
+        loginStatus.textContent = message;
+        loginStatus.dataset.tone = 'warn';
+      }
+      alert(message);
+      setStatus('Sign-in failed. Check Firebase Auth setup.', 'warn');
+    } finally {
+      if (triggerButton) triggerButton.disabled = false;
+    }
+  }
+
   function refreshAuthUi() {
     if (!auth) {
       if (authStatus) {
@@ -302,7 +422,7 @@
       return;
     }
 
-    authStatus.textContent = 'Not signed in. Save works locally, but Firebase sync requires Email/Password sign-in.';
+    authStatus.textContent = 'Not signed in. Sign in is required to open Team Admin.';
     authEmailInput.disabled = false;
     authPasswordInput.disabled = false;
     signInBtn.disabled = false;

@@ -333,6 +333,25 @@
         box-shadow:0 24px 54px rgba(15,23,42,.2);
       }
       .team-admin-body[hidden]{display:none}
+      .team-admin-modal{
+        position:fixed;
+        inset:0;
+        z-index:1300;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        padding:24px;
+        background:rgba(15,23,42,.38);
+      }
+      .team-admin-modal[hidden]{display:none}
+      .team-admin-modal-panel{
+        width:min(420px,calc(100vw - 32px));
+        background:var(--panel);
+        border:1px solid var(--border);
+        border-radius:20px;
+        padding:16px;
+        box-shadow:0 24px 54px rgba(15,23,42,.28);
+      }
       .team-admin-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:12px}
       .team-admin-title{font-size:15px;font-weight:800;color:var(--text)}
       .team-admin-status{font-size:11px;font-weight:700;color:var(--muted);text-align:right}
@@ -1487,6 +1506,31 @@
             <button id="teamAdminReloadBtn" class="team-admin-btn" type="button">Reload Saved</button>
           </div>
           <p class="team-admin-hint">Preview 는 현재 브라우저 화면에만 먼저 반영됩니다. Save 는 localStorage 에 저장하고, 로그인되어 있으면 Firebase teamPageContent 문서에도 같이 저장합니다.</p>
+        </div>
+      </div>
+      <div id="teamAdminLoginModal" class="team-admin-modal" hidden>
+        <div class="team-admin-modal-panel" role="dialog" aria-modal="true" aria-labelledby="teamAdminLoginTitle">
+          <div class="team-admin-head">
+            <div id="teamAdminLoginTitle" class="team-admin-title">Team Admin Sign In</div>
+            <div id="teamAdminLoginStatus" class="team-admin-status">로그인해야 Team Admin이 열립니다.</div>
+          </div>
+          <div class="team-admin-auth-box" style="margin-top:0">
+            <div class="team-admin-group-title">Firebase Admin Login</div>
+            <div class="team-admin-inline-grid">
+              <label class="team-admin-field" style="margin-top:0">
+                <span class="team-admin-label">Email</span>
+                <input id="teamAdminLoginEmail" class="team-admin-input" type="email" autocomplete="username" />
+              </label>
+              <label class="team-admin-field" style="margin-top:0">
+                <span class="team-admin-label">Password</span>
+                <input id="teamAdminLoginPassword" class="team-admin-input" type="password" autocomplete="current-password" />
+              </label>
+            </div>
+            <div class="team-admin-toolbar">
+              <button id="teamAdminLoginCancelBtn" class="team-admin-mini-btn" type="button">Cancel</button>
+              <button id="teamAdminLoginSubmitBtn" class="team-admin-mini-btn" type="button">Sign In</button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
