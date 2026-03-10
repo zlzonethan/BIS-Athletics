@@ -494,9 +494,15 @@ input.addEventListener('keydown', onKey);
 		return document.documentElement.classList.contains('in-iframe') &&
 			!document.documentElement.classList.contains('google-sites-embed');
 	}
-	function openDirectAdminPage() {
-		const directUrl = new URL(window.location.href);
+	function getDirectAdminUrl() {
+		const canonicalHref = document.querySelector('link[rel="canonical"]')?.href || '';
+		const fallbackUrl = new URL(window.location.href);
+		const directUrl = canonicalHref ? new URL(canonicalHref) : fallbackUrl;
 		directUrl.searchParams.set('admin', '1');
+		return directUrl;
+	}
+	function openDirectAdminPage() {
+		const directUrl = getDirectAdminUrl();
 		try {
 			if (window.top && window.top !== window.self) {
 				window.top.location.href = directUrl.toString();
