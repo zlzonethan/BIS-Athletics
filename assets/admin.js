@@ -32,14 +32,113 @@ db = firebase.firestore();
 		} catch (e) { console.warn('Firebase init failed', e); }
 	}
 
+	let inMemoryStore = {};
+	const getWindowStorage = (name) => {
+		try {
+			return window[name] || null;
+		} catch (e) {
+			return null;
+		}
+	};
+	const hasWindowStorage = (storage) => {
+		if (!storage) return false;
+		try {
+			const key = '__bis_storage_test__';
+			storage.setItem(key, key);
+			storage.removeItem(key);
+			return true;
+		} catch (e) {
+			return false;
+		}
+	};
+	let localStore = getWindowStorage('localStorage');
+	let sessionStore = getWindowStorage('sessionStorage');
+	let localStoreAvailable = hasWindowStorage(localStore);
+	let sessionStoreAvailable = hasWindowStorage(sessionStore);
+	const readStoredValue = (key) => {
+		try {
+			if (localStoreAvailable) {
+				const value = localStore.getItem(key);
+				if (value !== null) return value;
+			}
+		} catch (e) {
+			localStore = null;
+			localStoreAvailable = false;
+		}
+		try {
+			if (sessionStoreAvailable) {
+				const value = sessionStore.getItem(key);
+				if (value !== null) return value;
+			}
+		} catch (e) {
+			sessionStore = null;
+			sessionStoreAvailable = false;
+		}
+		return Object.prototype.hasOwnProperty.call(inMemoryStore, key) ? inMemoryStore[key] : null;
+	};
+	const writeStoredValue = (key, value) => {
+		const nextValue = value == null ? '' : String(value);
+		let persisted = false;
+		try {
+			if (localStoreAvailable) {
+				localStore.setItem(key, nextValue);
+				persisted = true;
+			}
+		} catch (e) {
+			localStore = null;
+			localStoreAvailable = false;
+		}
+		try {
+			if (sessionStoreAvailable) {
+				sessionStore.setItem(key, nextValue);
+				persisted = true;
+			}
+		} catch (e) {
+			sessionStore = null;
+			sessionStoreAvailable = false;
+		}
+		inMemoryStore[key] = nextValue;
+		return persisted;
+	};
+	const removeStoredValue = (key) => {
+		try {
+			if (localStoreAvailable) localStore.removeItem(key);
+		} catch (e) {
+			localStore = null;
+			localStoreAvailable = false;
+		}
+		try {
+			if (sessionStoreAvailable) sessionStore.removeItem(key);
+		} catch (e) {
+			sessionStore = null;
+			sessionStoreAvailable = false;
+		}
+		delete inMemoryStore[key];
+	};
+	async function ensureStorageAccess() {
+		if (!document.documentElement.classList.contains('in-iframe')) return;
+		if (localStoreAvailable) return;
+		if (typeof document.hasStorageAccess !== 'function' || typeof document.requestStorageAccess !== 'function') return;
+		try {
+			const hasAccess = await document.hasStorageAccess();
+			if (!hasAccess) await document.requestStorageAccess();
+		} catch (e) {}
+		localStore = getWindowStorage('localStorage');
+		sessionStore = getWindowStorage('sessionStorage');
+		localStoreAvailable = hasWindowStorage(localStore);
+		sessionStoreAvailable = hasWindowStorage(sessionStore);
+	}
+
 	const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 	const normalizeText = (v) => (v || '').toString().trim().toLowerCase();
 	const readJson = (key, fallback) => {
-		try { return JSON.parse(localStorage.getItem(key) || JSON.stringify(fallback)); }
-		catch (e) { return fallback; }
+		try {
+			const raw = readStoredValue(key);
+			return raw === null ? fallback : JSON.parse(raw);
+		} catch (e) { return fallback; }
 	};
 	const writeJson = (key, value) => {
-		try { localStorage.setItem(key, JSON.stringify(value)); } catch (e) {}
+		try { writeStoredValue(key, JSON.stringify(value)); } catch (e) {}
 	};
 	const normalizeCustomMatch = (m) => {
 		const id = Number(m?.id);
@@ -341,7 +440,7 @@ populateMatchSelect();
 
 	function getStoredPassHash(){
 		try {
-const current = localStorage.getItem(ADMIN_PASSPHRASE_KEY) || '';
+const current = readStoredValue(ADMIN_PASSPHRASE_KEY) || '';
 if (current) return current;
 // Migrate legacy plain text passphrase to hash on first use
 return '';
@@ -350,11 +449,14 @@ return '';
 	async function setPassHash(pass){
 		try {
 const hash = await sha256(pass.trim());
-localStorage.setItem(ADMIN_PASSPHRASE_KEY, hash);
+const persisted = writeStoredValue(ADMIN_PASSPHRASE_KEY, hash);
 // Clean up legacy keys
-localStorage.removeItem('bis_admin_pass');
-localStorage.removeItem(LEGACY_ADMIN_PASSPHRASE_KEY);
-		} catch(e){}
+removeStoredValue('bis_admin_pass');
+removeStoredValue(LEGACY_ADMIN_PASSPHRASE_KEY);
+			return persisted;
+		} catch(e){
+			return false;
+		}
 	}
 	function showPassModal(title, desc) {
 		return new Promise((resolve) => {
@@ -395,8 +497,11 @@ const newPass = await showPassModal('Create Passphrase', 'No passphrase configur
 if (newPass === null) return { ok: false, reason: 'cancelled' };
 const trimmed = (newPass || '').trim();
 if (trimmed.length < 6) return { ok: false, reason: 'weak' };
-await setPassHash(trimmed);
+const persisted = await setPassHash(trimmed);
 storedHash = await sha256(trimmed);
+			if (!persisted && document.documentElement.classList.contains('in-iframe')) {
+				alert('This forwarded page can open admin, but your browser is not allowing persistent storage inside the iframe. If it asks again after reload, use the direct site URL for admin access.');
+			}
 		}
 		const p = await showPassModal('Admin Passphrase', 'Enter passphrase to open admin panel.');
 		if (p === null) return { ok: false, reason: 'cancelled' };
@@ -406,10 +511,11 @@ storedHash = await sha256(trimmed);
 
 adminToggle.addEventListener('click', async ()=>{
 	if (adminBody.style.display === 'none' || adminBody.style.display === '') {
+await ensureStorageAccess();
 const auth = await promptPass();
 if(!auth.ok){
 	if (auth.reason === 'not_configured') alert('Admin passphrase is not configured.');
-	else if (auth.reason === 'weak') alert('Passphrase must be at least 4 characters.');
+	else if (auth.reason === 'weak') alert('Passphrase must be at least 6 characters.');
 	else if (auth.reason === 'wrong') alert('Incorrect passphrase');
 	return;
 }
@@ -579,17 +685,16 @@ await db.collection('finishedMatches').doc(id).set({
 alert('Match marked as finished (saved to Firebase)');
 		} catch(e) {
 console.error(e);
-// fallback to localStorage
-const finished = JSON.parse(localStorage.getItem('bis_finished_matches')||'{}');
+const finished = readJson(FINISHED_KEY, {});
 finished[id] = { finished: true, homeScore, awayScore, finishedAt: new Date().toISOString() };
-localStorage.setItem('bis_finished_matches', JSON.stringify(finished));
-alert('Match marked as finished (saved locally)');
+writeJson(FINISHED_KEY, finished);
+alert('Match marked as finished (saved in browser storage)');
 		}
 	} else {
-		const finished = JSON.parse(localStorage.getItem('bis_finished_matches')||'{}');
+		const finished = readJson(FINISHED_KEY, {});
 		finished[id] = { finished: true, homeScore, awayScore, finishedAt: new Date().toISOString() };
-		localStorage.setItem('bis_finished_matches', JSON.stringify(finished));
-		alert('Match marked as finished (saved locally)');
+		writeJson(FINISHED_KEY, finished);
+		alert('Match marked as finished (saved in browser storage)');
 	}
 });
 
@@ -604,16 +709,16 @@ await db.collection('finishedMatches').doc(id).delete();
 alert('Match reverted to Upcoming (Firebase)');
 		} catch(e) {
 console.error(e);
-const finished = JSON.parse(localStorage.getItem('bis_finished_matches')||'{}');
+const finished = readJson(FINISHED_KEY, {});
 delete finished[id];
-localStorage.setItem('bis_finished_matches', JSON.stringify(finished));
-alert('Match reverted to Upcoming (local)');
+writeJson(FINISHED_KEY, finished);
+alert('Match reverted to Upcoming (browser storage)');
 		}
 	} else {
-		const finished = JSON.parse(localStorage.getItem('bis_finished_matches')||'{}');
+		const finished = readJson(FINISHED_KEY, {});
 		delete finished[id];
-		localStorage.setItem('bis_finished_matches', JSON.stringify(finished));
-		alert('Match reverted to Upcoming (local)');
+		writeJson(FINISHED_KEY, finished);
+		alert('Match reverted to Upcoming (browser storage)');
 	}
 	});
 
