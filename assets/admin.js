@@ -490,6 +490,24 @@ input.addEventListener('keydown', onKey);
 		errEl.textContent = msg;
 		errEl.style.display = 'block';
 	}
+	function isForwardedFrameAdmin() {
+		return document.documentElement.classList.contains('in-iframe') &&
+			!document.documentElement.classList.contains('google-sites-embed');
+	}
+	function openDirectAdminPage() {
+		const directUrl = new URL(window.location.href);
+		directUrl.searchParams.set('admin', '1');
+		try {
+			if (window.top && window.top !== window.self) {
+				window.top.location.href = directUrl.toString();
+				return;
+			}
+		} catch (e) {}
+		const opened = window.open(directUrl.toString(), '_blank', 'noopener');
+		if (!opened) {
+			alert(`Open admin directly here: ${directUrl.toString()}`);
+		}
+	}
 	async function promptPass(){
 		let storedHash = getStoredPassHash();
 		if (!storedHash) {
@@ -511,6 +529,10 @@ storedHash = await sha256(trimmed);
 
 adminToggle.addEventListener('click', async ()=>{
 	if (adminBody.style.display === 'none' || adminBody.style.display === '') {
+		if (isForwardedFrameAdmin()) {
+			openDirectAdminPage();
+			return;
+		}
 await ensureStorageAccess();
 const auth = await promptPass();
 if(!auth.ok){
@@ -726,6 +748,14 @@ alert('Match reverted to Upcoming (browser storage)');
 	jsonArea.addEventListener('input', ()=>{
 		try{ const parsed = JSON.parse(jsonArea.value); setAll(parsed); }catch(e){}
 	});
+	try {
+		const currentUrl = new URL(window.location.href);
+		if (!document.documentElement.classList.contains('in-iframe') && currentUrl.searchParams.get('admin') === '1') {
+			currentUrl.searchParams.delete('admin');
+			history.replaceState(null, '', currentUrl.toString());
+			requestAnimationFrame(() => adminToggle?.click());
+		}
+	} catch (e) {}
 	if (matchSelect.value) {
 		matchSelect.dispatchEvent(new Event('change'));
 	}
