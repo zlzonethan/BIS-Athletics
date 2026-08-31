@@ -20,7 +20,7 @@
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 		<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet" />
-		<link rel="stylesheet" href="assets/style.css" />
+		<link rel="stylesheet" href="assets/style.css?v=20260408" />
 		<!-- Firebase SDKs -->
 		<script>
 			window.BIS_FIREBASE_CONFIG = {
@@ -34,8 +34,9 @@
 			};
 		</script>
 		<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+		<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
 		<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
-		<script src="data/schedules.js"></script>
+		<script src="data/schedules.js?v=20260408"></script>
 		<script>
 			// Detect iframe and add class
 			(function() {
@@ -60,27 +61,27 @@
 			<nav class="top-nav">
 				<div class="nav-center">
 					<div class="nav-left">
-						<a class="nav-item" href="bobcat.html">Bobcat</a>
-						<a class="nav-item" href="team.html">Team</a>
+						<a class="nav-item" href="bobcat.html"><span data-site-field="nav.bobcat">Bobcat</span></a>
+						<a class="nav-item" href="team.html"><span data-site-field="nav.team">Team</span></a>
 					</div>
 					<a class="nav-logo-link" href="index.html">
 						<img decoding="async" class="logo" src="assets/bismascot.png" alt="BIS mascot" />
 					</a>
 					<div class="nav-right">
-						<a class="nav-item" href="upcoming.html">Upcoming</a>
-						<a class="nav-item" href="kisaa-kaiac.html">KISAA/KAIAC</a>
+						<a class="nav-item" href="upcoming.html"><span data-site-field="nav.upcoming">Upcoming</span></a>
+						<a class="nav-item" href="kisaa-kaiac.html"><span data-site-field="nav.kisaa">KISAA/KAIAC</span></a>
 					</div>
 				</div>
 			</nav>
 
 			<header class="hero">
-				<h1>BIS ATHLETICS</h1>
-				<div class="season">2025-2026</div>
+				<h1 data-site-field="hero.title">BIS ATHLETICS</h1>
+				<div class="season" data-site-field="hero.season">2025-2026</div>
 			</header>
 
 			<section class="panel">
 				<div class="panel-title">
-					<span>MS / HS TEAMS</span>
+					<span data-site-field="panel.teams">MS / HS TEAMS</span>
 				</div>
 
 				<div class="split-grid" id="teamCardsGrid">
@@ -88,62 +89,218 @@
 				</div>
 			</section>
 
-			<!-- Game Calendar -->
-			<section class="panel calendar-wrap" id="calendarSection">
+			<section class="panel" id="calendarPanel" data-bis-no-reveal>
 				<div class="panel-title">
-					<span>🗓️</span>
-					<span>Game Calendar</span>
+					<span>📅</span>
+					<span>Match Calendar</span>
+					<span>📅</span>
 				</div>
-				<div class="cal-header">
-					<button class="cal-nav" id="calPrev" type="button" aria-label="Previous month">‹</button>
-					<h2 id="calMonth"></h2>
-					<button class="cal-nav" id="calNext" type="button" aria-label="Next month">›</button>
-					<button class="cal-today-btn" id="calToday" type="button">Today</button>
+				<div class="calendar-controls">
+					<button class="calendar-nav-btn" type="button" aria-label="Previous month" onclick="BIS_CAL.go(-1)">‹</button>
+					<div class="calendar-month-label" id="calMonthLabel" data-site-editor-ui="true"></div>
+					<button class="calendar-nav-btn" type="button" aria-label="Next month" onclick="BIS_CAL.go(1)">›</button>
+					<button class="calendar-today-btn" type="button" onclick="BIS_CAL.goToday()">Today</button>
 				</div>
-				<div class="cal-body">
-					<div class="cal-grid" id="calGrid"></div>
+				<div class="calendar-weekdays">
+					<div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
 				</div>
-				<div class="cal-legend">
-					<span class="cal-legend-item"><span class="cal-dot basketball"></span> Basketball</span>
-					<span class="cal-legend-item"><span class="cal-dot volleyball"></span> Volleyball</span>
-					<span class="cal-legend-item"><span class="cal-dot soccer"></span> Soccer</span>
-				</div>
+				<div class="calendar-grid" id="calGrid" data-site-editor-ui="true"></div>
+				<div class="calendar-event-list" id="calEventList" data-site-editor-ui="true"></div>
 			</section>
+			<script src="assets/calendar.js?v=20260830"></script>
+			<script>
+			if (!window.BIS_CAL) { var BIS_CAL = (function(){
+				var MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+				var SPORT_EMOJI = {basketball:'\u{1F3C0}',volleyball:'\u{1F3D0}',soccer:'\u26BD'};
+				var grid = document.getElementById('calGrid');
+				var label = document.getElementById('calMonthLabel');
+				var evList = document.getElementById('calEventList');
+				var today = new Date();
+				var viewDate = new Date(today.getFullYear(), today.getMonth(), 1);
+				var cSel = null;
+
+				var mn = {Jan:0,Feb:1,Mar:2,Apr:3,May:4,Jun:5,Jul:6,Aug:7,Sep:8,Oct:9,Nov:10,Dec:11};
+
+				// Fix #1: Dynamic year inference based on current date (like admin.js inferYearByMonth)
+				function inferYear(monthIndex) {
+					var now = new Date();
+					var currentYear = now.getFullYear();
+					var currentMonth = now.getMonth();
+					var year = currentYear;
+					if (currentMonth <= 4 && monthIndex >= 7) year = currentYear - 1;
+					if (currentMonth >= 7 && monthIndex <= 4) year = currentYear + 1;
+					return year;
+				}
+
+				function parseMatchDate(dateStr) {
+					if (!dateStr) return null;
+					var mt = dateStr.match(/^([A-Za-z]+)\s+(\d+)/);
+					if (!mt) return null;
+					var mo = mn[mt[1]];
+					if (mo === undefined) return null;
+					var yr = inferYear(mo);
+					return yr + '-' + String(mo + 1).padStart(2, '0') + '-' + String(parseInt(mt[2])).padStart(2, '0');
+				}
+
+				// Fix #2: Include custom matches from localStorage + Firestore
+				function buildEvMap() {
+					var evMap = {};
+					var delIds;
+					try { delIds = new Set(JSON.parse(localStorage.getItem('bis_deleted_matches') || '[]').map(String)); } catch(e) { delIds = new Set(); }
+
+					// Base schedules
+					var scheds = window.BIS_BASE_SCHEDULES || [];
+					for (var i = 0; i < scheds.length; i++) {
+						var s = scheds[i];
+						if (!s.date || delIds.has(String(s.id))) continue;
+						var k = parseMatchDate(s.date);
+						if (!k) continue;
+						if (!evMap[k]) evMap[k] = [];
+						evMap[k].push(s);
+					}
+
+					// Custom matches from localStorage
+					var customRaw;
+					try { customRaw = JSON.parse(localStorage.getItem('bis_custom_matches') || '[]'); } catch(e) { customRaw = []; }
+					if (Array.isArray(customRaw)) {
+						for (var j = 0; j < customRaw.length; j++) {
+							var c = customRaw[j];
+							if (!c || !c.date || !c.home || !c.away) continue;
+							if (delIds.has(String(c.id))) continue;
+							var ck = parseMatchDate(c.date);
+							if (!ck) continue;
+							if (!evMap[ck]) evMap[ck] = [];
+							evMap[ck].push(c);
+						}
+					}
+
+					return evMap;
+				}
+
+				var evMap = buildEvMap();
+
+				function draw(){
+					var cY = viewDate.getFullYear();
+					var cM = viewDate.getMonth();
+					label.textContent = MONTHS[cM]+' '+cY;
+
+					// Build a full 6-week grid from the Sunday before month start.
+					var monthStart = new Date(cY, cM, 1);
+					var cursor = new Date(cY, cM, 1 - monthStart.getDay());
+					var html = '';
+
+					for (var cell = 0; cell < 42; cell++) {
+						var y = cursor.getFullYear();
+						var m = cursor.getMonth();
+						var d = cursor.getDate();
+						var key = y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+						var ev = evMap[key] || [];
+
+						var cls = 'calendar-day';
+						if (m !== cM) cls += ' other-month empty';
+						if (y===today.getFullYear() && m===today.getMonth() && d===today.getDate()) cls += ' today';
+						if (cSel===key) cls += ' selected';
+
+						var dots = '';
+						if (ev.length > 0) {
+							var seen = {};
+							dots = '<div class="calendar-dots">';
+							for (var j = 0; j < ev.length; j++) {
+								var sport = ev[j] && ev[j].sport;
+								if (!sport || seen[sport]) continue;
+								seen[sport] = 1;
+								dots += '<div class="calendar-dot '+sport+'"></div>';
+							}
+							dots += '</div>';
+						}
+
+						if (ev.length > 0) {
+							html += '<div class="'+cls+'" style="cursor:pointer" onclick="BIS_CAL.pick(\''+key+'\')"><div class="day-number">'+d+'</div>'+dots+'</div>';
+						} else {
+							html += '<div class="'+cls+'"><div class="day-number">'+d+'</div></div>';
+						}
+
+						cursor.setDate(cursor.getDate() + 1);
+					}
+
+					grid.innerHTML = html;
+					drawEv();
+				}
+
+				// Fix #3: Add link to details page for each event
+				function drawEv(){
+					if(!evList) return;
+					if(!cSel||!evMap[cSel]){evList.innerHTML='';return;}
+					var ev=evMap[cSel], h='';
+					for(var i=0;i<ev.length;i++){
+						var e=ev[i], em=SPORT_EMOJI[e.sport]||'\u{1F3C5}';
+						var tm=e.date?e.date.match(/(\d+:\d+\w*)/):null;
+						var t=tm?tm[1]:'';
+						var link = 'details.html?id=' + encodeURIComponent(e.id);
+						h+='<a href="'+link+'" class="calendar-event-item" style="text-decoration:none;color:inherit;display:flex;">'+
+							'<div class="calendar-event-sport">'+em+'</div>'+
+							'<div class="calendar-event-info">'+
+								'<div class="calendar-event-title">'+e.home+' vs '+e.away+'</div>'+
+								'<div class="calendar-event-meta">'+(t?t+' \u00b7 ':'')+(e.location||'')+(e.gender?' \u00b7 '+e.gender:'')+'</div>'+
+							'</div>'+
+							'<div class="calendar-event-badge">'+e.level+' '+e.sport+'</div>'+
+						'</a>';
+					}
+					evList.innerHTML=h;
+				}
+
+				function go(d){
+					viewDate.setMonth(viewDate.getMonth() + d);
+					viewDate.setDate(1);
+					draw();
+				}
+				function goToday(){
+					cSel = null;
+					viewDate = new Date(today.getFullYear(), today.getMonth(), 1);
+					draw();
+				}
+				function pick(k){cSel=(cSel===k)?null:k;draw();}
+				function refresh(){evMap=buildEvMap();draw();}
+
+				draw();
+				return {go:go,goToday:goToday,pick:pick,refresh:refresh};
+			})(); }
+			</script>
 
 			<section class="panel">
 				<div class="panel-title">
 					<span>📅</span>
-					<span>Teams by Season</span>
+					<span data-site-field="panel.seasonSchedule">Teams by Season</span>
 					<span>📅</span>
 				</div>
 
 				<div class="season-tabs" role="tablist" aria-label="Season schedule">
-					<button class="season-tab" type="button" data-target="season-autumn" data-season="autumn">Autumn</button>
-					<button class="season-tab" type="button" data-target="season-winter" data-season="winter">Winter</button>
-					<button class="season-tab" type="button" data-target="season-spring" data-season="spring">Spring</button>
+					<button class="season-tab" type="button" data-target="season-autumn" data-season="autumn"><span data-site-field="seasonTabs.autumn">Autumn</span></button>
+					<button class="season-tab" type="button" data-target="season-winter" data-season="winter"><span data-site-field="seasonTabs.winter">Winter</span></button>
+					<button class="season-tab" type="button" data-target="season-spring" data-season="spring"><span data-site-field="seasonTabs.spring">Spring</span></button>
 				</div>
 
 				<div class="season-content active" id="season-autumn">
 					<div class="schedule-grid">
 						<div class="schedule-col">
 							<h3>Mon</h3>
-							<div class="season-item">HS Volleyball Men</div>
+							<div class="season-item" data-site-field="seasonSchedule.autumn.mon">HS Volleyball Men</div>
 						</div>
 						<div class="schedule-col">
 							<h3>Tue</h3>
-							<div class="season-item">HS Volleyball Women</div>
+							<div class="season-item" data-site-field="seasonSchedule.autumn.tue">HS Volleyball Women</div>
 						</div>
 						<div class="schedule-col">
 							<h3>Wed</h3>
-							<div class="season-item">HS Volleyball Men</div>
+							<div class="season-item" data-site-field="seasonSchedule.autumn.wed">HS Volleyball Men</div>
 						</div>
 						<div class="schedule-col">
 							<h3>Th</h3>
-							<div class="season-item">HS Volleyball Women</div>
+							<div class="season-item" data-site-field="seasonSchedule.autumn.thu">HS Volleyball Women</div>
 						</div>
 						<div class="schedule-col">
 							<h3>Fri</h3>
-							<div class="season-item">MS Soccer Boys</div>
+							<div class="season-item" data-site-field="seasonSchedule.autumn.fri">MS Soccer Boys</div>
 						</div>
 					</div>
 				</div>
@@ -152,23 +309,23 @@
 					<div class="schedule-grid">
 						<div class="schedule-col">
 							<h3>Mon</h3>
-							<div class="season-item">HS Basketball Women</div>
+							<div class="season-item" data-site-field="seasonSchedule.winter.mon">HS Basketball Women</div>
 						</div>
 						<div class="schedule-col">
 							<h3>Tue</h3>
-							<div class="season-item">MS Volleyball Girls</div>
+							<div class="season-item" data-site-field="seasonSchedule.winter.tue">MS Volleyball Girls</div>
 						</div>
 						<div class="schedule-col">
 							<h3>Wed</h3>
-							<div class="season-item">HS Basketball Women / Men</div>
+							<div class="season-item" data-site-field="seasonSchedule.winter.wed">HS Basketball Women / Men</div>
 						</div>
 						<div class="schedule-col">
 							<h3>Th</h3>
-							<div class="season-item">MS Volleyball Boys</div>
+							<div class="season-item" data-site-field="seasonSchedule.winter.thu">MS Volleyball Boys</div>
 						</div>
 						<div class="schedule-col">
 							<h3>Fri</h3>
-							<div class="season-item">HS Basketball Men</div>
+							<div class="season-item" data-site-field="seasonSchedule.winter.fri">HS Basketball Men</div>
 						</div>
 					</div>
 				</div>
@@ -177,23 +334,23 @@
 					<div class="schedule-grid">
 						<div class="schedule-col">
 							<h3>Mon</h3>
-							<div class="season-item">MS Basketball Girls</div>
+							<div class="season-item" data-site-field="seasonSchedule.spring.mon">MS Basketball Girls</div>
 						</div>
 						<div class="schedule-col">
 							<h3>Tue</h3>
-							<div class="season-item">HS Soccer Men</div>
+							<div class="season-item" data-site-field="seasonSchedule.spring.tue">HS Soccer Men</div>
 						</div>
 						<div class="schedule-col">
 							<h3>Wed</h3>
-							<div class="season-item">MS Basketball Boys</div>
+							<div class="season-item" data-site-field="seasonSchedule.spring.wed">MS Basketball Boys</div>
 						</div>
 						<div class="schedule-col">
 							<h3>Th</h3>
-							<div class="season-item">HS Soccer Men</div>
+							<div class="season-item" data-site-field="seasonSchedule.spring.thu">HS Soccer Men</div>
 						</div>
 						<div class="schedule-col">
 							<h3>Fri</h3>
-							<div class="season-item">Badminton</div>
+							<div class="season-item" data-site-field="seasonSchedule.spring.fri">Badminton</div>
 						</div>
 					</div>
 				</div>
@@ -229,171 +386,281 @@
 						</div>
 					</div>
 					<div id="adminBody" style="display:none;gap:12px">
-						<div style="margin-top:8px;display:grid;grid-template-columns:1fr 1fr;gap:12px">
-							<div>
-								<label style="font-weight:700;display:block;margin-bottom:6px">Stream URL 1</label>
-								<input id="adminStream" type="text" placeholder="YouTube link (main)" style="width:100%;padding:10px;border-radius:10px;border:1px solid rgba(0,0,0,0.08)" />
-							</div>
-							<div>
-								<label style="font-weight:700;display:block;margin-bottom:6px">Stream URL 2</label>
-								<input id="adminStream2" type="text" placeholder="YouTube link (optional)" style="width:100%;padding:10px;border-radius:10px;border:1px solid rgba(0,0,0,0.08)" />
+						<div class="admin-menu" role="tablist" aria-label="Admin sections">
+							<button class="admin-menu-btn active" type="button" data-admin-menu-btn="live">Live Match Control</button>
+							<button class="admin-menu-btn" type="button" data-admin-menu-btn="manage">Match Add / Delete</button>
+							<button class="admin-menu-btn" type="button" data-admin-menu-btn="homepage">Homepage Editor</button>
+						</div>
+						<div id="adminLiveSection" class="admin-menu-section active" data-admin-menu-section="live">
+							<div class="admin-subcard">
+								<div class="admin-subcard-title">Live Match Control</div>
+								<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+									<div>
+										<label style="font-weight:700;display:block;margin-bottom:6px">Stream URL 1</label>
+										<input id="adminStream" type="text" placeholder="YouTube link (main)" style="width:100%;padding:10px;border-radius:10px;border:1px solid rgba(0,0,0,0.08)" />
+									</div>
+									<div>
+										<label style="font-weight:700;display:block;margin-bottom:6px">Stream URL 2</label>
+										<input id="adminStream2" type="text" placeholder="YouTube link (optional)" style="width:100%;padding:10px;border-radius:10px;border:1px solid rgba(0,0,0,0.08)" />
+									</div>
+								</div>
+								<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+									<div>
+										<label style="font-weight:700;display:block;margin-bottom:6px">Match</label>
+										<select id="adminMatchSelect" style="width:100%;padding:10px;border-radius:10px;border:1px solid rgba(0,0,0,0.08)"></select>
+									</div>
+									<div>
+										<label style="font-weight:700;display:block;margin-bottom:6px">Status</label>
+										<select id="adminStatus" style="width:100%;padding:10px;border-radius:10px;border:1px solid rgba(0,0,0,0.08)">
+											<option value="scheduled">scheduled</option>
+											<option value="live">live</option>
+											<option value="ft">ft</option>
+										</select>
+									</div>
+								</div>
+								<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+									<div>
+										<label style="font-weight:700;display:block;margin-bottom:6px">Set #</label>
+										<input id="adminSet" type="number" min="0" style="width:100%;padding:10px;border-radius:10px;border:1px solid rgba(0,0,0,0.08)" />
+									</div>
+									<div>
+										<label style="font-weight:700;display:block;margin-bottom:6px">Note (optional)</label>
+										<input id="adminNote" type="text" style="width:100%;padding:10px;border-radius:10px;border:1px solid rgba(0,0,0,0.08)" />
+									</div>
+								</div>
+								<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+									<div>
+										<label style="font-weight:700;display:block;margin-bottom:6px">Home Score</label>
+										<input id="adminHomeScore" type="number" min="0" style="width:100%;padding:10px;border-radius:10px;border:1px solid rgba(0,0,0,0.08)" />
+									</div>
+									<div>
+										<label style="font-weight:700;display:block;margin-bottom:6px">Away Score</label>
+										<input id="adminAwayScore" type="number" min="0" style="width:100%;padding:10px;border-radius:10px;border:1px solid rgba(0,0,0,0.08)" />
+									</div>
+								</div>
+								<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+									<button id="adminSaveBtn" class="theme-toggle">Save This Match</button>
+									<button id="adminClearBtn" class="theme-toggle">Reset This Match</button>
+								</div>
+								<div style="font-size:12px;line-height:1.6;color:var(--muted)">Score, stream, and note changes here stay on this device.</div>
+								<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+									<button id="adminFinishBtn" class="theme-toggle" style="background:#10b981;color:white;border-color:#10b981">✅ Finish Match</button>
+									<button id="adminResetBtn" class="theme-toggle" style="background:#ef4444;color:white;border-color:#ef4444">🔄 Reopen Match</button>
+								</div>
+								<div class="admin-formation-card">
+									<div class="admin-formation-head">
+										<div>
+											<div class="admin-formation-title">Formation Editor</div>
+											<div id="adminFormationSummary" class="admin-formation-note">Select a match to edit its formation.</div>
+										</div>
+										<div id="adminFormationSportBadge" class="admin-formation-sport">Sport</div>
+									</div>
+									<div class="admin-formation-stage">
+										<div class="admin-formation-team-switch">
+											<select id="adminFormationTeam" class="admin-formation-select" style="min-width:120px">
+												<option value="home">Home</option>
+												<option value="away">Away</option>
+											</select>
+											<select id="adminFormationViewMode" class="admin-formation-select" style="min-width:100px">
+												<option value="visual">Visual</option>
+												<option value="list">List</option>
+											</select>
+										</div>
+									</div>
+									<!-- Visual court editor -->
+									<div id="adminFormationVisual" class="admin-formation-visual">
+										<div id="adminFormationCourt" class="admin-formation-court-wrap">
+											<div class="admin-formation-court-empty">Select a match to edit formation</div>
+										</div>
+									</div>
+									<!-- List editor (hidden by default) -->
+									<div id="adminFormationPlayers" class="admin-formation-players" style="display:none"></div>
+									<!-- Player edit popover -->
+									<div id="adminFormationPopover" class="admin-formation-popover" style="display:none">
+										<div class="admin-formation-popover-title">Edit Player</div>
+										<label class="admin-formation-popover-label">#</label>
+										<input id="adminPopoverNumber" class="admin-formation-input" type="number" min="0" placeholder="#">
+										<label class="admin-formation-popover-label">Position</label>
+										<input id="adminPopoverRole" class="admin-formation-input" type="text" placeholder="Position">
+										<label class="admin-formation-popover-label">Name</label>
+										<input id="adminPopoverName" class="admin-formation-input" type="text" placeholder="Player name">
+										<div class="admin-formation-popover-actions">
+											<button id="adminPopoverDone" class="theme-toggle" type="button">Done</button>
+											<button id="adminPopoverDelete" class="theme-toggle admin-danger-btn" type="button">Delete</button>
+										</div>
+									</div>
+									<div class="admin-formation-toolbar">
+										<button id="adminFormationAddBtn" class="theme-toggle" type="button">＋ Add Player</button>
+										<button id="adminFormationSaveBtn" class="theme-toggle" type="button">Save Formation</button>
+										<button id="adminFormationResetBtn" class="theme-toggle" type="button">Reset Formation</button>
+									</div>
+									<div class="admin-formation-note">Drag players on the court to position them. Tap a player to edit details.</div>
+								</div>
 							</div>
 						</div>
-						<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-							<div>
-								<label style="font-weight:700;display:block;margin-bottom:6px">Match</label>
-								<select id="adminMatchSelect" style="width:100%;padding:10px;border-radius:10px;border:1px solid rgba(0,0,0,0.08)"></select>
+						<div id="adminManageSection" class="admin-menu-section" data-admin-menu-section="manage">
+							<div class="admin-match-manager">
+								<!-- Sidebar: match list -->
+								<div class="admin-match-sidebar">
+									<div class="admin-match-sidebar-head">
+										<div style="font-weight:800;font-size:14px">Matches</div>
+										<button id="adminAddMatchBtn" class="admin-match-add-btn" type="button">+ New</button>
+									</div>
+									<div class="admin-match-filter" role="tablist" aria-label="Match status">
+										<button id="adminMatchFilterUpcoming" class="admin-match-filter-btn active" type="button" data-match-filter="upcoming" aria-selected="true">Upcoming</button>
+										<button id="adminMatchFilterPast" class="admin-match-filter-btn" type="button" data-match-filter="past" aria-selected="false">Past</button>
+									</div>
+									<input id="adminCustomMatchSearch" class="admin-match-search" type="text" placeholder="🔍 Search matches..." />
+									<div id="adminMatchList" class="admin-match-list"></div>
+									<div id="adminCustomMatchSearchInfo" class="admin-match-list-info"></div>
+								</div>
+								<!-- Detail panel -->
+								<div class="admin-match-detail" id="adminMatchDetail">
+									<div id="adminMatchDetailEmpty" class="admin-match-detail-empty">
+										<div style="font-size:32px">📋</div>
+										<div style="font-weight:700;font-size:15px">Select a match</div>
+										<div style="color:var(--muted);font-size:13px">Choose a match from the sidebar or add a new one</div>
+									</div>
+									<div id="adminMatchDetailForm" class="admin-match-detail-form" style="display:none">
+										<div class="admin-match-detail-head">
+											<div id="adminMatchDetailTitle" style="font-weight:800;font-size:16px"></div>
+											<div id="adminMatchDetailBadge" class="admin-match-detail-badge"></div>
+										</div>
+										<div class="admin-match-form-grid">
+											<div>
+												<label class="admin-match-label">Home Team</label>
+												<select id="adminNewHome" class="admin-match-input">
+													<option value="BIS">BIS</option>
+													<option value="SPPS">SPPS</option>
+													<option value="MICA">MICA</option>
+													<option value="CCAS">CCAS</option>
+													<option value="ICSU">ICSU</option>
+													<option value="SPAS">SPAS</option>
+													<option value="FPS">FPS</option>
+													<option value="SIE">SIE</option>
+													<option value="CSIS">CSIS</option>
+													<option value="GSIS">GSIS</option>
+													<option value="CMIS">CMIS</option>
+													<option value="ICSP">ICSP</option>
+													<option value="SFS">SFS</option>
+													<option value="SALT">SALT</option>
+													<option value="SPAD">SPAD</option>
+													<option value="SSI">SSI</option>
+													<option value="WCA">WCA</option>
+													<option value="BCC">BCC</option>
+													<option value="Chadwick JV">Chadwick JV</option>
+													<option value="__custom__">✏️ Type custom...</option>
+												</select>
+												<input id="adminNewHomeCustom" type="text" placeholder="Custom team name" class="admin-match-input" style="margin-top:4px;display:none" />
+											</div>
+											<div>
+												<label class="admin-match-label">Away Team</label>
+												<select id="adminNewAway" class="admin-match-input">
+													<option value="BIS">BIS</option>
+													<option value="SPPS">SPPS</option>
+													<option value="MICA">MICA</option>
+													<option value="CCAS">CCAS</option>
+													<option value="ICSU">ICSU</option>
+													<option value="SPAS">SPAS</option>
+													<option value="FPS">FPS</option>
+													<option value="SIE">SIE</option>
+													<option value="CSIS">CSIS</option>
+													<option value="GSIS">GSIS</option>
+													<option value="CMIS">CMIS</option>
+													<option value="ICSP">ICSP</option>
+													<option value="SFS">SFS</option>
+													<option value="SALT">SALT</option>
+													<option value="SPAD">SPAD</option>
+													<option value="SSI">SSI</option>
+													<option value="WCA">WCA</option>
+													<option value="BCC">BCC</option>
+													<option value="Chadwick JV">Chadwick JV</option>
+													<option value="__custom__">✏️ Type custom...</option>
+												</select>
+												<input id="adminNewAwayCustom" type="text" placeholder="Custom team name" class="admin-match-input" style="margin-top:4px;display:none" />
+											</div>
+										</div>
+										<div class="admin-match-form-grid">
+											<div>
+												<label class="admin-match-label">Date</label>
+												<input id="adminNewDateOnly" type="date" class="admin-match-input" />
+											</div>
+											<div>
+												<label class="admin-match-label">Time</label>
+												<input id="adminNewTimeOnly" type="time" class="admin-match-input" />
+											</div>
+										</div>
+										<input id="adminNewDate" type="hidden" />
+										<div>
+											<label class="admin-match-label">Location</label>
+											<input id="adminNewLocation" type="text" placeholder="e.g. BIS, GSIS, Respia" class="admin-match-input" />
+										</div>
+										<div class="admin-match-form-grid-3">
+											<div>
+												<label class="admin-match-label">Sport</label>
+												<select id="adminNewSport" class="admin-match-input">
+													<option value="basketball">🏀 Basketball</option>
+													<option value="volleyball">🏐 Volleyball</option>
+													<option value="soccer">⚽ Soccer</option>
+												</select>
+											</div>
+											<div>
+												<label class="admin-match-label">Level</label>
+												<select id="adminNewLevel" class="admin-match-input">
+													<option value="HS">HS</option>
+													<option value="MS">MS</option>
+													<option value="Elementary">Elementary</option>
+												</select>
+											</div>
+											<div>
+												<label class="admin-match-label">Gender</label>
+												<select id="adminNewGender" class="admin-match-input">
+													<option value="">-</option>
+													<option value="Boys">Boys</option>
+													<option value="Girls">Girls</option>
+													<option value="Boys/Girls">Boys and Girls</option>
+												</select>
+											</div>
+										</div>
+										<div class="admin-match-detail-actions">
+											<button id="adminSaveNewMatchBtn" class="admin-match-action-btn primary" type="button" style="display:none">➕ Add Match</button>
+											<button id="adminUpdateMatchBtn" class="admin-match-action-btn primary" type="button">💾 Save Changes</button>
+											<button id="adminDeleteMatchBtn" class="admin-match-action-btn danger" type="button">🗑️ Delete Match</button>
+										</div>
+									</div>
+								</div>
 							</div>
-							<div>
-								<label style="font-weight:700;display:block;margin-bottom:6px">Status</label>
-								<select id="adminStatus" style="width:100%;padding:10px;border-radius:10px;border:1px solid rgba(0,0,0,0.08)">
-									<option value="scheduled">scheduled</option>
-									<option value="live">live</option>
-									<option value="ft">ft</option>
-								</select>
+							<!-- Hidden select for compatibility -->
+							<select id="adminCustomMatchSelect" style="display:none"></select>
+						</div>
+						<div id="adminHomepageSection" class="admin-menu-section" data-admin-menu-section="homepage">
+						<div id="siteAdminBody" class="site-admin-body site-admin-inline-panel" aria-label="Homepage site admin">
+							<div class="site-admin-head">
+								<div>
+									<div class="site-admin-title">Homepage Editor</div>
+										<div class="site-admin-note">This editor opens only after approved Google admin sign-in.</div>
+								</div>
+								<div id="siteAdminStatus" class="site-admin-status">Read-only view</div>
+							</div>
+							<div class="site-admin-group">
+								<div class="site-admin-group-title">How It Works</div>
+								<p class="site-admin-note">Click Start Editing to highlight homepage text, edit the highlighted copy directly, then use Save Changes to store it on this device only. These text changes do not publish to the website.</p>
+							</div>
+
+							<div class="site-admin-actions">
+								<button id="siteAdminEditBtn" class="site-admin-btn" type="button">Start Editing</button>
+								<button id="siteAdminSaveBtn" class="site-admin-btn primary" type="button">Save Changes</button>
+								<button id="siteAdminReloadBtn" class="site-admin-btn" type="button">Reload Saved</button>
+								<button id="siteAdminResetBtn" class="site-admin-btn" type="button">Reset To Default</button>
 							</div>
 						</div>
-						<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:8px">
-							<div>
-								<label style="font-weight:700;display:block;margin-bottom:6px">Set #</label>
-								<input id="adminSet" type="number" min="0" style="width:100%;padding:10px;border-radius:10px;border:1px solid rgba(0,0,0,0.08)" />
-							</div>
-							<div>
-								<label style="font-weight:700;display:block;margin-bottom:6px">Note (optional)</label>
-								<input id="adminNote" type="text" style="width:100%;padding:10px;border-radius:10px;border:1px solid rgba(0,0,0,0.08)" />
-							</div>
-						</div>
-						<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:8px">
-							<div>
-								<label style="font-weight:700;display:block;margin-bottom:6px">Home Score</label>
-								<input id="adminHomeScore" type="number" min="0" style="width:100%;padding:10px;border-radius:10px;border:1px solid rgba(0,0,0,0.08)" />
-							</div>
-							<div>
-								<label style="font-weight:700;display:block;margin-bottom:6px">Away Score</label>
-								<input id="adminAwayScore" type="number" min="0" style="width:100%;padding:10px;border-radius:10px;border:1px solid rgba(0,0,0,0.08)" />
-							</div>
-						</div>
-						<div style="display:flex;gap:8px;margin-top:12px;align-items:center">
-							<button id="adminSaveBtn" class="theme-toggle">Save</button>
-							<button id="adminClearBtn" class="theme-toggle">Clear Match Override</button>
-							<button id="adminCopyBtn" class="theme-toggle">Copy JSON</button>
-						</div>
-						<div style="display:flex;gap:8px;margin-top:12px;align-items:center;flex-wrap:wrap">
-							<button id="adminFinishBtn" class="theme-toggle" style="background:#10b981;color:white;border-color:#10b981">✅ Finish Match</button>
-							<button id="adminResetBtn" class="theme-toggle" style="background:#ef4444;color:white;border-color:#ef4444">🔄 Reopen Match</button>
-						</div>
-						<hr style="margin:14px 0;border:none;border-top:1px solid rgba(0,0,0,0.08)" />
-						<div style="font-weight:800;font-size:15px">📅 Add Upcoming Match</div>
-						<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px">
-							<div>
-								<label style="font-weight:700;display:block;margin-bottom:4px;font-size:13px">Home Team</label>
-								<select id="adminNewHome" style="width:100%;padding:10px;border-radius:10px;border:1px solid rgba(0,0,0,0.08)">
-									<option value="BIS">BIS</option>
-									<option value="SPPS">SPPS</option>
-									<option value="MICA">MICA</option>
-									<option value="CCAS">CCAS</option>
-									<option value="ICSU">ICSU</option>
-									<option value="SPAS">SPAS</option>
-									<option value="FPS">FPS</option>
-									<option value="SIE">SIE</option>
-									<option value="CSIS">CSIS</option>
-									<option value="GSIS">GSIS</option>
-									<option value="CMIS">CMIS</option>
-									<option value="ICSP">ICSP</option>
-									<option value="SFS">SFS</option>
-									<option value="SALT">SALT</option>
-									<option value="SPAD">SPAD</option>
-									<option value="SSI">SSI</option>
-									<option value="WCA">WCA</option>
-									<option value="BCC">BCC</option>
-									<option value="Chadwick JV">Chadwick JV</option>
-									<option value="__custom__">✏️ Type custom...</option>
-								</select>
-								<input id="adminNewHomeCustom" type="text" placeholder="Custom team name" style="width:100%;padding:10px;border-radius:10px;border:1px solid rgba(0,0,0,0.08);margin-top:4px;display:none" />
-							</div>
-							<div>
-								<label style="font-weight:700;display:block;margin-bottom:4px;font-size:13px">Away Team</label>
-								<select id="adminNewAway" style="width:100%;padding:10px;border-radius:10px;border:1px solid rgba(0,0,0,0.08)">
-									<option value="BIS">BIS</option>
-									<option value="SPPS">SPPS</option>
-									<option value="MICA">MICA</option>
-									<option value="CCAS">CCAS</option>
-									<option value="ICSU">ICSU</option>
-									<option value="SPAS">SPAS</option>
-									<option value="FPS">FPS</option>
-									<option value="SIE">SIE</option>
-									<option value="CSIS">CSIS</option>
-									<option value="GSIS">GSIS</option>
-									<option value="CMIS">CMIS</option>
-									<option value="ICSP">ICSP</option>
-									<option value="SFS">SFS</option>
-									<option value="SALT">SALT</option>
-									<option value="SPAD">SPAD</option>
-									<option value="SSI">SSI</option>
-									<option value="WCA">WCA</option>
-									<option value="BCC">BCC</option>
-									<option value="Chadwick JV">Chadwick JV</option>
-									<option value="__custom__">✏️ Type custom...</option>
-								</select>
-								<input id="adminNewAwayCustom" type="text" placeholder="Custom team name" style="width:100%;padding:10px;border-radius:10px;border:1px solid rgba(0,0,0,0.08);margin-top:4px;display:none" />
-							</div>
-						</div>
-						<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px">
-							<div>
-								<label style="font-weight:700;display:block;margin-bottom:4px;font-size:13px">Date</label>
-								<input id="adminNewDateOnly" type="date" style="width:100%;padding:10px;border-radius:10px;border:1px solid rgba(0,0,0,0.08)" />
-							</div>
-							<div>
-								<label style="font-weight:700;display:block;margin-bottom:4px;font-size:13px">Time</label>
-								<input id="adminNewTimeOnly" type="time" style="width:100%;padding:10px;border-radius:10px;border:1px solid rgba(0,0,0,0.08)" />
-							</div>
-						</div>
-						<input id="adminNewDate" type="hidden" />
-						<div style="display:grid;grid-template-columns:1fr;gap:10px;margin-top:8px">
-							<div>
-								<label style="font-weight:700;display:block;margin-bottom:4px;font-size:13px">Location</label>
-								<input id="adminNewLocation" type="text" placeholder="e.g. BIS, GSIS, Respia" style="width:100%;padding:10px;border-radius:10px;border:1px solid rgba(0,0,0,0.08)" />
-							</div>
-						</div>
-						<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:8px">
-							<div>
-								<label style="font-weight:700;display:block;margin-bottom:4px;font-size:13px">Sport</label>
-								<select id="adminNewSport" style="width:100%;padding:10px;border-radius:10px;border:1px solid rgba(0,0,0,0.08)">
-									<option value="basketball">🏀 Basketball</option>
-									<option value="volleyball">🏐 Volleyball</option>
-									<option value="soccer">⚽ Soccer</option>
-								</select>
-							</div>
-							<div>
-								<label style="font-weight:700;display:block;margin-bottom:4px;font-size:13px">Level</label>
-								<select id="adminNewLevel" style="width:100%;padding:10px;border-radius:10px;border:1px solid rgba(0,0,0,0.08)">
-									<option value="HS">HS</option>
-									<option value="MS">MS</option>
-								</select>
-							</div>
-							<div>
-								<label style="font-weight:700;display:block;margin-bottom:4px;font-size:13px">Gender</label>
-								<select id="adminNewGender" style="width:100%;padding:10px;border-radius:10px;border:1px solid rgba(0,0,0,0.08)">
-									<option value="">-</option>
-									<option value="Boys">Boys</option>
-									<option value="Girls">Girls</option>
-									<option value="Boys/Girls">Boys and Girls</option>
-								</select>
-							</div>
-						</div>
-						<div style="display:flex;gap:8px;margin-top:10px;align-items:center;flex-wrap:wrap">
-								<button id="adminAddMatchBtn" class="theme-toggle">Add Match</button>
-								<button id="adminUpdateMatchBtn" class="theme-toggle">Update Selected Custom Match</button>
-								<button id="adminDeleteMatchBtn" class="theme-toggle">Delete Selected Custom Match</button>
-							</div>
-						<div style="margin-top:12px">
-							<label style="font-weight:700;display:block;margin-bottom:6px">Live Overrides (JSON)</label>
-							<textarea id="adminJson" style="width:100%;height:120px;padding:12px;border-radius:8px;border:1px solid rgba(0,0,0,0.06);font-family:monospace;font-size:13px"></textarea>
 						</div>
 					</div>
 				</div>
 		</div>
-		<script src="assets/main.js"></script>
-		<script src="assets/admin.js"></script>
+		<script src="assets/main.js?v=20260408b"></script>
+		<script src="assets/admin.js?v=20260412a"></script>
+		<script src="assets/site-admin.js?v=20260614a"></script>
+		<script src="assets/animations.js?v=20260408"></script>
 	</body>
 </html>

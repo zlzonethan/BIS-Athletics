@@ -2,14 +2,44 @@ rules_version='2'
 
 service cloud.firestore {
   match /databases/{database}/documents {
+    function isAllowedAdminEmail() {
+      return request.auth.token.email != null &&
+        (
+          request.auth.token.email == 'iamsunwo@gmail.com' ||
+          request.auth.token.email == 'tcassell@bisce.net' ||
+          request.auth.token.email == 'athletics@bisce.net' ||
+          request.auth.token.email == '30ekim@bisce.net' ||
+          request.auth.token.email == '30epark@bisce.net'
+        );
+    }
+
     function isAdmin() {
-      return request.auth != null && request.auth.token.admin == true;
+      return request.auth != null && isAllowedAdminEmail();
     }
 
     function canWriteTeamPage() {
-      return request.auth != null &&
+      return isAdmin() &&
         request.resource.data.keys().hasOnly(['tabs', 'updatedAt', 'updatedBy']) &&
         request.resource.data.tabs is list &&
+        (!request.resource.data.keys().hasAny(['updatedAt']) || request.resource.data.updatedAt is string) &&
+        (!request.resource.data.keys().hasAny(['updatedBy']) || request.resource.data.updatedBy is string);
+    }
+
+    function canWriteSiteContent() {
+      return isAdmin() &&
+        request.resource.data.keys().hasOnly(['fields', 'rosters', 'updatedAt', 'updatedBy']) &&
+        request.resource.data.fields is map &&
+        (!request.resource.data.keys().hasAny(['rosters']) || request.resource.data.rosters is map) &&
+        (!request.resource.data.keys().hasAny(['updatedAt']) || request.resource.data.updatedAt is string) &&
+        (!request.resource.data.keys().hasAny(['updatedBy']) || request.resource.data.updatedBy is string);
+    }
+
+    function canWriteMatchFormation() {
+      return isAdmin() &&
+        request.resource.data.keys().hasOnly(['sport', 'home', 'away', 'updatedAt', 'updatedBy']) &&
+        request.resource.data.sport is string &&
+        request.resource.data.home is list &&
+        request.resource.data.away is list &&
         (!request.resource.data.keys().hasAny(['updatedAt']) || request.resource.data.updatedAt is string) &&
         (!request.resource.data.keys().hasAny(['updatedBy']) || request.resource.data.updatedBy is string);
     }
@@ -73,6 +103,32 @@ service cloud.firestore {
     match /teamPageContent/{docId} {
       allow read: if true;
       allow write: if canWriteTeamPage();
+    }
+
+    match /siteContent/{docId} {
+      allow read: if true;
+      allow write: if canWriteSiteContent();
+    }
+
+    match /matchFormations/{docId} {
+      allow read: if true;
+      allow write: if canWriteMatchFormation();
+    }
+
+    match /liveScores/{matchId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /siteEditorPages/{docId} {
+      allow read: if true;
+      allow create, update: if canWriteSiteContent();
+      allow delete: if isAdmin();
+    }
+
+    match /deletedMatches/{matchId} {
+      allow read: if true;
+      allow write: if isAdmin();
     }
 
     match /{document=**} {

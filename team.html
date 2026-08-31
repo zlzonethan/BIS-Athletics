@@ -20,20 +20,6 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
-    <script>
-      window.BIS_FIREBASE_CONFIG = {
-        apiKey: "AIzaSyCzjMG7r_tweUGfznUnckpp_Xm4hF5119Q",
-        authDomain: "bis-athletics.firebaseapp.com",
-        projectId: "bis-athletics",
-        storageBucket: "bis-athletics.firebasestorage.app",
-        messagingSenderId: "759086332599",
-        appId: "1:759086332599:web:4261b5aa076f0c60a0eb32",
-        measurementId: "G-87M42WQKEQ"
-      };
-    </script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <style>
       :root{--bg:#f4f5f7;--text:#0f172a;--panel:#ffffff;--nav-muted:rgba(15,23,42,0.7);--muted:#64748b;--card-muted:#f8fafc;--border:#e2e8f0;--badge-bg:#e2e8f0;--badge-text:#1f2937}
       body.dark{--bg:#0a1120;--text:#f8fafc;--panel:#0f1a2b;--nav-muted:rgba(248,250,252,0.8);--muted:#94a3b8;--card-muted:#0b1426;--border:rgba(148,163,184,0.25);--badge-bg:rgba(148,163,184,0.25);--badge-text:#e2e8f0}
@@ -62,7 +48,7 @@
       .hero{text-align:center;margin-top:18px}
       h1{font-family:'Black Han Sans',sans-serif;font-weight:400;font-size:48px}
       .panel{margin-top:26px;background:var(--panel);border-radius:20px;padding:28px}
-      .tabs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;background:var(--border);border-radius:999px;padding:6px;margin-top:18px}
+      .tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;background:var(--border);border-radius:999px;padding:6px;margin-top:18px}
       .tab-btn{border:none;background:transparent;padding:10px 12px;border-radius:999px;font-weight:800;color:var(--muted);cursor:pointer;transition:all .2s ease}
       .tab-btn.active{background:var(--panel);color:var(--text);box-shadow:0 6px 14px rgba(15,23,42,.12)}
       .tab-panels{position:relative;min-height:200px}
@@ -116,7 +102,11 @@
       .uniform-gallery{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
       .uniform-img{width:100%;border-radius:10px;cursor:pointer;transition:transform .2s ease}
       .uniform-img:hover{transform:scale(1.02)}
-      .uniform-label{font-size:11px;font-weight:700;color:var(--text);text-align:center;margin-top:4px}
+      .uniform-label{display:none}
+      .photo-archive-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px}
+      .photo-archive-image{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:10px;background:var(--panel);cursor:pointer;transition:transform .2s ease}
+      .photo-archive-image:hover{transform:scale(1.02)}
+      .photo-archive-empty{grid-column:1/-1;padding:28px 16px;border:1px dashed var(--border);border-radius:10px;color:var(--muted);text-align:center;font-size:13px}
       .match-card{display:block;margin-top:16px;padding:16px;border-radius:16px;background:var(--card-muted);border:1px solid var(--border);cursor:pointer}
       .match-card-title{font-weight:700;margin-bottom:6px}
       .match-card-meta{font-size:12px;color:var(--muted)}
@@ -135,7 +125,7 @@
         .nav-left,.nav-right{gap:16px;font-size:14px}
         .top-nav .logo{width:40px;height:40px}
         h1{font-size:36px}
-        .tabs{grid-template-columns:1fr 1fr;gap:6px;padding:4px}
+        .tabs{grid-template-columns:1fr 1fr 1fr;gap:6px;padding:4px}
         .tab-btn{padding:8px 10px;font-size:14px}
         .panel{padding:20px 16px;border-radius:16px}
         .panel-title{font-size:18px;margin-bottom:12px}
@@ -297,226 +287,11 @@
         }
       }
 
-      #teamAdminDock{
-        position:fixed;
-        right:24px;
-        bottom:24px;
-        z-index:1200;
-        display:grid;
-        justify-items:end;
-        gap:12px;
-      }
-      .team-admin-toggle{
-        border:none;
-        border-radius:999px;
-        padding:12px 18px;
-        font:inherit;
-        font-weight:800;
-        letter-spacing:.2px;
-        cursor:pointer;
-        color:#fff;
-        background:linear-gradient(135deg,#0f172a,#1e3a8a);
-        box-shadow:0 16px 30px rgba(15,23,42,.24);
-      }
-      body.dark .team-admin-toggle{
-        background:linear-gradient(135deg,#e2e8f0,#94a3b8);
-        color:#0f172a;
-      }
-      .team-admin-body{
-        width:min(420px,calc(100vw - 32px));
-        max-height:min(72vh,760px);
-        overflow:auto;
-        background:var(--panel);
-        border:1px solid var(--border);
-        border-radius:20px;
-        padding:16px;
-        box-shadow:0 24px 54px rgba(15,23,42,.2);
-      }
-      .team-admin-body[hidden]{display:none}
-      .team-admin-modal{
-        position:fixed;
-        inset:0;
-        z-index:1300;
-        display:flex;
-        align-items:center;
-        justify-content:center;
-        padding:24px;
-        background:rgba(15,23,42,.38);
-      }
-      .team-admin-modal[hidden]{display:none}
-      .team-admin-modal-panel{
-        width:min(420px,calc(100vw - 32px));
-        background:var(--panel);
-        border:1px solid var(--border);
-        border-radius:20px;
-        padding:16px;
-        box-shadow:0 24px 54px rgba(15,23,42,.28);
-      }
-      .team-admin-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:12px}
-      .team-admin-title{font-size:15px;font-weight:800;color:var(--text)}
-      .team-admin-status{font-size:11px;font-weight:700;color:var(--muted);text-align:right}
-      .team-admin-status[data-tone="warn"]{color:#dc2626}
-      .team-admin-status[data-tone="ok"]{color:#059669}
-      .team-admin-field{display:grid;gap:6px;margin-top:12px}
-      .team-admin-label{font-size:11px;font-weight:800;color:var(--text);text-transform:uppercase;letter-spacing:.45px}
-      .team-admin-input,
-      .team-admin-select,
-      .team-admin-textarea,
-      .team-admin-btn{
-        font:inherit;
-      }
-      .team-admin-input,
-      .team-admin-select,
-      .team-admin-textarea{
-        width:100%;
-        border:1px solid var(--border);
-        border-radius:12px;
-        background:var(--card-muted);
-        color:var(--text);
-        padding:10px 12px;
-      }
-      .team-admin-textarea{
-        min-height:260px;
-        resize:vertical;
-        font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,Liberation Mono,Courier New,monospace;
-        font-size:12px;
-        line-height:1.55;
-      }
-      .team-admin-textarea.compact{
-        min-height:120px;
-      }
-      .team-admin-auth-box,
-      .team-admin-group,
-      .team-admin-repeat,
-      .team-admin-roster-card{
-        border:1px solid var(--border);
-        background:var(--card-muted);
-        border-radius:14px;
-      }
-      .team-admin-auth-box,
-      .team-admin-group{
-        padding:12px;
-        margin-top:12px;
-      }
-      .team-admin-group-title{
-        font-size:12px;
-        font-weight:800;
-        color:var(--text);
-        margin-bottom:10px;
-        letter-spacing:.25px;
-      }
-      .team-admin-auth-status,
-      .team-admin-note{
-        font-size:11px;
-        line-height:1.6;
-        color:var(--muted);
-      }
-      .team-admin-note{
-        margin-top:8px;
-      }
-      .team-admin-inline-grid{
-        display:grid;
-        grid-template-columns:repeat(2,minmax(0,1fr));
-        gap:8px;
-        margin-top:10px;
-      }
-      .team-admin-stack{
-        display:grid;
-        gap:10px;
-        margin-top:10px;
-      }
-      .team-admin-repeat,
-      .team-admin-roster-card{
-        padding:10px;
-      }
-      .team-admin-repeat-head,
-      .team-admin-roster-head,
-      .team-admin-toolbar{
-        display:flex;
-        align-items:center;
-        justify-content:space-between;
-        gap:8px;
-      }
-      .team-admin-toolbar{
-        margin-top:10px;
-      }
-      .team-admin-mini-btn{
-        border:1px solid var(--border);
-        background:var(--panel);
-        color:var(--text);
-        border-radius:10px;
-        padding:8px 10px;
-        font:inherit;
-        font-size:11px;
-        font-weight:800;
-        cursor:pointer;
-      }
-      .team-admin-mini-btn.warn{
-        color:#b91c1c;
-      }
-      .team-admin-json details{
-        margin-top:12px;
-      }
-      .team-admin-json summary{
-        cursor:pointer;
-        color:var(--text);
-        font-size:12px;
-        font-weight:800;
-      }
-      .team-admin-actions{
-        display:grid;
-        grid-template-columns:repeat(2,minmax(0,1fr));
-        gap:8px;
-        margin-top:14px;
-      }
-      .team-admin-btn{
-        border:1px solid var(--border);
-        border-radius:12px;
-        background:var(--card-muted);
-        color:var(--text);
-        padding:10px 12px;
-        font-weight:800;
-        cursor:pointer;
-      }
-      .team-admin-btn.primary{
-        background:#0f172a;
-        border-color:#0f172a;
-        color:#fff;
-      }
-      body.dark .team-admin-btn.primary{
-        background:#e2e8f0;
-        border-color:#e2e8f0;
-        color:#0f172a;
-      }
-      .team-admin-hint{
-        margin-top:10px;
-        font-size:11px;
-        line-height:1.6;
-        color:var(--muted);
-      }
       .accordion-inner > .hs-label{
         margin-bottom:6px;
       }
       .accordion-inner > .game-item + .hs-label{
         margin-top:12px;
-      }
-      html.in-iframe #teamAdminDock{
-        display:none;
-      }
-
-      @media (max-width: 600px) {
-        #teamAdminDock{
-          left:12px;
-          right:12px;
-          bottom:12px;
-          justify-items:stretch;
-        }
-        .team-admin-body{
-          width:100%;
-        }
-        .team-admin-inline-grid{
-          grid-template-columns:1fr;
-        }
       }
     </style>
     <script>
@@ -555,6 +330,7 @@
       <div class="tabs" role="tablist" aria-label="Team sections">
         <button class="tab-btn active" type="button" role="tab" id="tab-btn-hs" aria-selected="true" aria-controls="tab-hs" data-target="tab-hs">HS</button>
         <button class="tab-btn" type="button" role="tab" id="tab-btn-ms" aria-selected="false" aria-controls="tab-ms" tabindex="-1" data-target="tab-ms">MS</button>
+        <button class="tab-btn" type="button" role="tab" id="tab-btn-es" aria-selected="false" aria-controls="tab-es" tabindex="-1" data-target="tab-es">Elementary</button>
       </div>
 
       <div class="tab-panels" style="--tab-dir: 1;">
@@ -698,22 +474,10 @@
                 <div class="accordion-content">
                   <div class="accordion-inner">
                     <div class="uniform-gallery">
-                      <div>
-                        <img loading="lazy" decoding="async" class="uniform-img" src="https://lh3.googleusercontent.com/sitesv/APaQ0SRIEfRvzKjyjfaY0qPGP68ywJrsjbytHYGK-NbeM3JB2-5DkmSIbUjyKhXgNQeUTnNaqwa3yKv1-GDDFt0ZkImoZoUFKUcU0TPHTZGVFWmmz4vasX-2o-KmgIfIMEkQs6uAlorCh8UEhWeIi6PwkEcAZOvfrXiesh438jaY4aKng2su_qaqIry4gfKuvGiFsW0o0HYsU-2ojQbLH9w4CuojZfh8s_gyi2YA=w1280" alt="Men's Uniform">
-                        <div class="uniform-label">Men's Uniform</div>
-                      </div>
-                      <div>
-                        <img loading="lazy" decoding="async" class="uniform-img" src="https://lh3.googleusercontent.com/sitesv/APaQ0SQl4k9JJxLpzZ1ET0LDZT6s3xVsuMdQssSUD5mlYyFmgyqByXVM7knH9mPjyuWVIGL4fnWbWdxogXeH51gpHN3dCPiMm6iT-yppt_3uFzo8-3OHk9sQPpWDgMpgl9ljpKMignD7IcBFyW_np-ndDaMjNhjYS1JHpwW5GsiQHCArJ8ga_XkWGEs9TUr7ekcVQpj-QcnJX2cEuXYg97Aut4yKfnIQ7HO9cpg192w=w1280" alt="Men's Uniform 2">
-                        <div class="uniform-label">Men's Away</div>
-                      </div>
-                      <div>
-                        <img loading="lazy" decoding="async" class="uniform-img" src="https://lh3.googleusercontent.com/sitesv/APaQ0STmb7x3_9DyoY1PB74GAw9OhjF5iremgaYoZEvpRKP4t2ZFARNdP-LqK5Cg27GB17MBGoc_pIAa59_WvPcfIltDf63D0oPrGIAjkB8boPTllIkpy4HxRvSHuHzdQ3hcOFrcYuCLr1FsmIHhJJRtWC0Pu2ILF93p16fnOQKWMBDohGHYgJxkoPLE1KPl4SJhi3pwBXHgPFYEuenANUZQ12AR_zGTetq9vx-OvP0=w1280" alt="Women's Uniform">
-                        <div class="uniform-label">Women's Uniform</div>
-                      </div>
-                      <div>
-                        <img loading="lazy" decoding="async" class="uniform-img" src="https://lh3.googleusercontent.com/sitesv/APaQ0SRn6OA_5BGJ8AuEZ6P7MunMlQkm-dIsZ_ErX405SazVMnMjWiBKMV42qlPCLbIDr1yZYaxYLKlX0Hmnlqig5KzQfv6yf4kjjGqEWx1TzEYFPbk99gTPMhiJkcYNDU-xxtpMSUXCDJrOrIeINfrwzofVN7HrgqL-dzQTgXaVeCcr5KGhab4_DV7f1KjqsPei_bo82ARtG3dxaC048nFHwDQhj72ULfd5yEKU=w1280" alt="Women's Uniform 2">
-                        <div class="uniform-label">Women's Away</div>
-                      </div>
+                      <img loading="lazy" decoding="async" class="uniform-img" src="assets/HSVolleyballMensUniform1.jpg" alt="HS volleyball uniform">
+                      <img loading="lazy" decoding="async" class="uniform-img" src="assets/HSVolleyballMensUniform2.jpg" alt="HS volleyball uniform">
+                      <img loading="lazy" decoding="async" class="uniform-img" src="assets/HSVolleyballWomensUniform1.png" alt="HS volleyball uniform">
+                      <img loading="lazy" decoding="async" class="uniform-img" src="assets/HSVolleyballWomensUniform2.png" alt="HS volleyball uniform">
                     </div>
                   </div>
                 </div>
@@ -844,18 +608,7 @@
                 <div class="accordion-content">
                   <div class="accordion-inner">
                     <div class="uniform-gallery">
-                      <div>
-                        <img loading="lazy" decoding="async" class="uniform-img" src="https://lh3.googleusercontent.com/sitesv/APaQ0SRvHmhEaUwN4R2aZAwVptvZOZ7F8-mn7tl_7NyMToy_zv0SCN9-tAR86lCpjXmalMnaT3gGtl-gynP1BHAK0WQsDnyL4QI_XQa00T__xlgpx3CUcHjCtG6gvXOqvqM3eAVmp2B-rP22XfVVHbuiGrJ0uThajO-4H5pTy2W_X8sg-jnrvRawuCBMBohzmMSX1uKbUxQ37dUc9DBouG-DpxSmGnfiUYZli7vxIwM=w1280" alt="Men's Uniform">
-                        <div class="uniform-label">Men's Home</div>
-                      </div>
-                      <div>
-                        <img loading="lazy" decoding="async" class="uniform-img" src="https://lh3.googleusercontent.com/sitesv/APaQ0SQ2MHkNHR7yXp9r8qsw9sYJGxAoUJmfc6xGWoYCwc4VgaH211p-NVSI1z8NLFc0nZC1RL7Jma3ZRg4rsIRwGFV8XIK5OSsrxyK18gD1RKumKOkhYUo4HeIKWrFP1qPC6SvP4iE9Qlmk1p9tcsERsxSGhRv1kgEyaThqnBc8qNKIeuMbl8crTYZEfnG3Lb1Ht6HpMQO3LtI8MS4ZCtmu5M0mSXn0E7J7OjSHTDU=w1280" alt="Women's Uniform">
-                        <div class="uniform-label">Women's Home</div>
-                      </div>
-                      <div>
-                        <img loading="lazy" decoding="async" class="uniform-img" src="https://lh3.googleusercontent.com/sitesv/APaQ0SRb1pinslgdCxPPT8rNMZ3n6H-5is14A5_bB9Ys8R0a8K12LYdXHuAQrZ5bjXgbzrlqjxdmDhn67aRDn-3SroqzOmohXne_A1acVf_Rw-diSRNo9vzzo304YZ9edpZ4d6zfFra6S_RtpuGOeYoNNINUQdFUzas_b7S-vJUXbKn6kFzowLV5MlXVQIgwAkmXMckBOReyQpHyN1OdKngRIv-rW5pfy1LiQzesD0U=w1280" alt="Away Uniform">
-                        <div class="uniform-label">Away Black</div>
-                      </div>
+                      <img loading="lazy" decoding="async" class="uniform-img" src="assets/HSBasketballMensWarmUps.png" alt="HS basketball warm-up uniform">
                     </div>
                     <div class="staff-item" style="margin-top:10px">
                       <div class="role">Uniform Provider</div>
@@ -1229,22 +982,10 @@
                 <div class="accordion-content">
                   <div class="accordion-inner">
                     <div class="uniform-gallery">
-                      <div>
-                        <img loading="lazy" decoding="async" class="uniform-img" src="https://lh3.googleusercontent.com/sitesv/APaQ0SRjnZysp-gN3FHiOXvGc5Qx7TOALikxk4OeQ4x6fCid4lUpzuKZhafHg6OWyYhCWRZiFQMXlcRGet24dFnTvvFsGflU8vPECRyeWJy5J6KKQ85ADt4d4VSQw8m00-4Ep4hp1XeEa1bjYm04Umh_I7AL_2OsPIrXtYoCKXaLIxwbFU5rIMISg2jgguk8XEcm4OGEXs4VoPn5xqcS6HfOpIg1if2vopflhZPz=w1280" alt="MS Volleyball Team">
-                        <div class="uniform-label">Boys Team</div>
-                      </div>
-                      <div>
-                        <img loading="lazy" decoding="async" class="uniform-img" src="https://lh3.googleusercontent.com/sitesv/APaQ0SRgWF40VNYGiR0hrr52kxr0xEB8Hh29DzMPDp_6Pp7De2Ek7-alEco0ZIeD1pUbuHqLJbO2B1Dzm4Zb90tRSfSGRUp3e4kTE7gcawc8pbaths7M81xCOpmtiGWqlzADNqaRKRI8iq-VDAXKG6Rz64S_YPwNoL_rP4pI3WNbSuS1jj2YvtJfhZDdG5gbMjzPe-WoREE4dUW6OG2G7_FAkC3lKQpvLrLZ1cPw0UY=w1280" alt="Boys Uniform">
-                        <div class="uniform-label">Boys Uniform</div>
-                      </div>
-                      <div>
-                        <img loading="lazy" decoding="async" class="uniform-img" src="https://lh3.googleusercontent.com/sitesv/APaQ0STFPGKRa_zZTVimKRMl5zsaUqTCp8c9o7pO2qF1V1U_dFYLNx63qXGd2q-5VHKtTnUwx5Ff7Tqz9reeFOqrTkN2WoWhjWRovHkgT_A16G2PNziLOU1X3jSYC6HdFTzJy9MTt4re6wDw8M2qfFOG8lL3HBfuzY-1LLMdrUvm85wJ8Q-LMLoAJdxcCvi-79Xhmhwh_tE2WJCCUQx__WxgSFWmPNZ_icJsGoy3gbY=w1280" alt="Girls Team">
-                        <div class="uniform-label">Girls Team</div>
-                      </div>
-                      <div>
-                        <img loading="lazy" decoding="async" class="uniform-img" src="https://lh3.googleusercontent.com/sitesv/APaQ0SSox90XEr985spYV2S3SuAsu50EW9jC70VMBzdwKrHH1oFV0i8WkiUArY799m0c_fT_1mgSdXjHftig5d-1hZvNKhLzS678oqtEMzfxQJbl6J7sHCLjFtZU1XYC8i1VKZnqeZ-hGX3xFAzeytpx2v3SMzooFbIByZ9l1fG16lR8Un-Gk7z_6Nu47qB4Rvifuml2hCXZ8c3PtG98LNXrHVxj-BjpibP4u6miyNE=w1280" alt="Girls Uniform">
-                        <div class="uniform-label">Girls Uniform</div>
-                      </div>
+                      <img loading="lazy" decoding="async" class="uniform-img" src="assets/MSVolleyballMensUniforms1.jpg" alt="MS volleyball uniform">
+                      <img loading="lazy" decoding="async" class="uniform-img" src="assets/MSVolleyballMensUniforms2.jpg" alt="MS volleyball uniform">
+                      <img loading="lazy" decoding="async" class="uniform-img" src="assets/MsVolleyballWomensUniform1.jpg" alt="MS volleyball uniform">
+                      <img loading="lazy" decoding="async" class="uniform-img" src="assets/MSVolleyballWomensUniform2.jpg" alt="MS volleyball uniform">
                     </div>
                     <div class="staff-item" style="margin-top:10px">
                       <div class="role">Uniform Provider</div>
@@ -1352,18 +1093,7 @@
                 <div class="accordion-content">
                   <div class="accordion-inner">
                     <div class="uniform-gallery">
-                      <div>
-                        <img loading="lazy" decoding="async" class="uniform-img" src="https://lh3.googleusercontent.com/sitesv/APaQ0SSDBsWk8c3J7OzIFgrRNknP1sTW06qNfQfrrJQpk0hXpK0dypQBFnMqZ5YvDLRWPVXmvHSHAJ_HjeXtPgqpP5ZlfKa30uQH7NT58YvEBmUvGf0Uy9gMVSTB7uCGhEu0y_WjmMMsQ3Jh_tSR62frkJVqY5rvIMc-fryt-1QEVSS6q3XHuFoyaA7Ho46ncVsw1TWEm5YvLiwcE5YSO7hq731jSOr1fI9OsAEXAMQ=w1280" alt="MS Basketball Girls">
-                        <div class="uniform-label">Girls Team</div>
-                      </div>
-                      <div>
-                        <img loading="lazy" decoding="async" class="uniform-img" src="https://lh3.googleusercontent.com/sitesv/APaQ0SRwmin7PFatrIset3hwKhz7dv3sFwsKtF69b2NxfETFGRL33u53UOrXFStz6MGHBKGjO1B3-C8IR74dUqCOwIBWK4_fDh96s5kVFS8MngDC8bndN7MDVzkCzQ_tr4CM5f1vo6whscgJ0_ShMyJzCQq71LLy4mouyzWOAJGEARbYE3B8AolJnskxQtnWTN7O-SPwWSBUgXcyUV8PYoT3OZ54yc7PGE97BLJa=w1280" alt="MS Basketball Practice">
-                        <div class="uniform-label">Practice</div>
-                      </div>
-                      <div>
-                        <img loading="lazy" decoding="async" class="uniform-img" src="https://lh3.googleusercontent.com/sitesv/APaQ0STbg-fvuNf80sPeXgCYAdy11UvBm6Sx3hhT78JaOEhONoK_ElnlibqPEpeD9Cmk3d3a31I8R4-Yg5-ei_-k37QOZpVm9KvRka_VdD6-jluh6sSNOddmLp7FGZbdNKTUL0BAjnncpmsrILJGllO-ichQDFMFqZ9QMgUGcF4NC6v_60GdYAeDZnod0DM3FeTB70SuxpCVdovtGhJzUrvJbGLP6Fs0c1i4SVJQ=w1280" alt="MS Basketball Group">
-                        <div class="uniform-label">Team Photo</div>
-                      </div>
+                      <img loading="lazy" decoding="async" class="uniform-img" src="assets/MSBasketballMensUniform.jpg" alt="MS basketball uniform">
                     </div>
                   </div>
                 </div>
@@ -1373,7 +1103,31 @@
             </div>
           </section>
         </div>
+
+        <div class="tab-panel" id="tab-es" role="tabpanel" aria-labelledby="tab-btn-es" hidden>
+          <section class="panel">
+            <div class="panel-title">Elementary Teams 25-26</div>
+            <div class="hs-grid">
+              <div class="hs-card">
+                <div class="hs-title">⚽ Elementary Soccer</div>
+                <div class="hs-meta">Spring Season 2026</div>
+                <div class="hs-block">
+                  <div class="hs-label">Info</div>
+                  <div class="hs-value">Roster and details coming soon.</div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
       </div>
+
+      <section class="panel site-photo-archive">
+        <div class="panel-title">Team Photo Archive</div>
+        <div class="panel-subtitle">Team photos can be added here later from Edit Site.</div>
+        <div class="photo-archive-grid">
+          <div class="photo-archive-empty">No team photos yet.</div>
+        </div>
+      </section>
 
       <div class="theme-toggle-wrap">
         <button class="theme-toggle" type="button" aria-pressed="false">
@@ -1382,157 +1136,6 @@
         </button>
       </div>
 
-      <div id="teamAdminDock" aria-label="Team page admin">
-        <button id="teamAdminToggleBtn" class="team-admin-toggle" type="button">Team Admin</button>
-        <div id="teamAdminBody" class="team-admin-body" hidden>
-          <div class="team-admin-head">
-            <div class="team-admin-title">Team Page Admin</div>
-            <div id="teamAdminStatus" class="team-admin-status">Read-only view</div>
-          </div>
-          <div class="team-admin-auth-box">
-            <div class="team-admin-group-title">Firebase Admin Login</div>
-            <div id="teamAdminAuthStatus" class="team-admin-auth-status">Not signed in. Remote save is disabled.</div>
-            <div class="team-admin-inline-grid">
-              <label class="team-admin-field" style="margin-top:0">
-                <span class="team-admin-label">Email</span>
-                <input id="teamAdminEmail" class="team-admin-input" type="email" autocomplete="username" />
-              </label>
-              <label class="team-admin-field" style="margin-top:0">
-                <span class="team-admin-label">Password</span>
-                <input id="teamAdminPassword" class="team-admin-input" type="password" autocomplete="current-password" />
-              </label>
-            </div>
-            <div class="team-admin-toolbar">
-              <button id="teamAdminSignInBtn" class="team-admin-mini-btn" type="button">Sign In</button>
-              <button id="teamAdminSignOutBtn" class="team-admin-mini-btn warn" type="button">Sign Out</button>
-            </div>
-            <p class="team-admin-note">Firebase Console 에서 Email/Password provider 를 켜고, 편집에 사용할 계정을 먼저 만들어 두면 여러 기기에서 같은 team 내용으로 저장됩니다.</p>
-          </div>
-
-          <label class="team-admin-field">
-            <span class="team-admin-label">Section</span>
-            <select id="teamAdminTabSelect" class="team-admin-select"></select>
-          </label>
-          <label class="team-admin-field">
-            <span class="team-admin-label">Section Title</span>
-            <input id="teamAdminSectionTitle" class="team-admin-input" type="text" />
-          </label>
-          <label class="team-admin-field">
-            <span class="team-admin-label">Section Subtitle</span>
-            <input id="teamAdminSectionSubtitle" class="team-admin-input" type="text" placeholder="Optional" />
-          </label>
-          <label class="team-admin-field">
-            <span class="team-admin-label">Team Card</span>
-            <select id="teamAdminCardSelect" class="team-admin-select"></select>
-          </label>
-
-          <div class="team-admin-group">
-            <div class="team-admin-group-title">Card Basics</div>
-            <div class="team-admin-stack">
-              <label class="team-admin-field" style="margin-top:0">
-                <span class="team-admin-label">Card Title</span>
-                <input id="teamAdminCardTitle" class="team-admin-input" type="text" />
-              </label>
-              <label class="team-admin-field" style="margin-top:0">
-                <span class="team-admin-label">Season / Meta</span>
-                <input id="teamAdminCardMeta" class="team-admin-input" type="text" />
-              </label>
-              <label class="team-admin-field" style="margin-top:0">
-                <span class="team-admin-label">Record Badges</span>
-                <textarea id="teamAdminRecordBadges" class="team-admin-textarea compact" spellcheck="false" placeholder="One badge per line. Example: Men 8-1"></textarea>
-              </label>
-            </div>
-          </div>
-
-          <div class="team-admin-group">
-            <div class="team-admin-group-title">Practice & Staff</div>
-            <label class="team-admin-field" style="margin-top:0">
-              <span class="team-admin-label">Accordion Title</span>
-              <input id="teamAdminPracticeTitle" class="team-admin-input" type="text" />
-            </label>
-            <div id="teamAdminPracticeStaffList" class="team-admin-stack"></div>
-            <div class="team-admin-toolbar">
-              <button id="teamAdminAddStaffBtn" class="team-admin-mini-btn" type="button">Add Staff Block</button>
-            </div>
-          </div>
-
-          <div class="team-admin-group">
-            <div class="team-admin-group-title">Rosters</div>
-            <div id="teamAdminRosterList" class="team-admin-stack"></div>
-            <div class="team-admin-toolbar">
-              <button id="teamAdminAddRosterBtn" class="team-admin-mini-btn" type="button">Add Roster Group</button>
-            </div>
-          </div>
-
-          <div class="team-admin-group">
-            <div class="team-admin-group-title">Game Results</div>
-            <label class="team-admin-field" style="margin-top:0">
-              <span class="team-admin-label">Accordion Title</span>
-              <input id="teamAdminGamesTitle" class="team-admin-input" type="text" />
-            </label>
-            <label class="team-admin-field">
-              <span class="team-admin-label">Results</span>
-              <textarea id="teamAdminGamesText" class="team-admin-textarea compact" spellcheck="false" placeholder="# Boys Games&#10;win | vs SPPS | League | 2-0 W"></textarea>
-            </label>
-            <p class="team-admin-note">Heading line은 # 로 시작하고, 경기 줄은 result | opponent | type | score 형식으로 입력합니다.</p>
-          </div>
-
-          <div class="team-admin-group">
-            <div class="team-admin-group-title">Uniforms</div>
-            <label class="team-admin-field" style="margin-top:0">
-              <span class="team-admin-label">Accordion Title</span>
-              <input id="teamAdminUniformsTitle" class="team-admin-input" type="text" />
-            </label>
-            <label class="team-admin-field">
-              <span class="team-admin-label">Uniform Items</span>
-              <textarea id="teamAdminUniformsText" class="team-admin-textarea compact" spellcheck="false" placeholder="Label | Image URL | Alt text"></textarea>
-            </label>
-          </div>
-
-          <div class="team-admin-json">
-            <details>
-              <summary>Advanced JSON Preview</summary>
-              <label class="team-admin-field">
-                <span class="team-admin-label">Selected Card JSON</span>
-                <textarea id="teamAdminJson" class="team-admin-textarea compact" spellcheck="false" readonly></textarea>
-              </label>
-            </details>
-          </div>
-
-          <div class="team-admin-actions">
-            <button id="teamAdminPreviewBtn" class="team-admin-btn" type="button">Apply Preview</button>
-            <button id="teamAdminSaveBtn" class="team-admin-btn primary" type="button">Save Changes</button>
-            <button id="teamAdminResetBtn" class="team-admin-btn" type="button">Reset Card</button>
-            <button id="teamAdminReloadBtn" class="team-admin-btn" type="button">Reload Saved</button>
-          </div>
-          <p class="team-admin-hint">Preview 는 현재 브라우저 화면에만 먼저 반영됩니다. Save 는 localStorage 에 저장하고, 로그인되어 있으면 Firebase teamPageContent 문서에도 같이 저장합니다.</p>
-        </div>
-      </div>
-      <div id="teamAdminLoginModal" class="team-admin-modal" hidden>
-        <div class="team-admin-modal-panel" role="dialog" aria-modal="true" aria-labelledby="teamAdminLoginTitle">
-          <div class="team-admin-head">
-            <div id="teamAdminLoginTitle" class="team-admin-title">Team Admin Sign In</div>
-            <div id="teamAdminLoginStatus" class="team-admin-status">로그인해야 Team Admin이 열립니다.</div>
-          </div>
-          <div class="team-admin-auth-box" style="margin-top:0">
-            <div class="team-admin-group-title">Firebase Admin Login</div>
-            <div class="team-admin-inline-grid">
-              <label class="team-admin-field" style="margin-top:0">
-                <span class="team-admin-label">Email</span>
-                <input id="teamAdminLoginEmail" class="team-admin-input" type="email" autocomplete="username" />
-              </label>
-              <label class="team-admin-field" style="margin-top:0">
-                <span class="team-admin-label">Password</span>
-                <input id="teamAdminLoginPassword" class="team-admin-input" type="password" autocomplete="current-password" />
-              </label>
-            </div>
-            <div class="team-admin-toolbar">
-              <button id="teamAdminLoginCancelBtn" class="team-admin-mini-btn" type="button">Cancel</button>
-              <button id="teamAdminLoginSubmitBtn" class="team-admin-mini-btn" type="button">Sign In</button>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
     <script>
       const goToDetails = (card) => {
@@ -1549,6 +1152,13 @@
         goToDetails(card);
       }, true);
       (function(){
+        document.querySelectorAll('.hs-block').forEach((block) => {
+          if ((block.querySelector('.hs-label')?.textContent || '').trim().toLowerCase() === 'record') block.remove();
+        });
+        document.querySelectorAll('.accordion-item').forEach((item) => {
+          const title = item.querySelector('.accordion-title')?.textContent || '';
+          if (/game results|past results/i.test(title)) item.remove();
+        });
         const tabs = document.querySelectorAll('.tab-btn');
         const panels = document.querySelectorAll('.tab-panel');
         const tabsWrap = document.querySelector('.tabs[role="tablist"]');
@@ -1631,6 +1241,20 @@
         });
       })();
     </script>
-    <script src="assets/team-admin.js"></script>
+    <script>
+      window.BIS_FIREBASE_CONFIG = {
+        apiKey: "AIzaSyCzjMG7r_tweUGfznUnckpp_Xm4hF5119Q",
+        authDomain: "bis-athletics.firebaseapp.com",
+        projectId: "bis-athletics",
+        storageBucket: "bis-athletics.firebasestorage.app",
+        messagingSenderId: "759086332599",
+        appId: "1:759086332599:web:4261b5aa076f0c60a0eb32"
+      };
+    </script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="assets/site-admin.js?v=20260614a"></script>
+    <script src="assets/animations.js?v=20260407"></script>
   </body>
 </html>

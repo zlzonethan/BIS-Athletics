@@ -350,60 +350,94 @@
 
         /* Formation Component Styles */
         .formation-section {
-            margin-top: 16px;
-            padding: 16px;
-            border-radius: 16px;
-            background: var(--muted-surface);
+            margin-top: 18px;
+            padding: 20px;
+            border-radius: 24px;
+            background:
+                radial-gradient(circle at top left, rgba(37,99,235,0.14), transparent 36%),
+                linear-gradient(180deg, color-mix(in srgb, var(--card-bg) 92%, transparent), color-mix(in srgb, var(--muted-surface) 92%, transparent));
             border: 1px solid var(--muted-border);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.12);
         }
         .formation-header {
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            margin-bottom: 14px;
+            align-items: flex-start;
+            margin-bottom: 12px;
             flex-wrap: wrap;
-            gap: 10px;
+            gap: 14px;
+        }
+        .formation-copy {
+            display: grid;
+            gap: 6px;
+        }
+        .formation-kicker {
+            font-size: 11px;
+            letter-spacing: 0.16em;
+            font-weight: 800;
+            color: var(--text-sub);
+        }
+        .formation-subtitle {
+            margin: 0;
+            font-size: 13px;
+            line-height: 1.55;
+            color: var(--text-sub);
         }
         .formation-header h4 {
             margin: 0;
-            font-size: 15px;
-            font-weight: 700;
+            font-size: 21px;
+            font-weight: 800;
         }
-        .formation-tabs {
-            display: flex;
-            gap: 6px;
-        }
-        .formation-tab {
-            padding: 8px 14px;
-            border-radius: 20px;
-            border: none;
-            background: var(--card-bg);
-            cursor: pointer;
+        .formation-sport-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 14px;
+            border-radius: 999px;
+            background: color-mix(in srgb, var(--card-bg) 85%, transparent);
+            border: 1px solid var(--muted-border);
             font-size: 12px;
-            font-weight: 600;
-            transition: all 0.2s;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.06);
-        }
-        .formation-tab:hover {
-            background: var(--primary-color);
-            color: white;
-            transform: translateY(-1px);
-        }
-        .formation-tab.active {
-            background: var(--primary-color);
-            color: white;
-            box-shadow: 0 4px 12px rgba(37,99,235,0.3);
-        }
-
-        /* Dark mode for formation tabs */
-        body.dark .formation-tab {
-            background: rgba(255,255,255,0.05);
+            font-weight: 800;
             color: var(--text-main);
+            box-shadow: 0 12px 24px rgba(15,23,42,0.08);
         }
-        body.dark .formation-tab:hover,
-        body.dark .formation-tab.active {
-            background: var(--primary-color);
-            color: white;
+        .formation-stage {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 14px;
+            flex-wrap: wrap;
+        }
+        .formation-legend {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .formation-legend-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 700;
+            background: color-mix(in srgb, var(--card-bg) 88%, transparent);
+            border: 1px solid var(--muted-border);
+        }
+        .formation-legend-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+            box-shadow: 0 0 0 4px rgba(255,255,255,0.18);
+        }
+        .formation-legend-item.home .formation-legend-dot {
+            background: #2563eb;
+        }
+        .formation-legend-item.away .formation-legend-dot {
+            background: #ef4444;
         }
         body.dark .team-switch-btn {
             background: rgba(255,255,255,0.05);
@@ -420,41 +454,44 @@
         body.dark .formation-court-wrapper {
             box-shadow: 0 8px 24px rgba(0,0,0,0.4);
         }
-        }
         .team-formation-switch {
             display: flex;
             gap: 6px;
             align-items: center;
-            margin-bottom: 14px;
+            flex-wrap: wrap;
         }
         .team-switch-btn {
-            padding: 6px 14px;
-            border-radius: 20px;
-            border: 2px solid var(--muted-border);
-            background: var(--card-bg);
+            padding: 8px 14px;
+            border-radius: 999px;
+            border: 1px solid var(--muted-border);
+            background: color-mix(in srgb, var(--card-bg) 90%, transparent);
             cursor: pointer;
-            font-size: 11px;
+            font-size: 12px;
             font-weight: 700;
-            transition: all 0.2s;
+            transition: all 0.2s ease;
         }
         .team-switch-btn:hover {
             border-color: var(--primary-color);
+            transform: translateY(-1px);
         }
         .team-switch-btn.active {
             background: var(--primary-color);
             color: white;
             border-color: var(--primary-color);
+            box-shadow: 0 12px 24px rgba(37,99,235,0.24);
         }
         .team-switch-btn.away.active {
             background: var(--lose-color);
             border-color: var(--lose-color);
+            box-shadow: 0 12px 24px rgba(239,68,68,0.24);
         }
         .formation-court-wrapper {
             position: relative;
             width: 100%;
-            border-radius: 16px;
+            border-radius: 28px;
             overflow: hidden;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+            box-shadow: 0 22px 44px rgba(15,23,42,0.2);
+            border: 1px solid rgba(255,255,255,0.18);
         }
 
         /* Base court styles */
@@ -462,6 +499,7 @@
             position: relative;
             width: 100%;
             overflow: hidden;
+            isolation: isolate;
         }
 
         /* Volleyball Court - Horizontal */
@@ -469,9 +507,11 @@
             position: relative;
             width: 100%;
             aspect-ratio: 2 / 1;
-            background: linear-gradient(135deg, #F97316 0%, #EA580C 50%, #DC2626 100%);
-            border-radius: 12px;
-            border: 3px solid rgba(255,255,255,0.9);
+            background:
+                radial-gradient(circle at center, rgba(255,255,255,0.18), transparent 28%),
+                linear-gradient(135deg, #fb923c 0%, #f97316 36%, #ea580c 68%, #c2410c 100%);
+            border-radius: 28px;
+            border: 3px solid rgba(255,255,255,0.84);
         }
         .court-volleyball .court-inner {
             position: absolute;
@@ -504,8 +544,10 @@
             position: relative;
             width: 100%;
             aspect-ratio: 1.88 / 1;
-            background: linear-gradient(180deg, #D4A574 0%, #C4956A 50%, #B8895E 100%);
-            border-radius: 12px;
+            background:
+                linear-gradient(90deg, rgba(255,255,255,0.06) 0%, transparent 8%, transparent 92%, rgba(255,255,255,0.06) 100%),
+                linear-gradient(180deg, #d8a879 0%, #cb976c 50%, #b57f54 100%);
+            border-radius: 28px;
             border: 3px solid rgba(139,69,19,0.4);
         }
         .court-basketball .court-lines {
@@ -592,7 +634,7 @@
                 #16A34A 10%,
                 #16A34A 20%
             );
-            border-radius: 12px;
+            border-radius: 28px;
             border: 3px solid rgba(255,255,255,0.9);
         }
         .court-soccer .field-border {
@@ -697,15 +739,15 @@
             z-index: 30;
         }
         .player-number {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            border-radius: 14px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: 800;
             font-size: 13px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+            box-shadow: 0 10px 22px rgba(0,0,0,0.24);
             border: 3px solid rgba(255,255,255,0.95);
             transition: all 0.2s;
         }
@@ -713,28 +755,29 @@
             box-shadow: 0 6px 20px rgba(0,0,0,0.35);
         }
         .player-marker.home .player-number {
-            background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%);
+            background: linear-gradient(135deg, #60a5fa 0%, #2563eb 100%);
             color: white;
         }
         .player-marker.away .player-number {
-            background: linear-gradient(135deg, #F87171 0%, #EF4444 100%);
+            background: linear-gradient(135deg, #fb7185 0%, #ef4444 100%);
             color: white;
         }
         .player-name {
-            margin-top: 3px;
-            padding: 2px 6px;
+            margin-top: 5px;
+            padding: 4px 8px;
             font-size: 10px;
             font-weight: 700;
             color: white;
-            background: rgba(0,0,0,0.6);
-            border-radius: 4px;
+            background: rgba(2,6,23,0.62);
+            border-radius: 999px;
             white-space: nowrap;
-            max-width: 90px;
+            max-width: 120px;
             overflow: hidden;
             text-overflow: ellipsis;
-            backdrop-filter: blur(4px);
+            backdrop-filter: blur(8px);
             text-align: center;
             line-height: 1.3;
+            box-shadow: 0 8px 18px rgba(2,6,23,0.22);
         }
         .player-realname {
             display: block;
@@ -745,10 +788,13 @@
 
         /* No formation message */
         .no-formation {
-            padding: 24px;
+            padding: 30px 24px;
             text-align: center;
             color: var(--text-sub);
-            font-size: 12px;
+            font-size: 13px;
+            border-radius: 20px;
+            background: rgba(148,163,184,0.08);
+            border: 1px dashed rgba(148,163,184,0.3);
         }
 
         /* Formation Mobile Responsive */
@@ -757,23 +803,20 @@
                 flex-direction: column;
                 align-items: flex-start;
             }
-            .formation-tabs {
+            .formation-stage {
                 width: 100%;
-                justify-content: flex-start;
-            }
-            .formation-tab {
-                padding: 6px 10px;
-                font-size: 11px;
+                align-items: stretch;
             }
             .player-number {
-                width: 28px;
-                height: 28px;
+                width: 30px;
+                height: 30px;
                 font-size: 11px;
                 border-width: 2px;
+                border-radius: 10px;
             }
             .player-name {
                 font-size: 8px;
-                padding: 1px 4px;
+                padding: 2px 6px;
                 max-width: 60px;
             }
             .player-realname {
@@ -851,8 +894,9 @@
         };
     </script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
-    <script src="data/schedules.js"></script>
+    <script src="data/schedules.js?v=20260407"></script>
     <script>
         // Detect iframe and add class
         (function() {
@@ -928,17 +972,23 @@
             <!-- Formation Section -->
             <div class="formation-section" id="formationSection">
                 <div class="formation-header">
-                    <h4>📍 Formation</h4>
-                    <div class="formation-tabs">
-                        <button class="formation-tab active" data-sport="volleyball">🏐 Volleyball</button>
-                        <button class="formation-tab" data-sport="basketball">🏀 Basketball</button>
-                        <button class="formation-tab" data-sport="soccer">⚽ Soccer</button>
+                    <div class="formation-copy">
+                        <div class="formation-kicker">FORMATION BOARD</div>
+                        <h4 id="formationTitle">📍 Formation</h4>
+                        <p class="formation-subtitle" id="formationSubtitle">Live lineup view for this match.</p>
                     </div>
+                    <div class="formation-sport-pill" id="formationSportPill">Sport</div>
                 </div>
-                <div class="team-formation-switch">
-                    <button class="team-switch-btn active" data-team="home" id="formationHomeBtn">Home</button>
-                    <button class="team-switch-btn away" data-team="away" id="formationAwayBtn">Away</button>
-                    <button class="team-switch-btn" data-team="both" id="formationBothBtn">Both</button>
+                <div class="formation-stage">
+                    <div class="formation-legend">
+                        <span class="formation-legend-item home"><span class="formation-legend-dot"></span><span id="formationLegendHome">Home</span></span>
+                        <span class="formation-legend-item away"><span class="formation-legend-dot"></span><span id="formationLegendAway">Away</span></span>
+                    </div>
+                    <div class="team-formation-switch">
+                        <button class="team-switch-btn active" data-team="home" id="formationHomeBtn">Home</button>
+                        <button class="team-switch-btn away" data-team="away" id="formationAwayBtn">Away</button>
+                        <button class="team-switch-btn" data-team="both" id="formationBothBtn">Both</button>
+                    </div>
                 </div>
                 <div class="formation-court" id="formationCourt">
                     <!-- Court will be rendered by JS -->
@@ -1070,6 +1120,7 @@
             { id: 'mica', name: 'MICA', logo: assetUrl('assets/micamascot.png') },
             { id: 'ccas', name: 'CCAS', logo: assetUrl('assets/ccasmascot.png') },
             { id: 'icsu', name: 'ICSU', logo: assetUrl('assets/icsumascot.png') },
+            { id: 'icsp', name: 'ICSP', logo: assetUrl('assets/icspmascot.png') },
             { id: 'spas', name: 'SPAS', logo: assetUrl('assets/spasmascot.png') },
             { id: 'fps', name: 'FPS', logo: assetUrl('assets/fpsmascot.jpeg') },
             { id: 'sie', name: 'SIE', logo: assetUrl('assets/siemascot.jpg') },
@@ -1099,12 +1150,19 @@
             } catch (e) { return []; }
         }
 
+        const DELETED_MATCHES_KEY = 'bis_deleted_matches';
+        const getDeletedMatchIds = () => {
+            try { return new Set(JSON.parse(localStorage.getItem(DELETED_MATCHES_KEY) || '[]').map(String)); } catch(e) { return new Set(); }
+        };
+
         const schedules = (() => {
+            const deleted = getDeletedMatchIds();
             const all = [...baseSchedules, ...getCustomMatches()];
             const seen = new Set();
             return all.filter((m) => {
                 const id = Number(m?.id);
                 if (!Number.isFinite(id) || seen.has(id)) return false;
+                if (deleted.has(String(id))) return false;
                 seen.add(id);
                 return true;
             });
@@ -1437,6 +1495,21 @@
         const firebaseReady = initFirebaseIfConfigured();
         if (firebaseReady) hydrateMissingMatchFromFirebase();
 
+        // Listen for live score updates from Firebase
+        if (useFirebase && db) {
+            let liveScoreInitial = true;
+            db.collection('liveScores').doc(String(matchId)).onSnapshot((doc) => {
+                const data = doc.exists ? doc.data() : {};
+                const all = getLiveScores();
+                const prev = JSON.stringify(all[matchId] || {});
+                const next = JSON.stringify(data);
+                if (doc.exists) { all[matchId] = data; } else { delete all[matchId]; }
+                try { localStorage.setItem(LIVE_SCORE_KEY, JSON.stringify(all)); } catch(e){}
+                if (liveScoreInitial) { liveScoreInitial = false; return; }
+                if (prev !== next) location.reload();
+            }, (err) => console.error('liveScores listen error', err));
+        }
+
         // initialize vote UI to mirror index.html
         (function initLocalVoteUI(){
             const homeBtn = document.getElementById('voteHomeBtn');
@@ -1586,9 +1659,36 @@
     </script>
     <script>
         // --- Admin modal behavior ---
-        const ADMIN_PASSPHRASE_KEY = 'bis_admin_pass';
-        const LEGACY_ADMIN_PASSPHRASE_KEY = 'kis_admin_pass';
-        const DEFAULT_ADMIN_PASSPHRASE = 'BISathletic120712!';
+        const ADMIN_EMAILS = ['iamsunwo@gmail.com', 'tcassell@bisce.net', 'athletics@bisce.net', '30ekim@bisce.net', '30epark@bisce.net'];
+        let detailsAuth = null;
+        let detailsAuthReady = Promise.resolve(null);
+
+        function initAdminAuth() {
+            if (detailsAuth || !window.firebase || typeof firebase.auth !== 'function') return detailsAuth;
+            detailsAuth = firebase.auth();
+            detailsAuthReady = new Promise((resolve) => {
+                const unsubscribe = detailsAuth.onAuthStateChanged((user) => {
+                    unsubscribe();
+                    resolve(user || null);
+                }, () => resolve(null));
+            });
+            return detailsAuth;
+        }
+
+        const normalizeAdminEmail = (value) => (value || '').toString().trim().toLowerCase();
+        const isAllowedAdminEmail = (value) => ADMIN_EMAILS.includes(normalizeAdminEmail(value));
+        const isAuthorizedAdminUser = (user) => Boolean(user && isAllowedAdminEmail(user.email));
+
+        async function getResolvedAdminUser() {
+            const authInstance = initAdminAuth();
+            if (!authInstance) return null;
+            if (authInstance.currentUser) return authInstance.currentUser;
+            try {
+                return await detailsAuthReady;
+            } catch (error) {
+                return authInstance.currentUser || null;
+            }
+        }
 
         function getAllLiveScores() {
             try { return JSON.parse(localStorage.getItem(LIVE_SCORE_KEY) || '{}'); } catch(e){ return {}; }
@@ -1600,60 +1700,110 @@
             try { return JSON.parse(localStorage.getItem(MATCH_META_KEY) || '{}'); } catch(e){ return {}; }
         }
 
-        function showPassModal(title, desc) {
-            return new Promise((resolve) => {
-                const modal = document.getElementById('passModal');
-                const input = document.getElementById('passModalInput');
-                const errEl = document.getElementById('passModalError');
-                const okBtn = document.getElementById('passModalOk');
-                const cancelBtn = document.getElementById('passModalCancel');
-                document.getElementById('passModalTitle').textContent = title || 'Admin Passphrase';
-                document.getElementById('passModalDesc').textContent = desc || 'Enter passphrase to continue';
-                input.value = '';
-                errEl.style.display = 'none';
-                modal.style.display = 'flex';
-                setTimeout(() => input.focus(), 50);
-                const cleanup = () => {
-                    modal.style.display = 'none';
-                    okBtn.removeEventListener('click', onOk);
-                    cancelBtn.removeEventListener('click', onCancel);
-                    input.removeEventListener('keydown', onKey);
-                };
-                const onOk = () => { cleanup(); resolve(input.value); };
-                const onCancel = () => { cleanup(); resolve(null); };
-                const onKey = (e) => { if (e.key === 'Enter') onOk(); if (e.key === 'Escape') onCancel(); };
-                okBtn.addEventListener('click', onOk);
-                cancelBtn.addEventListener('click', onCancel);
-                input.addEventListener('keydown', onKey);
-            });
+        function ensureDetailsPassModal() {
+            if (document.getElementById('detailsPassModal')) return;
+            const modal = document.createElement('div');
+            modal.id = 'detailsPassModal';
+            modal.style.cssText = 'display:none;position:fixed;inset:0;z-index:99999;background:rgba(2,6,23,0.5);align-items:center;justify-content:center;padding:24px';
+            modal.innerHTML = `
+                <div style="background:#fff;border-radius:16px;padding:28px 24px;max-width:360px;width:100%;box-shadow:0 30px 60px rgba(0,0,0,0.3);border:1px solid rgba(148,163,184,0.2)">
+                    <div style="font-weight:800;font-size:16px;margin-bottom:4px">Admin Login</div>
+                    <div style="font-size:13px;color:#64748b;margin-bottom:16px">Sign in with your admin account</div>
+                    <input id="detailsPassEmail" type="email" placeholder="Email" autocomplete="email" style="width:100%;padding:12px 14px;border-radius:10px;border:1px solid rgba(148,163,184,0.3);background:#fff;color:#0f172a;font-size:15px;outline:none;margin-bottom:10px" />
+                    <input id="detailsPassPassword" type="password" placeholder="Password" autocomplete="current-password" style="width:100%;padding:12px 14px;border-radius:10px;border:1px solid rgba(148,163,184,0.3);background:#fff;color:#0f172a;font-size:15px;outline:none" />
+                    <div id="detailsPassError" style="color:#ef4444;font-size:12px;margin-top:8px;display:none"></div>
+                    <div style="display:flex;gap:8px;margin-top:16px;justify-content:flex-end">
+                        <button id="detailsPassCancel" style="appearance:none;border:1px solid rgba(148,163,184,0.3);background:#fff;color:#0f172a;border-radius:999px;padding:10px 16px;font:inherit;font-weight:800;cursor:pointer">Cancel</button>
+                        <button id="detailsPassOk" style="appearance:none;border:1px solid #0b1b3a;background:#0b1b3a;color:#fff;border-radius:999px;padding:10px 16px;font:inherit;font-weight:800;cursor:pointer">Sign In</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
         }
 
         async function promptForAdmin() {
-            let saved = (window.BIS_ADMIN_PASSPHRASE || '').trim();
-            if (!saved) {
-                try {
-                    saved = (localStorage.getItem(ADMIN_PASSPHRASE_KEY) || '').trim();
-                    if (!saved) {
-                        const legacy = (localStorage.getItem(LEGACY_ADMIN_PASSPHRASE_KEY) || '').trim();
-                        if (legacy) {
-                            localStorage.setItem(ADMIN_PASSPHRASE_KEY, legacy);
-                            saved = legacy;
+            const authInstance = initAdminAuth();
+            if (!authInstance) return { ok: false, reason: 'auth_unavailable' };
+            const currentUser = await getResolvedAdminUser();
+            if (isAuthorizedAdminUser(currentUser)) return { ok: true, user: currentUser };
+            ensureDetailsPassModal();
+            const modal = document.getElementById('detailsPassModal');
+            const emailInput = document.getElementById('detailsPassEmail');
+            const passInput = document.getElementById('detailsPassPassword');
+            const errorEl = document.getElementById('detailsPassError');
+            const okBtn = document.getElementById('detailsPassOk');
+            const cancelBtn = document.getElementById('detailsPassCancel');
+            if (!modal || !emailInput || !passInput || !okBtn || !cancelBtn) {
+                return { ok: false, reason: 'auth_unavailable' };
+            }
+            emailInput.value = '';
+            passInput.value = '';
+            errorEl.style.display = 'none';
+            errorEl.textContent = '';
+            modal.style.display = 'flex';
+            emailInput.focus();
+            return new Promise((resolve) => {
+                function cleanup() {
+                    okBtn.removeEventListener('click', onOk);
+                    cancelBtn.removeEventListener('click', onCancel);
+                    modal.style.display = 'none';
+                }
+                async function onOk() {
+                    const email = (emailInput.value || '').trim();
+                    const password = passInput.value || '';
+                    if (!email || !password) {
+                        errorEl.textContent = 'Please enter email and password.';
+                        errorEl.style.display = 'block';
+                        return;
+                    }
+                    if (!isAllowedAdminEmail(email)) {
+                        cleanup();
+                        resolve({ ok: false, reason: 'unauthorized' });
+                        return;
+                    }
+                    okBtn.disabled = true;
+                    okBtn.textContent = 'Signing in\u2026';
+                    try {
+                        const result = await authInstance.signInWithEmailAndPassword(email, password);
+                        const signedInUser = result?.user || authInstance.currentUser;
+                        if (!isAuthorizedAdminUser(signedInUser)) {
+                            try { await authInstance.signOut(); } catch (e) {}
+                            cleanup();
+                            resolve({ ok: false, reason: 'unauthorized' });
+                            return;
+                        }
+                        cleanup();
+                        resolve({ ok: true, user: signedInUser });
+                    } catch (error) {
+                        okBtn.disabled = false;
+                        okBtn.textContent = 'Sign In';
+                        const code = error?.code || '';
+                        if (code === 'auth/wrong-password' || code === 'auth/invalid-credential') {
+                            errorEl.textContent = 'Incorrect password.';
+                            errorEl.style.display = 'block';
+                        } else if (code === 'auth/user-not-found') {
+                            cleanup();
+                            resolve({ ok: false, reason: 'user_not_found', errorCode: code });
+                        } else if (code === 'auth/too-many-requests') {
+                            cleanup();
+                            resolve({ ok: false, reason: 'too_many_requests', errorCode: code });
+                        } else if (code === 'auth/network-request-failed') {
+                            cleanup();
+                            resolve({ ok: false, reason: 'network', errorCode: code });
+                        } else {
+                            errorEl.textContent = 'Sign-in failed. Please try again.';
+                            errorEl.style.display = 'block';
                         }
                     }
-                } catch(e) { saved = ''; }
-            }
-            if (!saved) saved = DEFAULT_ADMIN_PASSPHRASE;
-            if (!saved) {
-                const newPass = await showPassModal('Create Passphrase', 'No passphrase configured. Create one (min 4 chars).');
-                if (newPass === null) return { ok: false, reason: 'cancelled' };
-                const trimmed = (newPass || '').trim();
-                if (trimmed.length < 4) return { ok: false, reason: 'weak' };
-                saved = trimmed;
-                try { localStorage.setItem(ADMIN_PASSPHRASE_KEY, saved); } catch(e) {}
-            }
-            const pass = await showPassModal('Admin Passphrase', 'Enter passphrase to open admin panel.');
-            if (pass === null) return { ok: false, reason: 'cancelled' };
-            return pass === saved ? { ok: true } : { ok: false, reason: 'wrong' };
+                }
+                function onCancel() {
+                    cleanup();
+                    resolve({ ok: false, reason: 'cancelled' });
+                }
+                okBtn.addEventListener('click', onOk);
+                cancelBtn.addEventListener('click', onCancel);
+                passInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') onOk(); });
+            });
         }
 
         function showAdminModal() {
@@ -1717,9 +1867,13 @@
             adminOpenBtn.addEventListener('click', async ()=>{
                 const auth = await promptForAdmin();
                 if(!auth.ok){
-                    if (auth.reason === 'not_configured') alert('Admin passphrase is not configured.');
-                    else if (auth.reason === 'weak') alert('Passphrase must be at least 4 characters.');
-                    else if (auth.reason === 'wrong') alert('Incorrect passphrase.');
+                    if (auth.reason === 'unauthorized') alert('This email is not approved for admin access.');
+                    else if (auth.reason === 'wrong_password') alert('Incorrect password. Please try again.');
+                    else if (auth.reason === 'user_not_found') alert('No admin account found for this email.');
+                    else if (auth.reason === 'too_many_requests') alert('Too many failed attempts. Please try again later.');
+                    else if (auth.reason === 'network') alert('Network error. Check the connection and try again.');
+                    else if (auth.reason === 'auth_unavailable') alert('Firebase Auth is not available on this page.');
+                    else if (auth.reason !== 'cancelled') alert(`Admin sign-in failed${auth.errorCode ? ` (${auth.errorCode})` : ''}.`);
                     return;
                 }
                 showAdminModal();
@@ -1734,9 +1888,13 @@
                 showAdminModal();
                 return;
             }
-            if (auth.reason === 'not_configured') alert('Admin passphrase is not configured.');
-            else if (auth.reason === 'weak') alert('Passphrase must be at least 4 characters.');
-            else if (auth.reason !== 'cancelled') alert('Passphrase required');
+            if (auth.reason === 'unauthorized') alert('This email is not approved for admin access.');
+            else if (auth.reason === 'wrong_password') alert('Incorrect password. Please try again.');
+            else if (auth.reason === 'user_not_found') alert('No admin account found for this email.');
+            else if (auth.reason === 'too_many_requests') alert('Too many failed attempts. Please try again later.');
+            else if (auth.reason === 'network') alert('Network error. Check the connection and try again.');
+            else if (auth.reason === 'auth_unavailable') alert('Firebase Auth is not available on this page.');
+            else if (auth.reason !== 'cancelled') alert(`Admin sign-in failed${auth.errorCode ? ` (${auth.errorCode})` : ''}.`);
             const url = new URL(location.href);
             url.searchParams.delete('admin');
             location.replace(url.href);
@@ -1812,6 +1970,9 @@
         // Formation Component Logic
         // ============================================
         const FORMATION_KEY = 'bis_formations';
+        const FORMATION_COLLECTION = 'matchFormations';
+        let formationUnsubscribe = null;
+        let formationSyncTimers = {};
 
         // Default formations for each sport (horizontal layout: x=left-right, y=top-bottom)
         const defaultFormations = {
@@ -1884,6 +2045,67 @@
             catch (e) { return {}; }
         }
 
+        function setAllFormations(next) {
+            try { localStorage.setItem(FORMATION_KEY, JSON.stringify(next || {})); } catch (e) {}
+        }
+
+        function formationDocId(matchId, sport) {
+            return `${String(matchId)}_${normalizeFormationSport(sport)}`;
+        }
+
+        function writeFormationCache(matchId, sport, formation) {
+            const all = getAllFormations();
+            if (!all[matchId]) all[matchId] = {};
+            all[matchId][normalizeFormationSport(sport)] = formation;
+            setAllFormations(all);
+        }
+
+        function syncFormationFromRemote(matchId, sport, payload) {
+            const normalizedSport = normalizeFormationSport(sport);
+            const safeFormation = {
+                home: Array.isArray(payload?.home) ? payload.home : [],
+                away: Array.isArray(payload?.away) ? payload.away : []
+            };
+            writeFormationCache(String(matchId), normalizedSport, safeFormation);
+            if (normalizedSport === currentSport) {
+                renderPlayers(currentSport);
+            }
+        }
+
+        function queueFormationRemoteSave(matchId, sport, formation) {
+            if (!db) return;
+            const docId = formationDocId(matchId, sport);
+            clearTimeout(formationSyncTimers[docId]);
+            formationSyncTimers[docId] = setTimeout(async () => {
+                try {
+                    await db.collection(FORMATION_COLLECTION).doc(docId).set({
+                        sport: normalizeFormationSport(sport),
+                        home: Array.isArray(formation?.home) ? formation.home : [],
+                        away: Array.isArray(formation?.away) ? formation.away : [],
+                        updatedAt: new Date().toISOString(),
+                        updatedBy: ''
+                    }, { merge: true });
+                } catch (error) {
+                    console.error('formation remote save error', error);
+                }
+            }, 250);
+        }
+
+        function subscribeFormation(matchId, sport) {
+            if (formationUnsubscribe) {
+                formationUnsubscribe();
+                formationUnsubscribe = null;
+            }
+            if (!db || !Number.isFinite(Number(matchId))) return;
+            const docId = formationDocId(matchId, sport);
+            formationUnsubscribe = db.collection(FORMATION_COLLECTION).doc(docId).onSnapshot((doc) => {
+                if (!doc.exists) return;
+                syncFormationFromRemote(matchId, sport, doc.data() || {});
+            }, (error) => {
+                console.error('formation listen error', error);
+            });
+        }
+
         function getFormationForMatch(matchId, sport) {
             const all = getAllFormations();
             const matchData = all[matchId] || {};
@@ -1891,15 +2113,55 @@
         }
 
         function saveFormationForMatch(matchId, sport, formation) {
-            const all = getAllFormations();
-            if (!all[matchId]) all[matchId] = {};
-            all[matchId][sport] = formation;
-            try { localStorage.setItem(FORMATION_KEY, JSON.stringify(all)); } catch (e) {}
+            writeFormationCache(matchId, sport, formation);
+            queueFormationRemoteSave(matchId, sport, formation);
+        }
+
+        function normalizeFormationSport(sport) {
+            const next = (sport || '').toString().trim().toLowerCase();
+            if (next === 'basketball' || next === 'volleyball' || next === 'soccer') return next;
+            return 'soccer';
+        }
+
+        function getFormationSportMeta(sport) {
+            if (sport === 'basketball') {
+                return {
+                    emoji: '🏀',
+                    label: 'Basketball',
+                    subtitle: 'Only the basketball lineup for this match is shown.'
+                };
+            }
+            if (sport === 'volleyball') {
+                return {
+                    emoji: '🏐',
+                    label: 'Volleyball',
+                    subtitle: 'Only the volleyball rotation for this match is shown.'
+                };
+            }
+            return {
+                emoji: '⚽',
+                label: 'Soccer',
+                subtitle: 'Only the soccer formation for this match is shown.'
+            };
         }
 
         // Current state
-        let currentSport = 'volleyball';
+        let currentSport = normalizeFormationSport(match?.sport || '');
         let currentTeamView = 'home'; // 'home', 'away', 'both'
+
+        function updateFormationHeader(sport) {
+            const meta = getFormationSportMeta(sport);
+            const title = document.getElementById('formationTitle');
+            const subtitle = document.getElementById('formationSubtitle');
+            const pill = document.getElementById('formationSportPill');
+            const legendHome = document.getElementById('formationLegendHome');
+            const legendAway = document.getElementById('formationLegendAway');
+            if (title) title.textContent = `${meta.emoji} ${meta.label} Formation`;
+            if (subtitle) subtitle.textContent = meta.subtitle;
+            if (pill) pill.textContent = `${meta.emoji} ${meta.label}`;
+            if (legendHome && homeTeam) legendHome.textContent = homeTeam.name;
+            if (legendAway && awayTeam) legendAway.textContent = awayTeam.name;
+        }
 
         function renderCourt(sport) {
             const courtContainer = document.getElementById('formationCourt');
@@ -2013,17 +2275,7 @@
             const awayBtn = document.getElementById('formationAwayBtn');
             if (homeBtn && homeTeam) homeBtn.textContent = homeTeam.name;
             if (awayBtn && awayTeam) awayBtn.textContent = awayTeam.name;
-
-            // Sport tab click handlers
-            const sportTabs = formationSection.querySelectorAll('.formation-tab');
-            sportTabs.forEach(tab => {
-                tab.addEventListener('click', () => {
-                    sportTabs.forEach(t => t.classList.remove('active'));
-                    tab.classList.add('active');
-                    currentSport = tab.dataset.sport;
-                    renderCourt(currentSport);
-                });
-            });
+            updateFormationHeader(currentSport);
 
             // Team switch handlers
             const teamBtns = formationSection.querySelectorAll('.team-switch-btn');
@@ -2038,6 +2290,7 @@
 
             // Initial render
             renderCourt(currentSport);
+            subscribeFormation(matchId, currentSport);
         })();
 
         // ============================================
@@ -2047,7 +2300,7 @@
             const container = document.getElementById('adminFormationPlayers');
             if (!container) return;
 
-            const sport = document.getElementById('adminFormationSport')?.value || 'volleyball';
+            const sport = normalizeFormationSport(document.getElementById('adminFormationSport')?.value || currentSport);
             const team = document.getElementById('adminFormationTeam')?.value || 'home';
 
             const savedFormation = getFormationForMatch(matchId, sport);
@@ -2132,8 +2385,10 @@
             const teamSelect = document.getElementById('adminFormationTeam');
 
             if (sportSelect) {
-                sportSelect.addEventListener('change', renderAdminFormationPlayers);
+                sportSelect.value = currentSport;
+                sportSelect.disabled = true;
             }
+
             if (teamSelect) {
                 teamSelect.addEventListener('change', renderAdminFormationPlayers);
             }
@@ -2155,6 +2410,8 @@
             }
         });
     </script>
+
+    <script src="assets/site-admin.js?v=20260614a"></script>
 
 </body>
 </html>
